@@ -3,10 +3,8 @@ import { Test } from './Test';
 
 export function AppRoutes() {
 	return (
-		<>
-			<Routes>
-				<Route path='/' element={<Test />}></Route>
-			</Routes>
-		</>
+		<Routes>
+			<Route path='/' element={<Test />}></Route>
+		</Routes>
 	);
 }
