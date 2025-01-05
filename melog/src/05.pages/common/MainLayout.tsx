@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { Button } from '../../01.shared/common/ui';
+import { Button } from '../../01.shared';
 
 interface MainLayout {
 	children: ReactElement;
