@@ -1,10 +1,6 @@
-import { MainLayout } from '../05.pages';
-import { AppRoutes } from './AppRoute';
+import { MainPageComponent } from '../05.pages';
+import { Navigate } from './AppRoute';
 
 export function App() {
-	return (
-		<MainLayout>
-			<AppRoutes />
-		</MainLayout>
-	);
+	return <Navigate />;
 }
