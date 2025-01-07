@@ -1,4 +1,4 @@
-import { ReactEventHandler } from 'react';
+import { memo, ReactEventHandler } from 'react';
 import { BaseComponentProps } from '../base';
 
 interface InputProps extends BaseComponentProps {
@@ -8,20 +8,16 @@ interface InputProps extends BaseComponentProps {
 	onFocus?: ReactEventHandler<HTMLInputElement>;
 }
 
-export function Input({
-	className,
-	onClick,
-	onChange,
-	onBlur,
-	onFocus,
-}: InputProps) {
-	return (
-		<input
-			className={className}
-			onClick={onClick}
-			onChange={onChange}
-			onBlur={onBlur}
-			onFocus={onFocus}
-		/>
-	);
-}
+export const Input = memo(
+	({ className, onClick, onChange, onBlur, onFocus }: InputProps) => {
+		return (
+			<input
+				className={className}
+				onClick={onClick}
+				onChange={onChange}
+				onBlur={onBlur}
+				onFocus={onFocus}
+			/>
+		);
+	}
+);
