@@ -1,5 +1,8 @@
 import { memo } from 'react';
+import { BasePageComponent } from '../../01.shared';
 
-export const HeaderComponent = memo(({ children }: any) => {
+interface HeaderComponentProps extends BasePageComponent {}
+
+export const HeaderComponent = memo(({ view_type }: BasePageComponent) => {
 	return <div></div>;
 });
