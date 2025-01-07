@@ -10,6 +10,9 @@ export const Navigate = memo(() => {
 	return (
 		<Routes>
 			<Route path='/' element={<MainPageComponent />}></Route>
+			<Route path='/a' element={<MainPageComponent />}></Route>
+			<Route path='/b' element={<MainPageComponent />}></Route>
+			<Route path='/c' element={<MainPageComponent />}></Route>
 		</Routes>
 	);
 });
