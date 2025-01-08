@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { App } from './06.application';
+import { App } from './04.application';
 
 createRoot(document.getElementById('root')!).render(
 	<BrowserRouter>

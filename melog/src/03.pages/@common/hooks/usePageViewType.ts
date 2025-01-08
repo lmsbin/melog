@@ -3,9 +3,15 @@ import {
 	ENUM_CONTENT_VIEW_TYPE,
 	ENUM_FOOTER_VIEW_TYPE,
 	ENUM_HEADER_VIEW_TYPE,
-} from '../../01.shared';
+} from '../../../01.shared';
 
-export function usePageViewType() {
+interface pageViewTypes {
+	header_view_type: ENUM_HEADER_VIEW_TYPE;
+	content_view_type: ENUM_CONTENT_VIEW_TYPE;
+	footer_view_type: ENUM_FOOTER_VIEW_TYPE;
+}
+
+export function usePageViewType(): pageViewTypes {
 	const { pathname, search, state } = useLocation();
 
 	const header_view_type = getHeaderViewType(pathname);
