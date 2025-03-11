@@ -1,3 +1,3 @@
 export function Application() {
-	return <div></div>;
+	return <div>어플?</div>;
 }

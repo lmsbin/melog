@@ -1,10 +1,10 @@
 import { memo, MouseEvent, ReactNode, useCallback } from 'react';
+import { BaseComponentProps } from '../../type';
 
-export type ButtonProps = {
-	className?: string;
+export interface ButtonProps extends BaseComponentProps {
 	children?: ReactNode;
 	onClick?: (e: MouseEvent) => void;
-};
+}
 
 export const Button = memo(function Button(props: ButtonProps) {
 	const { className, children } = props;

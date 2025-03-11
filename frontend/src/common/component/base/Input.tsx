@@ -8,22 +8,23 @@ import {
 	Ref,
 	useCallback,
 } from 'react';
+import { BaseComponentProps } from '../../type';
 
-export type InputProps = {
-	className?: string;
+export interface InputProps extends BaseComponentProps {
 	disabled?: boolean;
 	type?: HTMLInputTypeAttribute;
-	onClick?: (e: MouseEvent) => void;
-	onChange?: (e: ChangeEvent) => void;
-	onKeyDown?: (e: KeyboardEvent) => void;
-};
+	placeholder?: string;
+	onClick?: (e: MouseEvent<HTMLInputElement>) => void;
+	onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+	onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
+}
 
 export const Input = memo(
 	forwardRef(function Input(props: InputProps, ref: Ref<HTMLInputElement>) {
-		const { className, disabled, type } = props;
+		const { className, disabled, type, placeholder } = props;
 
 		const onClick = useCallback(
-			(e: MouseEvent) => {
+			(e: MouseEvent<HTMLInputElement>) => {
 				e.stopPropagation();
 				props.onClick?.(e);
 			},
@@ -31,14 +32,14 @@ export const Input = memo(
 		);
 
 		const onChange = useCallback(
-			(e: ChangeEvent) => {
+			(e: ChangeEvent<HTMLInputElement>) => {
 				props.onChange?.(e);
 			},
 			[props.onChange]
 		);
 
 		const onKeyDown = useCallback(
-			(e: KeyboardEvent) => {
+			(e: KeyboardEvent<HTMLInputElement>) => {
 				props.onKeyDown?.(e);
 			},
 			[props.onKeyDown]
@@ -53,6 +54,7 @@ export const Input = memo(
 				onClick={onClick}
 				onChange={onChange}
 				onKeyDown={onKeyDown}
+				placeholder={placeholder}
 			/>
 		);
 	})
