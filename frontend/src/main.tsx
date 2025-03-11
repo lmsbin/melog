@@ -1,7 +1,10 @@
-import { StrictMode } from 'react';
+import { lazy, StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Application } from './application';
-import { TestApplication } from './__test__';
+
+const Application = lazy(() => import('./application/application'));
+const TestApplication = lazy(
+	() => import('./__test__/application/test_application')
+);
 
 (function main() {
 	const dev_mode = import.meta.env.MODE;
