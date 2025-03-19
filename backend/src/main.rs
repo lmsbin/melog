@@ -4,11 +4,10 @@ use chrono_tz::Asia::Seoul;
 use once_cell::sync::Lazy;
 use reqwest::{Client, header};
 use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
 use std::sync::Mutex;
 
 #[derive(Serialize, Deserialize, Debug)]
-struct userData {
+struct UserData {
     character_name: String,
     world_name: String,
     character_gender: String,
@@ -22,12 +21,12 @@ struct userData {
 }
 
 #[derive(Serialize, Deserialize, Clone)]
-struct userocid {
+struct UserOcid {
     ocid: String,
 }
 
 // 전역 변수 선언 (Mutex로 안전하게 보호)
-static GLOBAL_OCID: Lazy<Mutex<Option<userocid>>> = Lazy::new(|| Mutex::new(None));
+static GLOBAL_OCID: Lazy<Mutex<Option<UserOcid>>> = Lazy::new(|| Mutex::new(None));
 
 #[tokio::main]
 async fn main() {
@@ -39,7 +38,7 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn get_ocid() -> Result<Json<userocid>, (StatusCode, &'static str)> {
+async fn get_ocid() -> Result<Json<UserOcid>, (StatusCode, &'static str)> {
     let client = Client::new();
 
     // 요청할 API의 URL
@@ -59,22 +58,22 @@ async fn get_ocid() -> Result<Json<userocid>, (StatusCode, &'static str)> {
     println!("{}", response.status());
     // 응답 결과 확인
     if response.status().is_success() {
-        let user_ocid: userocid = response
+        let userocid: UserOcid = response
             .json()
             .await
             .expect("Failed to parse response JSON");
 
         // 전역 변수 업데이트
         let mut global_ocid = GLOBAL_OCID.lock().unwrap();
-        *global_ocid = Some(user_ocid.clone());
+        *global_ocid = Some(userocid.clone());
 
-        Ok(Json(user_ocid))
+        Ok(Json(userocid))
     } else {
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
 }
 
-async fn get_user_info() -> Result<Json<userData>, (StatusCode, &'static str)> {
+async fn get_user_info() -> Result<Json<UserData>, (StatusCode, &'static str)> {
     let client = Client::new();
     let now_time = (Utc::now() - Duration::days(1))
         .with_timezone(&Seoul)
@@ -105,7 +104,7 @@ async fn get_user_info() -> Result<Json<userData>, (StatusCode, &'static str)> {
     println!("{}", response.status());
     // 응답 결과 확인
     if response.status().is_success() {
-        let user_data: userData = response
+        let user_data: UserData = response
             .json()
             .await
             .expect("Failed to parse response JSON");
