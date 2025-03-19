@@ -30,22 +30,48 @@ static GLOBAL_OCID: Lazy<Mutex<Option<UserOcid>>> = Lazy::new(|| Mutex::new(None
 
 #[tokio::main]
 async fn main() {
+    let args: Vec<String> = std::env::args().collect();
+
+    let key = if args.len() == 2 {
+        let value = &args[1];
+        if value.is_empty() {
+            println!("오류: 빈 값이 전달되었습니다.");
+            return;
+        }
+        value.clone() // 값 체크 후 클론하여 저장
+    } else {
+        println!("사용법: cargo run <arg>");
+        return;
+    };
+
     let app = Router::new()
-        .route("/getOcid", get(get_ocid))
-        .route("/getUserInfo", get(get_user_info));
+        .route(
+            "/getOcid",
+            get({
+                let key = key.clone();
+                move || get_ocid(key)
+            }),
+        )
+        .route(
+            "/getUserInfo",
+            get({
+                let key = key.clone();
+                move || get_user_info(key)
+            }),
+        );
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn get_ocid() -> Result<Json<UserOcid>, (StatusCode, &'static str)> {
+async fn get_ocid(key: String) -> Result<Json<UserOcid>, (StatusCode, &'static str)> {
     let client = Client::new();
 
     // 요청할 API의 URL
     let url = "https://open.api.nexon.com/maplestory/v1/id?character_name={nickname}";
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
-    headers.insert("x-nxopen-api-key", "{API_KEY}".parse().unwrap());
+    headers.insert("x-nxopen-api-key", key.parse().unwrap());
 
     // POST 요청 보내기
     let response = client
@@ -73,7 +99,7 @@ async fn get_ocid() -> Result<Json<UserOcid>, (StatusCode, &'static str)> {
     }
 }
 
-async fn get_user_info() -> Result<Json<UserData>, (StatusCode, &'static str)> {
+async fn get_user_info(key: String) -> Result<Json<UserData>, (StatusCode, &'static str)> {
     let client = Client::new();
     let now_time = (Utc::now() - Duration::days(1))
         .with_timezone(&Seoul)
@@ -91,7 +117,7 @@ async fn get_user_info() -> Result<Json<UserData>, (StatusCode, &'static str)> {
     println!("{}", url);
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
-    headers.insert("x-nxopen-api-key", "{API_KEY}".parse().unwrap());
+    headers.insert("x-nxopen-api-key", key.parse().unwrap());
 
     // POST 요청 보내기
     let response = client
