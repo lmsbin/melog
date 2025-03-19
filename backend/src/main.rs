@@ -28,6 +28,7 @@ struct UserOcid {
 }
 
 #[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 struct Character {
     nick_name: String,
 }
@@ -52,8 +53,6 @@ async fn main() {
         key: Mutex::new(args[1].clone()),
     });
 
-    println!("{}", api_key.key.lock().unwrap());
-
     let app = Router::new()
         .route("/getOcid", post(get_ocid))
         .route("/getUserInfo", get(get_user_info))
@@ -69,7 +68,6 @@ async fn get_ocid(
 ) -> Result<Json<UserOcid>, (StatusCode, &'static str)> {
     let client = Client::new();
 
-    println!("{}", character.nick_name);
     // 요청할 API의 URL
     let url = format!(
         "https://open.api.nexon.com/maplestory/v1/id?character_name={}",
@@ -90,7 +88,6 @@ async fn get_ocid(
         .await
         .expect("Failed to send request");
 
-    println!("{}", response.status());
     // 응답 결과 확인
     if response.status().is_success() {
         let userocid: UserOcid = response
@@ -117,7 +114,6 @@ async fn get_user_info(
         .format("%Y-%m-%d")
         .to_string();
 
-    println!("{}", now_time);
     // 요청할 API의 URL
     let url = format!(
         "https://open.api.nexon.com/maplestory/v1/character/basic?ocid={}&date={}",
@@ -125,7 +121,6 @@ async fn get_user_info(
         now_time.to_string()
     );
 
-    println!("{}", url);
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
     headers.insert(
@@ -141,7 +136,6 @@ async fn get_user_info(
         .await
         .expect("Failed to send request");
 
-    println!("{}", response.status());
     // 응답 결과 확인
     if response.status().is_success() {
         let user_data: UserData = response
