@@ -1,10 +1,12 @@
-use axum::{Router, http::StatusCode, response::Json, routing::get, routing::post};
+use axum::{
+    Router, extract::Extension, http::StatusCode, response::Json, routing::get, routing::post,
+};
 use chrono::{Duration, Utc};
 use chrono_tz::Asia::Seoul;
 use once_cell::sync::Lazy;
 use reqwest::{Client, header};
 use serde::{Deserialize, Serialize};
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct UserData {
@@ -25,6 +27,15 @@ struct UserOcid {
     ocid: String,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
+struct Character {
+    nick_name: String,
+}
+
+struct API {
+    key: Mutex<String>,
+}
+
 // 전역 변수 선언 (Mutex로 안전하게 보호)
 static GLOBAL_OCID: Lazy<Mutex<Option<UserOcid>>> = Lazy::new(|| Mutex::new(None));
 
@@ -32,46 +43,44 @@ static GLOBAL_OCID: Lazy<Mutex<Option<UserOcid>>> = Lazy::new(|| Mutex::new(None
 async fn main() {
     let args: Vec<String> = std::env::args().collect();
 
-    let key = if args.len() == 2 {
-        let value = &args[1];
-        if value.is_empty() {
-            println!("오류: 빈 값이 전달되었습니다.");
-            return;
-        }
-        value.clone() // 값 체크 후 클론하여 저장
-    } else {
+    if args.len() < 2 {
         println!("사용법: cargo run <arg>");
         return;
-    };
+    }
+
+    let api_key = Arc::new(API {
+        key: Mutex::new(args[1].clone()),
+    });
+
+    println!("{}", api_key.key.lock().unwrap());
 
     let app = Router::new()
-        .route(
-            "/getOcid",
-            get({
-                let key = key.clone();
-                move || get_ocid(key)
-            }),
-        )
-        .route(
-            "/getUserInfo",
-            get({
-                let key = key.clone();
-                move || get_user_info(key)
-            }),
-        );
+        .route("/getOcid", post(get_ocid))
+        .route("/getUserInfo", get(get_user_info))
+        .layer(Extension(api_key));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn get_ocid(key: String) -> Result<Json<UserOcid>, (StatusCode, &'static str)> {
+async fn get_ocid(
+    Extension(api_key): Extension<Arc<API>>,
+    Json(character): Json<Character>,
+) -> Result<Json<UserOcid>, (StatusCode, &'static str)> {
     let client = Client::new();
 
+    println!("{}", character.nick_name);
     // 요청할 API의 URL
-    let url = "https://open.api.nexon.com/maplestory/v1/id?character_name={nickname}";
+    let url = format!(
+        "https://open.api.nexon.com/maplestory/v1/id?character_name={}",
+        character.nick_name
+    );
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
-    headers.insert("x-nxopen-api-key", key.parse().unwrap());
+    headers.insert(
+        "x-nxopen-api-key",
+        api_key.key.lock().unwrap().parse().unwrap(),
+    );
 
     // POST 요청 보내기
     let response = client
@@ -99,7 +108,9 @@ async fn get_ocid(key: String) -> Result<Json<UserOcid>, (StatusCode, &'static s
     }
 }
 
-async fn get_user_info(key: String) -> Result<Json<UserData>, (StatusCode, &'static str)> {
+async fn get_user_info(
+    Extension(api_key): Extension<Arc<API>>,
+) -> Result<Json<UserData>, (StatusCode, &'static str)> {
     let client = Client::new();
     let now_time = (Utc::now() - Duration::days(1))
         .with_timezone(&Seoul)
@@ -117,7 +128,10 @@ async fn get_user_info(key: String) -> Result<Json<UserData>, (StatusCode, &'sta
     println!("{}", url);
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
-    headers.insert("x-nxopen-api-key", key.parse().unwrap());
+    headers.insert(
+        "x-nxopen-api-key",
+        api_key.key.lock().unwrap().parse().unwrap(),
+    );
 
     // POST 요청 보내기
     let response = client
