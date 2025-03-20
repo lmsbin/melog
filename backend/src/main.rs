@@ -38,7 +38,7 @@ struct API {
 }
 
 // 전역 변수 선언 (Mutex로 안전하게 보호)
-static GLOBAL_OCID: Lazy<Mutex<Option<UserOcid>>> = Lazy::new(|| Mutex::new(None));
+static OCID: Lazy<Mutex<String>> = Lazy::new(|| Mutex::new(String::new()));
 
 #[tokio::main]
 async fn main() {
@@ -96,8 +96,8 @@ async fn get_ocid(
             .expect("Failed to parse response JSON");
 
         // 전역 변수 업데이트
-        let mut global_ocid = GLOBAL_OCID.lock().unwrap();
-        *global_ocid = Some(userocid.clone());
+        let mut ocid = OCID.lock().unwrap();
+        *ocid = userocid.ocid.clone();
 
         Ok(Json(userocid))
     } else {
@@ -117,7 +117,7 @@ async fn get_user_info(
     // 요청할 API의 URL
     let url = format!(
         "https://open.api.nexon.com/maplestory/v1/character/basic?ocid={}&date={}",
-        "{ocid}".to_string(),
+        OCID.lock().unwrap().to_string(),
         now_time.to_string()
     );
 
