@@ -12,7 +12,7 @@ pub struct UserOcid {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct UserData {
+pub struct UserDefaultData {
     character_name: String,
     world_name: String,
     character_gender: String,
@@ -23,6 +23,18 @@ pub struct UserData {
     character_exp_rate: String,
     character_guild_name: String,
     character_image: String,
+    character_date_create: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UserStatData {
+    pub final_stat: Vec<Stat>,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Stat {
+    pub stat_name: String,
+    pub stat_value: String,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -79,9 +91,9 @@ pub async fn get_ocid(
     }
 }
 
-pub async fn get_user_info(
+pub async fn get_user_default_info(
     Extension(api_key): Extension<Arc<API>>,
-) -> Result<Json<UserData>, (StatusCode, &'static str)> {
+) -> Result<Json<UserDefaultData>, (StatusCode, &'static str)> {
     let client = Client::new();
     let now_time = (Utc::now() - Duration::days(1))
         .with_timezone(&Seoul)
@@ -112,12 +124,56 @@ pub async fn get_user_info(
 
     // 응답 결과 확인
     if response.status().is_success() {
-        let user_data: UserData = response
+        let user_data: UserDefaultData = response
             .json()
             .await
             .expect("Failed to parse response JSON");
 
         Ok(Json(user_data))
+    } else {
+        Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
+    }
+}
+
+pub async fn get_user_stat_info(
+    Extension(api_key): Extension<Arc<API>>,
+) -> Result<Json<UserStatData>, (StatusCode, &'static str)> {
+    let client = Client::new();
+    let now_time = (Utc::now() - Duration::days(1))
+        .with_timezone(&Seoul)
+        .format("%Y-%m-%d")
+        .to_string();
+
+    // 요청할 API의 URL
+    let url = format!(
+        "https://open.api.nexon.com/maplestory/v1/character/stat?ocid={}&date={}",
+        api_key.ocid.lock().unwrap().to_string(),
+        now_time.to_string()
+    );
+
+    // 요청 헤더 정의
+    let mut headers = header::HeaderMap::new();
+    headers.insert(
+        "x-nxopen-api-key",
+        api_key.key.lock().unwrap().parse().unwrap(),
+    );
+
+    // POST 요청 보내기
+    let response = client
+        .get(url)
+        .headers(headers)
+        .send()
+        .await
+        .expect("Failed to send request");
+
+    // 응답 결과 확인
+    if response.status().is_success() {
+        let user_stat_data: UserStatData = response
+            .json()
+            .await
+            .expect("Failed to parse response JSON");
+
+        Ok(Json(user_stat_data))
     } else {
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
