@@ -2,7 +2,6 @@ use axum::Extension;
 use axum::{http::StatusCode, response::Json};
 use chrono::{Duration, Utc};
 use chrono_tz::Asia::Seoul;
-use once_cell::sync::Lazy;
 use reqwest::{Client, header};
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
@@ -34,10 +33,8 @@ pub struct Character {
 
 pub struct API {
     pub key: Mutex<String>,
+    pub ocid: Mutex<String>,
 }
-
-// 전역 변수 선언 (Mutex로 안전하게 보호)
-static OCID: Lazy<Mutex<String>> = Lazy::new(|| Mutex::new(String::new()));
 
 pub async fn get_ocid(
     Extension(api_key): Extension<Arc<API>>,
@@ -73,7 +70,7 @@ pub async fn get_ocid(
             .expect("Failed to parse response JSON");
 
         // 전역 변수 업데이트
-        let mut ocid = OCID.lock().unwrap();
+        let mut ocid = api_key.ocid.lock().unwrap();
         *ocid = userocid.ocid.clone();
 
         Ok(Json(userocid))
@@ -94,7 +91,7 @@ pub async fn get_user_info(
     // 요청할 API의 URL
     let url = format!(
         "https://open.api.nexon.com/maplestory/v1/character/basic?ocid={}&date={}",
-        OCID.lock().unwrap().to_string(),
+        api_key.ocid.lock().unwrap().to_string(),
         now_time.to_string()
     );
 

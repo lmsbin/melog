@@ -15,6 +15,7 @@ async fn main() {
 
     let api_key = Arc::new(API {
         key: Mutex::new(args[1].clone()),
+        ocid: Mutex::new("".to_string()),
     });
 
     let app = Router::new()
