@@ -37,6 +37,19 @@ pub struct Stat {
     pub stat_value: String,
 }
 
+#[derive(Deserialize, Serialize, Debug)]
+pub struct HyperStat {
+    pub stat_type: String,
+    pub stat_point: Option<u32>, // null을 허용하기 위해 Option 사용
+    pub stat_level: u32,
+    pub stat_increase: Option<String>,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct UserHyperStatData {
+    pub hyper_stat_preset_1: Vec<HyperStat>,
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Character {
@@ -174,6 +187,58 @@ pub async fn get_user_stat_info(
             .expect("Failed to parse response JSON");
 
         Ok(Json(user_stat_data))
+    } else {
+        Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
+    }
+}
+
+pub async fn get_user_hyper_stat_info(
+    Extension(api_key): Extension<Arc<API>>,
+) -> Result<Json<UserHyperStatData>, (StatusCode, &'static str)> {
+    let client = Client::new();
+    let now_time = (Utc::now() - Duration::days(1))
+        .with_timezone(&Seoul)
+        .format("%Y-%m-%d")
+        .to_string();
+
+    // 요청할 API의 URL
+    let url = format!(
+        "https://open.api.nexon.com/maplestory/v1/character/hyper-stat?ocid={}&date={}",
+        api_key.ocid.lock().unwrap().to_string(),
+        now_time.to_string()
+    );
+
+    // 요청 헤더 정의
+    let mut headers = header::HeaderMap::new();
+    headers.insert(
+        "x-nxopen-api-key",
+        api_key.key.lock().unwrap().parse().unwrap(),
+    );
+
+    // POST 요청 보내기
+    let response = client
+        .get(url)
+        .headers(headers)
+        .send()
+        .await
+        .expect("Failed to send request");
+
+    // 응답 결과 확인
+    if response.status().is_success() {
+        let user_hyper_stat_data: UserHyperStatData = response
+            .json()
+            .await
+            .expect("Failed to parse response JSON");
+
+        let filtered_data = UserHyperStatData {
+            hyper_stat_preset_1: user_hyper_stat_data
+                .hyper_stat_preset_1
+                .into_iter()
+                .filter(|stat| stat.stat_point.is_some() && stat.stat_increase.is_some())
+                .collect(),
+        };
+
+        Ok(Json(filtered_data))
     } else {
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
