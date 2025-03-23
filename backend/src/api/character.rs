@@ -104,22 +104,7 @@ pub async fn get_ocid(
     }
 }
 
-pub async fn get_user_default_info(
-    Extension(api_key): Extension<Arc<API>>,
-) -> Result<Json<UserDefaultData>, (StatusCode, &'static str)> {
-    let client = Client::new();
-    let now_time = (Utc::now() - Duration::days(1))
-        .with_timezone(&Seoul)
-        .format("%Y-%m-%d")
-        .to_string();
-
-    // 요청할 API의 URL
-    let url = format!(
-        "https://open.api.nexon.com/maplestory/v1/character/basic?ocid={}&date={}",
-        api_key.ocid.lock().unwrap().to_string(),
-        now_time.to_string()
-    );
-
+pub async fn request_parser(api_key: Arc<API>, url: String) -> reqwest::Response {
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
     headers.insert(
@@ -128,12 +113,34 @@ pub async fn get_user_default_info(
     );
 
     // POST 요청 보내기
-    let response = client
+    let response = Client::new()
         .get(url)
         .headers(headers)
         .send()
         .await
         .expect("Failed to send request");
+
+    return response;
+}
+
+pub async fn get_user_default_info(
+    Extension(api_key): Extension<Arc<API>>,
+) -> Result<Json<UserDefaultData>, (StatusCode, &'static str)> {
+    let now_time = (Utc::now() - Duration::days(1))
+        .with_timezone(&Seoul)
+        .format("%Y-%m-%d")
+        .to_string();
+
+    // POST 요청 보내기
+    let response = request_parser(
+        api_key.clone(),
+        format!(
+            "https://open.api.nexon.com/maplestory/v1/character/basic?ocid={}&date={}",
+            api_key.ocid.lock().unwrap().to_string(),
+            now_time.to_string()
+        ),
+    )
+    .await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -151,33 +158,21 @@ pub async fn get_user_default_info(
 pub async fn get_user_stat_info(
     Extension(api_key): Extension<Arc<API>>,
 ) -> Result<Json<UserStatData>, (StatusCode, &'static str)> {
-    let client = Client::new();
     let now_time = (Utc::now() - Duration::days(1))
         .with_timezone(&Seoul)
         .format("%Y-%m-%d")
         .to_string();
 
-    // 요청할 API의 URL
-    let url = format!(
-        "https://open.api.nexon.com/maplestory/v1/character/stat?ocid={}&date={}",
-        api_key.ocid.lock().unwrap().to_string(),
-        now_time.to_string()
-    );
-
-    // 요청 헤더 정의
-    let mut headers = header::HeaderMap::new();
-    headers.insert(
-        "x-nxopen-api-key",
-        api_key.key.lock().unwrap().parse().unwrap(),
-    );
-
     // POST 요청 보내기
-    let response = client
-        .get(url)
-        .headers(headers)
-        .send()
-        .await
-        .expect("Failed to send request");
+    let response = request_parser(
+        api_key.clone(),
+        format!(
+            "https://open.api.nexon.com/maplestory/v1/character/stat?ocid={}&date={}",
+            api_key.ocid.lock().unwrap().to_string(),
+            now_time.to_string()
+        ),
+    )
+    .await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -195,33 +190,21 @@ pub async fn get_user_stat_info(
 pub async fn get_user_hyper_stat_info(
     Extension(api_key): Extension<Arc<API>>,
 ) -> Result<Json<UserHyperStatData>, (StatusCode, &'static str)> {
-    let client = Client::new();
     let now_time = (Utc::now() - Duration::days(1))
         .with_timezone(&Seoul)
         .format("%Y-%m-%d")
         .to_string();
 
-    // 요청할 API의 URL
-    let url = format!(
-        "https://open.api.nexon.com/maplestory/v1/character/hyper-stat?ocid={}&date={}",
-        api_key.ocid.lock().unwrap().to_string(),
-        now_time.to_string()
-    );
-
-    // 요청 헤더 정의
-    let mut headers = header::HeaderMap::new();
-    headers.insert(
-        "x-nxopen-api-key",
-        api_key.key.lock().unwrap().parse().unwrap(),
-    );
-
     // POST 요청 보내기
-    let response = client
-        .get(url)
-        .headers(headers)
-        .send()
-        .await
-        .expect("Failed to send request");
+    let response = request_parser(
+        api_key.clone(),
+        format!(
+            "https://open.api.nexon.com/maplestory/v1/character/hyper-stat?ocid={}&date={}",
+            api_key.ocid.lock().unwrap().to_string(),
+            now_time.to_string()
+        ),
+    )
+    .await;
 
     // 응답 결과 확인
     if response.status().is_success() {
