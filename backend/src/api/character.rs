@@ -60,6 +60,19 @@ pub struct Propensity {
     pub charm_level: i8,
 }
 
+#[derive(Deserialize, Serialize, Debug)]
+pub struct AbilityInfo {
+    pub ability_no: String,
+    pub ability_grade: String,
+    pub ability_value: String,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Ability {
+    pub ability_grade: String,
+    pub ability_info: Vec<AbilityInfo>,
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Character {
@@ -264,6 +277,38 @@ pub async fn get_user_propensity(
             .expect("Failed to parse response JSON");
 
         Ok(Json(user_propensity))
+    } else {
+        Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
+    }
+}
+
+pub async fn get_user_ability(
+    Extension(api_key): Extension<Arc<API>>,
+) -> Result<Json<Ability>, (StatusCode, &'static str)> {
+    let now_time = (Utc::now() - Duration::days(1))
+        .with_timezone(&Seoul)
+        .format("%Y-%m-%d")
+        .to_string();
+
+    // POST 요청 보내기
+    let response = request_parser(
+        api_key.clone(),
+        format!(
+            "https://open.api.nexon.com/maplestory/v1/character/ability?ocid={}&date={}",
+            api_key.ocid.lock().unwrap().to_string(),
+            now_time.to_string()
+        ),
+    )
+    .await;
+
+    // 응답 결과 확인
+    if response.status().is_success() {
+        let user_ability: Ability = response
+            .json()
+            .await
+            .expect("Failed to parse response JSON");
+
+        Ok(Json(user_ability))
     } else {
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
