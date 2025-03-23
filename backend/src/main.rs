@@ -1,7 +1,8 @@
 mod api;
 
 use api::character::{
-    API, get_ocid, get_user_default_info, get_user_hyper_stat_info, get_user_stat_info,
+    API, get_ocid, get_user_default_info, get_user_hyper_stat_info, get_user_propensity,
+    get_user_stat_info,
 };
 use axum::{Router, extract::Extension, routing::get, routing::post};
 use std::sync::{Arc, Mutex};
@@ -25,6 +26,7 @@ async fn main() {
         .route("/getUserInfo", get(get_user_default_info))
         .route("/getUserStatInfo", get(get_user_stat_info))
         .route("/getUserHyperStatInfo", get(get_user_hyper_stat_info))
+        .route("/getUserPropensity", get(get_user_propensity))
         .layer(Extension(api_key));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();

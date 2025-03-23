@@ -50,6 +50,16 @@ pub struct UserHyperStatData {
     pub hyper_stat_preset_1: Vec<HyperStat>,
 }
 
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Propensity {
+    pub charisma_level: i8,
+    pub sensibility_level: i8,
+    pub insight_level: i8,
+    pub willingness_level: i8,
+    pub handicraft_level: i8,
+    pub charm_level: i8,
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Character {
@@ -222,6 +232,38 @@ pub async fn get_user_hyper_stat_info(
         };
 
         Ok(Json(filtered_data))
+    } else {
+        Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
+    }
+}
+
+pub async fn get_user_propensity(
+    Extension(api_key): Extension<Arc<API>>,
+) -> Result<Json<Propensity>, (StatusCode, &'static str)> {
+    let now_time = (Utc::now() - Duration::days(1))
+        .with_timezone(&Seoul)
+        .format("%Y-%m-%d")
+        .to_string();
+
+    // POST 요청 보내기
+    let response = request_parser(
+        api_key.clone(),
+        format!(
+            "https://open.api.nexon.com/maplestory/v1/character/propensity?ocid={}&date={}",
+            api_key.ocid.lock().unwrap().to_string(),
+            now_time.to_string()
+        ),
+    )
+    .await;
+
+    // 응답 결과 확인
+    if response.status().is_success() {
+        let user_propensity: Propensity = response
+            .json()
+            .await
+            .expect("Failed to parse response JSON");
+
+        Ok(Json(user_propensity))
     } else {
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
