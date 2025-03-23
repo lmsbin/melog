@@ -11,68 +11,6 @@ pub struct UserOcid {
     ocid: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct UserDefaultData {
-    character_name: String,
-    world_name: String,
-    character_gender: String,
-    character_class: String,
-    character_class_level: String,
-    character_level: i16,
-    character_exp: i64,
-    character_exp_rate: String,
-    character_guild_name: String,
-    character_image: String,
-    character_date_create: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct UserStatData {
-    pub final_stat: Vec<Stat>,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-pub struct Stat {
-    pub stat_name: String,
-    pub stat_value: String,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-pub struct HyperStat {
-    pub stat_type: String,
-    pub stat_point: Option<u32>, // null을 허용하기 위해 Option 사용
-    pub stat_level: u32,
-    pub stat_increase: Option<String>,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-pub struct UserHyperStatData {
-    pub hyper_stat_preset_1: Vec<HyperStat>,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-pub struct Propensity {
-    pub charisma_level: i8,
-    pub sensibility_level: i8,
-    pub insight_level: i8,
-    pub willingness_level: i8,
-    pub handicraft_level: i8,
-    pub charm_level: i8,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-pub struct AbilityInfo {
-    pub ability_no: String,
-    pub ability_grade: String,
-    pub ability_value: String,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-pub struct Ability {
-    pub ability_grade: String,
-    pub ability_info: Vec<AbilityInfo>,
-}
-
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Character {
@@ -157,6 +95,21 @@ pub async fn request_parser(api_key: Arc<API>, kind: &str) -> reqwest::Response 
     return response;
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UserDefaultData {
+    character_name: String,
+    world_name: String,
+    character_gender: String,
+    character_class: String,
+    character_class_level: String,
+    character_level: i16,
+    character_exp: i64,
+    character_exp_rate: String,
+    character_guild_name: String,
+    character_image: String,
+    character_date_create: String,
+}
+
 pub async fn get_user_default_info(
     Extension(api_key): Extension<Arc<API>>,
 ) -> Result<Json<UserDefaultData>, (StatusCode, &'static str)> {
@@ -176,6 +129,17 @@ pub async fn get_user_default_info(
     }
 }
 
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Stat {
+    pub stat_name: String,
+    pub stat_value: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UserStatData {
+    pub final_stat: Vec<Stat>,
+}
+
 pub async fn get_user_stat_info(
     Extension(api_key): Extension<Arc<API>>,
 ) -> Result<Json<UserStatData>, (StatusCode, &'static str)> {
@@ -193,6 +157,19 @@ pub async fn get_user_stat_info(
     } else {
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct HyperStat {
+    pub stat_type: String,
+    pub stat_point: Option<u32>, // null을 허용하기 위해 Option 사용
+    pub stat_level: u32,
+    pub stat_increase: Option<String>,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct UserHyperStatData {
+    pub hyper_stat_preset_1: Vec<HyperStat>,
 }
 
 pub async fn get_user_hyper_stat_info(
@@ -222,6 +199,16 @@ pub async fn get_user_hyper_stat_info(
     }
 }
 
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Propensity {
+    pub charisma_level: i8,
+    pub sensibility_level: i8,
+    pub insight_level: i8,
+    pub willingness_level: i8,
+    pub handicraft_level: i8,
+    pub charm_level: i8,
+}
+
 pub async fn get_user_propensity(
     Extension(api_key): Extension<Arc<API>>,
 ) -> Result<Json<Propensity>, (StatusCode, &'static str)> {
@@ -241,6 +228,19 @@ pub async fn get_user_propensity(
     }
 }
 
+#[derive(Deserialize, Serialize, Debug)]
+pub struct AbilityInfo {
+    pub ability_no: String,
+    pub ability_grade: String,
+    pub ability_value: String,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Ability {
+    pub ability_grade: String,
+    pub ability_info: Vec<AbilityInfo>,
+}
+
 pub async fn get_user_ability(
     Extension(api_key): Extension<Arc<API>>,
 ) -> Result<Json<Ability>, (StatusCode, &'static str)> {
@@ -250,6 +250,94 @@ pub async fn get_user_ability(
     // 응답 결과 확인
     if response.status().is_success() {
         let user_ability: Ability = response
+            .json()
+            .await
+            .expect("Failed to parse response JSON");
+
+        Ok(Json(user_ability))
+    } else {
+        Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
+    }
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct ItemEquipment {}
+
+// TODO : 사용자 착용 아이템 정보
+// pub async fn get_user_item_equipment(
+//     Extension(api_key): Extension<Arc<API>>,
+// ) -> Result<Json<ItemEquipment>, (StatusCode, &'static str)> {
+//     // POST 요청 보내기
+//     let response = request_parser(api_key.clone(), "item-equipment").await;
+
+//     // 응답 결과 확인
+//     if response.status().is_success() {
+//         let user_ability: ItemEquipment = response
+//             .json()
+//             .await
+//             .expect("Failed to parse response JSON");
+
+//         Ok(Json(user_ability))
+//     } else {
+//         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
+//     }
+// }
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct CashItemEquipment {}
+
+// TODO : 캐시 사용자 착용 아이템 정보
+// pub async fn get_user_cash_item_equipment(
+//     Extension(api_key): Extension<Arc<API>>,
+// ) -> Result<Json<CashItemEquipment>, (StatusCode, &'static str)> {
+//     // POST 요청 보내기
+//     let response = request_parser(api_key.clone(), "cashitem-equipment").await;
+
+//     // 응답 결과 확인
+//     if response.status().is_success() {
+//         let user_ability: CashItemEquipment = response
+//             .json()
+//             .await
+//             .expect("Failed to parse response JSON");
+
+//         Ok(Json(user_ability))
+//     } else {
+//         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
+//     }
+// }
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct SymbolInfo {
+    pub symbol_name: String,
+    pub symbol_icon: String,
+    pub symbol_force: String,
+    pub symbol_level: i8,
+    pub symbol_str: String,
+    pub symbol_dex: String,
+    pub symbol_int: String,
+    pub symbol_luk: String,
+    pub symbol_hp: String,
+    pub symbol_drop_rate: String,
+    pub symbol_meso_rate: String,
+    pub symbol_exp_rate: String,
+    pub symbol_growth_count: i32,
+    pub symbol_require_growth_count: i32,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Symbol {
+    pub symbol: Vec<SymbolInfo>,
+}
+
+pub async fn get_user_symbol_equipment(
+    Extension(api_key): Extension<Arc<API>>,
+) -> Result<Json<Symbol>, (StatusCode, &'static str)> {
+    // POST 요청 보내기
+    let response = request_parser(api_key.clone(), "symbol-equipment").await;
+
+    // 응답 결과 확인
+    if response.status().is_success() {
+        let user_ability: Symbol = response
             .json()
             .await
             .expect("Failed to parse response JSON");
