@@ -127,12 +127,23 @@ pub async fn get_ocid(
     }
 }
 
-pub async fn request_parser(api_key: Arc<API>, url: String) -> reqwest::Response {
+pub async fn request_parser(api_key: Arc<API>, kind: &str) -> reqwest::Response {
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
     headers.insert(
         "x-nxopen-api-key",
         api_key.key.lock().unwrap().parse().unwrap(),
+    );
+
+    let now_time = (Utc::now() - Duration::days(1))
+        .with_timezone(&Seoul)
+        .format("%Y-%m-%d");
+
+    let url = format!(
+        "https://open.api.nexon.com/maplestory/v1/character/{}?ocid={}&date={}",
+        kind,
+        api_key.ocid.lock().unwrap().to_string(),
+        now_time
     );
 
     // POST 요청 보내기
@@ -149,21 +160,8 @@ pub async fn request_parser(api_key: Arc<API>, url: String) -> reqwest::Response
 pub async fn get_user_default_info(
     Extension(api_key): Extension<Arc<API>>,
 ) -> Result<Json<UserDefaultData>, (StatusCode, &'static str)> {
-    let now_time = (Utc::now() - Duration::days(1))
-        .with_timezone(&Seoul)
-        .format("%Y-%m-%d")
-        .to_string();
-
     // POST 요청 보내기
-    let response = request_parser(
-        api_key.clone(),
-        format!(
-            "https://open.api.nexon.com/maplestory/v1/character/basic?ocid={}&date={}",
-            api_key.ocid.lock().unwrap().to_string(),
-            now_time.to_string()
-        ),
-    )
-    .await;
+    let response = request_parser(api_key.clone(), "basic").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -181,21 +179,8 @@ pub async fn get_user_default_info(
 pub async fn get_user_stat_info(
     Extension(api_key): Extension<Arc<API>>,
 ) -> Result<Json<UserStatData>, (StatusCode, &'static str)> {
-    let now_time = (Utc::now() - Duration::days(1))
-        .with_timezone(&Seoul)
-        .format("%Y-%m-%d")
-        .to_string();
-
     // POST 요청 보내기
-    let response = request_parser(
-        api_key.clone(),
-        format!(
-            "https://open.api.nexon.com/maplestory/v1/character/stat?ocid={}&date={}",
-            api_key.ocid.lock().unwrap().to_string(),
-            now_time.to_string()
-        ),
-    )
-    .await;
+    let response = request_parser(api_key.clone(), "stat").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -213,21 +198,8 @@ pub async fn get_user_stat_info(
 pub async fn get_user_hyper_stat_info(
     Extension(api_key): Extension<Arc<API>>,
 ) -> Result<Json<UserHyperStatData>, (StatusCode, &'static str)> {
-    let now_time = (Utc::now() - Duration::days(1))
-        .with_timezone(&Seoul)
-        .format("%Y-%m-%d")
-        .to_string();
-
     // POST 요청 보내기
-    let response = request_parser(
-        api_key.clone(),
-        format!(
-            "https://open.api.nexon.com/maplestory/v1/character/hyper-stat?ocid={}&date={}",
-            api_key.ocid.lock().unwrap().to_string(),
-            now_time.to_string()
-        ),
-    )
-    .await;
+    let response = request_parser(api_key.clone(), "hyper-stat").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -253,21 +225,8 @@ pub async fn get_user_hyper_stat_info(
 pub async fn get_user_propensity(
     Extension(api_key): Extension<Arc<API>>,
 ) -> Result<Json<Propensity>, (StatusCode, &'static str)> {
-    let now_time = (Utc::now() - Duration::days(1))
-        .with_timezone(&Seoul)
-        .format("%Y-%m-%d")
-        .to_string();
-
     // POST 요청 보내기
-    let response = request_parser(
-        api_key.clone(),
-        format!(
-            "https://open.api.nexon.com/maplestory/v1/character/propensity?ocid={}&date={}",
-            api_key.ocid.lock().unwrap().to_string(),
-            now_time.to_string()
-        ),
-    )
-    .await;
+    let response = request_parser(api_key.clone(), "propensity").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -285,21 +244,8 @@ pub async fn get_user_propensity(
 pub async fn get_user_ability(
     Extension(api_key): Extension<Arc<API>>,
 ) -> Result<Json<Ability>, (StatusCode, &'static str)> {
-    let now_time = (Utc::now() - Duration::days(1))
-        .with_timezone(&Seoul)
-        .format("%Y-%m-%d")
-        .to_string();
-
     // POST 요청 보내기
-    let response = request_parser(
-        api_key.clone(),
-        format!(
-            "https://open.api.nexon.com/maplestory/v1/character/ability?ocid={}&date={}",
-            api_key.ocid.lock().unwrap().to_string(),
-            now_time.to_string()
-        ),
-    )
-    .await;
+    let response = request_parser(api_key.clone(), "ability").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
