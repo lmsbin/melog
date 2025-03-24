@@ -486,3 +486,56 @@ pub async fn get_user_characeter_link_skill(
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
 }
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct VMatrixInfo {
+    pub slot_id: String,
+    pub slot_level: i8,
+    pub v_core_name: Option<String>,
+    pub v_core_level: i8,
+    pub v_core_skill_1: Option<String>,
+    pub v_core_skill_2: Option<String>,
+    pub v_core_skill_3: Option<String>,
+    pub v_core_type: Option<String>,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct VMatrix {
+    pub character_v_core_equipment: Vec<VMatrixInfo>,
+}
+
+pub async fn get_user_v_matrix(
+    Extension(api_key): Extension<Arc<API>>,
+) -> Result<Json<VMatrix>, (StatusCode, &'static str)> {
+    // POST 요청 보내기
+    let response = request_parser(api_key.clone(), "vmatrix").await;
+
+    // 응답 결과 확인
+    if response.status().is_success() {
+        let user_v_matrix: VMatrix = response
+            .json()
+            .await
+            .expect("Failed to parse response JSON");
+
+        let filter_v_matrix: VMatrix = VMatrix {
+            character_v_core_equipment: user_v_matrix
+                .character_v_core_equipment
+                .into_iter()
+                .map(|matrix| VMatrixInfo {
+                    slot_id: matrix.slot_id,
+                    slot_level: matrix.slot_level,
+                    v_core_name: Some(matrix.v_core_name.unwrap_or_default()),
+                    v_core_level: matrix.v_core_level,
+                    v_core_skill_1: Some(matrix.v_core_skill_1.unwrap_or_default()),
+                    v_core_skill_2: Some(matrix.v_core_skill_2.unwrap_or_default()),
+                    v_core_skill_3: Some(matrix.v_core_skill_3.unwrap_or_default()),
+                    v_core_type: Some(matrix.v_core_type.unwrap_or_default()),
+                })
+                .collect(),
+        };
+
+        Ok(Json(filter_v_matrix))
+    } else {
+        Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
+    }
+}

@@ -3,7 +3,7 @@ mod api;
 use api::character::{
     API, get_ocid, get_user_ability, get_user_characeter_link_skill, get_user_characeter_skill,
     get_user_default_info, get_user_hyper_stat_info, get_user_propensity, get_user_set_effect,
-    get_user_stat_info, get_user_symbol_equipment,
+    get_user_stat_info, get_user_symbol_equipment, get_user_v_matrix,
 };
 use axum::{Router, extract::Extension, routing::get, routing::post};
 use std::sync::{Arc, Mutex};
@@ -36,6 +36,7 @@ async fn main() {
             "/getUserCharacterLinkSkill",
             get(get_user_characeter_link_skill),
         )
+        .route("/getUserVMatrix", get(get_user_v_matrix))
         .layer(Extension(api_key));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
