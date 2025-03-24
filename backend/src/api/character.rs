@@ -170,8 +170,14 @@ pub struct HyperStat {
 #[derive(Deserialize, Serialize, Debug)]
 pub struct UserHyperStatData {
     pub hyper_stat_preset_1: Vec<HyperStat>,
+    pub hyper_stat_preset_1_remain_point: i8,
+    pub hyper_stat_preset_2: Vec<HyperStat>,
+    pub hyper_stat_preset_2_remain_point: i8,
+    pub hyper_stat_preset_3: Vec<HyperStat>,
+    pub hyper_stat_preset_3_remain_point: i8,
 }
 
+//TODO : hyper_stat_preset_1, hyper_stat_preset_2, hyper_stat_preset_3 모두 받도록 수정
 pub async fn get_user_hyper_stat_info(
     Extension(api_key): Extension<Arc<API>>,
 ) -> Result<Json<UserHyperStatData>, (StatusCode, &'static str)> {
@@ -191,6 +197,21 @@ pub async fn get_user_hyper_stat_info(
                 .into_iter()
                 .filter(|stat| stat.stat_point.is_some() && stat.stat_increase.is_some())
                 .collect(),
+            hyper_stat_preset_1_remain_point: user_hyper_stat_data.hyper_stat_preset_1_remain_point,
+
+            hyper_stat_preset_2: user_hyper_stat_data
+                .hyper_stat_preset_2
+                .into_iter()
+                .filter(|stat| stat.stat_point.is_some() && stat.stat_increase.is_some())
+                .collect(),
+            hyper_stat_preset_2_remain_point: user_hyper_stat_data.hyper_stat_preset_2_remain_point,
+
+            hyper_stat_preset_3: user_hyper_stat_data
+                .hyper_stat_preset_3
+                .into_iter()
+                .filter(|stat| stat.stat_point.is_some() && stat.stat_increase.is_some())
+                .collect(),
+            hyper_stat_preset_3_remain_point: user_hyper_stat_data.hyper_stat_preset_3_remain_point,
         };
 
         Ok(Json(filtered_data))
@@ -344,7 +365,7 @@ pub async fn get_user_set_effect(
                     let matched_options: Vec<SetEffectInfoFull> = set_info
                         .set_option_full
                         .into_iter()
-                        .filter(|option| option.set_count == set_info.total_set_count)
+                        .filter(|option| option.set_count <= set_info.total_set_count)
                         .collect();
 
                     if matched_options.is_empty() {
@@ -502,6 +523,7 @@ pub struct VMatrixInfo {
 #[derive(Deserialize, Serialize, Debug)]
 pub struct VMatrix {
     pub character_v_core_equipment: Vec<VMatrixInfo>,
+    pub character_v_matrix_remain_slot_upgrade_point: i8,
 }
 
 pub async fn get_user_v_matrix(
@@ -532,6 +554,8 @@ pub async fn get_user_v_matrix(
                     v_core_type: Some(matrix.v_core_type.unwrap_or_default()),
                 })
                 .collect(),
+            character_v_matrix_remain_slot_upgrade_point: user_v_matrix
+                .character_v_matrix_remain_slot_upgrade_point,
         };
 
         Ok(Json(filter_v_matrix))
