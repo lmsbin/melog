@@ -1,9 +1,9 @@
 mod api;
 
 use api::character::{
-    API, get_ocid, get_user_ability, get_user_characeter_skill, get_user_default_info,
-    get_user_hyper_stat_info, get_user_propensity, get_user_set_effect, get_user_stat_info,
-    get_user_symbol_equipment,
+    API, get_ocid, get_user_ability, get_user_characeter_link_skill, get_user_characeter_skill,
+    get_user_default_info, get_user_hyper_stat_info, get_user_propensity, get_user_set_effect,
+    get_user_stat_info, get_user_symbol_equipment,
 };
 use axum::{Router, extract::Extension, routing::get, routing::post};
 use std::sync::{Arc, Mutex};
@@ -32,6 +32,10 @@ async fn main() {
         .route("/getUserSymbolEquipment", get(get_user_symbol_equipment))
         .route("/getUserSetEffect", get(get_user_set_effect))
         .route("/getUserCharacterSkill", post(get_user_characeter_skill))
+        .route(
+            "/getUserCharacterLinkSkill",
+            get(get_user_characeter_link_skill),
+        )
         .layer(Extension(api_key));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
