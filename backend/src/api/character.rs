@@ -539,3 +539,73 @@ pub async fn get_user_v_matrix(
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
 }
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct HexaSkillInfo {
+    pub hexa_skill_id: String,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct HexaMatrixInfo {
+    pub hexa_core_name: String,
+    pub hexa_core_level: i8,
+    pub hexa_core_type: Option<String>,
+    pub linked_skill: Vec<HexaSkillInfo>,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct HexaMatrix {
+    pub character_hexa_core_equipment: Vec<HexaMatrixInfo>,
+}
+
+pub async fn get_user_hexa_matrix(
+    Extension(api_key): Extension<Arc<API>>,
+) -> Result<Json<HexaMatrix>, (StatusCode, &'static str)> {
+    // POST 요청 보내기
+    let response = request_parser(api_key.clone(), "hexamatrix").await;
+
+    // 응답 결과 확인
+    if response.status().is_success() {
+        let user_hexa_matrix: HexaMatrix = response
+            .json()
+            .await
+            .expect("Failed to parse response JSON");
+
+        Ok(Json(user_hexa_matrix))
+    } else {
+        Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
+    }
+}
+
+// TODO : Hexa 매트릭스 설정 정보 조회
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Dojang {
+    pub dojang_best_floor: i8,
+    pub date_dojang_record: Option<String>,
+    pub dojang_best_time: i32,
+}
+
+pub async fn get_user_dojang(
+    Extension(api_key): Extension<Arc<API>>,
+) -> Result<Json<Dojang>, (StatusCode, &'static str)> {
+    // POST 요청 보내기
+    let response = request_parser(api_key.clone(), "dojang").await;
+
+    // 응답 결과 확인
+    if response.status().is_success() {
+        let user_dojang: Dojang = response
+            .json()
+            .await
+            .expect("Failed to parse response JSON");
+
+        let filter_dojang: Dojang = Dojang {
+            dojang_best_floor: user_dojang.dojang_best_floor,
+            date_dojang_record: Some(user_dojang.date_dojang_record.unwrap_or_default()),
+            dojang_best_time: user_dojang.dojang_best_time,
+        };
+
+        Ok(Json(filter_dojang))
+    } else {
+        Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
+    }
+}
