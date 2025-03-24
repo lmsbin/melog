@@ -6,7 +6,7 @@ export interface ButtonProps extends BaseComponentProps {
 	onClick?: (e: MouseEvent) => void;
 }
 
-export const Button = memo(function Button(props: ButtonProps) {
+export const BaseButton = memo(function BaseButton(props: ButtonProps) {
 	const { className, children } = props;
 
 	const onClick = useCallback(

@@ -1,5 +1,5 @@
 import { ChangeEvent, KeyboardEvent, memo, useCallback, useState } from 'react';
-import { Button, Input } from '../../common';
+import { BaseButton, BaseInput } from '../../common';
 
 interface FetchUnit {
 	method: 'GET' | 'POST';
@@ -55,14 +55,14 @@ const FetchUnit = memo(function FetchUnit({ method }: FetchUnit) {
 
 	return (
 		<div>
-			<Input
+			<BaseInput
 				onChange={onChange}
 				onKeyDown={onKeyDown}
 				placeholder='lms/getcharacter'
 			/>
-			<Button onClick={onClick}>{method}</Button>
+			<BaseButton onClick={onClick}>{method}</BaseButton>
 			{method === 'POST' && (
-				<Input
+				<BaseInput
 					onChange={onChangePostInput}
 					onKeyDown={onKeyDown}
 					placeholder='json or object'

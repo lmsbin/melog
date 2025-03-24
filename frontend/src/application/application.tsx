@@ -1,5 +1,12 @@
+import { BrowserRouter } from 'react-router-dom';
+import { Router } from './router';
+
 function Application() {
-	return <div>어플?</div>;
+	return (
+		<BrowserRouter>
+			<Router />
+		</BrowserRouter>
+	);
 }
 
 export default Application;

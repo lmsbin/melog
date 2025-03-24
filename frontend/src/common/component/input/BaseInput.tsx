@@ -19,8 +19,11 @@ export interface InputProps extends BaseComponentProps {
 	onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
 }
 
-export const Input = memo(
-	forwardRef(function Input(props: InputProps, ref: Ref<HTMLInputElement>) {
+export const BaseInput = memo(
+	forwardRef(function BaseInput(
+		props: InputProps,
+		ref: Ref<HTMLInputElement>
+	) {
 		const { className, disabled, type, placeholder } = props;
 
 		const onClick = useCallback(
