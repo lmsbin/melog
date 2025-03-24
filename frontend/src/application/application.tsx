@@ -4,11 +4,11 @@ import { Setter } from './setter';
 
 function Application() {
 	return (
-		<Setter>
-			<BrowserRouter>
+		<BrowserRouter>
+			<Setter>
 				<Router />
-			</BrowserRouter>
-		</Setter>
+			</Setter>
+		</BrowserRouter>
 	);
 }
 

@@ -1,16 +1,19 @@
-import { createContext, memo, ReactNode, useMemo } from 'react';
+import { createContext, memo, ReactNode } from 'react';
 import { StoreContainer } from './global';
+import { useSearchDataStore } from '../common/store';
 
-interface SetterProps {
+export interface SetterProps {
 	children: ReactNode;
 }
 
-const StoreContainerContext = createContext<StoreContainer>(
-	new StoreContainer()
+export const StoreContainerContext = createContext<StoreContainer>(
+	{} as StoreContainer
 );
 
 export const Setter = memo(function Setter({ children }: SetterProps) {
-	const storeContainer = useMemo(() => new StoreContainer(), []);
+	const searchDataStore = useSearchDataStore();
+
+	const storeContainer = new StoreContainer(searchDataStore);
 
 	return (
 		<StoreContainerContext.Provider value={storeContainer}>
