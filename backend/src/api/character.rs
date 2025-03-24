@@ -260,51 +260,8 @@ pub async fn get_user_ability(
     }
 }
 
-#[derive(Deserialize, Serialize, Debug)]
-pub struct ItemEquipment {}
-
 // TODO : 사용자 착용 아이템 정보
-// pub async fn get_user_item_equipment(
-//     Extension(api_key): Extension<Arc<API>>,
-// ) -> Result<Json<ItemEquipment>, (StatusCode, &'static str)> {
-//     // POST 요청 보내기
-//     let response = request_parser(api_key.clone(), "item-equipment").await;
-
-//     // 응답 결과 확인
-//     if response.status().is_success() {
-//         let user_ability: ItemEquipment = response
-//             .json()
-//             .await
-//             .expect("Failed to parse response JSON");
-
-//         Ok(Json(user_ability))
-//     } else {
-//         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
-//     }
-// }
-
-#[derive(Deserialize, Serialize, Debug)]
-pub struct CashItemEquipment {}
-
 // TODO : 캐시 사용자 착용 아이템 정보
-// pub async fn get_user_cash_item_equipment(
-//     Extension(api_key): Extension<Arc<API>>,
-// ) -> Result<Json<CashItemEquipment>, (StatusCode, &'static str)> {
-//     // POST 요청 보내기
-//     let response = request_parser(api_key.clone(), "cashitem-equipment").await;
-
-//     // 응답 결과 확인
-//     if response.status().is_success() {
-//         let user_ability: CashItemEquipment = response
-//             .json()
-//             .await
-//             .expect("Failed to parse response JSON");
-
-//         Ok(Json(user_ability))
-//     } else {
-//         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
-//     }
-// }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SymbolInfo {
@@ -404,6 +361,88 @@ pub async fn get_user_set_effect(
         };
 
         Ok(Json(filtered_data))
+    } else {
+        Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
+    }
+}
+
+// TODO : 장착 헤어, 성형, 피부 정보 조회
+// TODO : 장착 안드로이드 조회
+// TODO : 장착 펫 정보 조회
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct SkillInfo {
+    pub skill_name: String,
+    pub skill_description: String,
+    pub skill_level: i8,
+    pub skill_effect: Option<String>,
+    pub skill_icon: String,
+    pub skill_effect_next: Option<String>,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct CharacterSkill {
+    pub character_skill: Vec<SkillInfo>,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct CharacterSkilLevel {
+    pub level: i8,
+}
+
+pub async fn get_user_characeter_skill(
+    Extension(api_key): Extension<Arc<API>>,
+    Json(character_skil_level): Json<CharacterSkilLevel>,
+) -> Result<Json<CharacterSkill>, (StatusCode, &'static str)> {
+    // 요청 헤더 정의
+    let mut headers = header::HeaderMap::new();
+    headers.insert(
+        "x-nxopen-api-key",
+        api_key.key.lock().unwrap().parse().unwrap(),
+    );
+
+    let now_time = (Utc::now() - Duration::days(1))
+        .with_timezone(&Seoul)
+        .format("%Y-%m-%d");
+
+    let url = format!(
+        "https://open.api.nexon.com/maplestory/v1/character/skill?ocid={}&date={}&character_skill_grade={}",
+        api_key.ocid.lock().unwrap().to_string(),
+        now_time,
+        character_skil_level.level
+    );
+
+    // POST 요청 보내기
+    let response = Client::new()
+        .get(url)
+        .headers(headers)
+        .send()
+        .await
+        .expect("Failed to send request");
+
+    // 응답 결과 확인
+    if response.status().is_success() {
+        let user_character_skill: CharacterSkill = response
+            .json()
+            .await
+            .expect("Failed to parse response JSON");
+
+        let filter_character_skill: CharacterSkill = CharacterSkill {
+            character_skill: user_character_skill
+                .character_skill
+                .into_iter()
+                .map(|skill| SkillInfo {
+                    skill_name: skill.skill_name,
+                    skill_description: skill.skill_description,
+                    skill_level: skill.skill_level,
+                    skill_effect: Some(skill.skill_effect.unwrap_or_default()),
+                    skill_icon: skill.skill_icon,
+                    skill_effect_next: Some(skill.skill_effect_next.unwrap_or_default()),
+                })
+                .collect(),
+        };
+
+        Ok(Json(filter_character_skill))
     } else {
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
