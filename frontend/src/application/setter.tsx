@@ -1,6 +1,6 @@
 import { createContext, memo, ReactNode } from 'react';
 import { StoreContainer } from './global';
-import { useSearchDataStore } from '../common/store';
+import { useSearchDataStore } from '../store';
 
 export interface SetterProps {
 	children: ReactNode;

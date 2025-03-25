@@ -1,6 +1,6 @@
 import { memo, useContext, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { StoreContainerContext } from '../../application';
+import { StoreContainerContext } from '../application';
 
 export const SearchPage = memo(function SearchPage() {
 	const [searchParam] = useSearchParams();

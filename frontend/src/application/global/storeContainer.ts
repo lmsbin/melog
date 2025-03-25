@@ -16,6 +16,7 @@ export class StoreContainer {
 
 		if (searchData.inputData === inputValue) return;
 
+		console.log(`[INFO] StoreContainer >> setInputData ${inputValue}`);
 		setSearchData('inputData', inputValue);
 	};
 }

@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
-import { MainLayout } from '../common/page';
-import { MainPage } from '../common/page/MainPage';
-import { SearchPage } from '../common/page/SearchPage';
+import { MainLayout } from '../page';
+import { MainPage } from '../page/MainPage';
+import { SearchPage } from '../page/SearchPage';
 
 export function Router() {
 	return (

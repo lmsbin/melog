@@ -1,7 +1,7 @@
 import { memo, useContext, useEffect } from 'react';
 import { BaseInput } from './BaseInput';
 import { useSearch } from '../../hook';
-import { StoreContainerContext } from '../../../application';
+import { StoreContainerContext } from '../../application';
 
 export const SearchInput = memo(function SearchInput() {
 	const { searchData, setInputData } = useContext(StoreContainerContext);
