@@ -18,7 +18,7 @@ pub struct Character {
 }
 
 pub struct API {
-    pub key: Mutex<String>,
+    pub key: String,
     pub ocid: Mutex<String>,
 }
 
@@ -35,10 +35,7 @@ pub async fn get_ocid(
     );
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
-    headers.insert(
-        "x-nxopen-api-key",
-        api_key.key.lock().unwrap().parse().unwrap(),
-    );
+    headers.insert("x-nxopen-api-key", api_key.key.parse().unwrap());
 
     // POST 요청 보내기
     let response = client
@@ -68,10 +65,7 @@ pub async fn get_ocid(
 pub async fn request_parser(api_key: Arc<API>, kind: &str) -> reqwest::Response {
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
-    headers.insert(
-        "x-nxopen-api-key",
-        api_key.key.lock().unwrap().parse().unwrap(),
-    );
+    headers.insert("x-nxopen-api-key", api_key.key.parse().unwrap());
 
     let now_time = (Utc::now() - Duration::days(1))
         .with_timezone(&Seoul)
@@ -417,10 +411,7 @@ pub async fn get_user_characeter_skill(
 ) -> Result<Json<CharacterSkill>, (StatusCode, &'static str)> {
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
-    headers.insert(
-        "x-nxopen-api-key",
-        api_key.key.lock().unwrap().parse().unwrap(),
-    );
+    headers.insert("x-nxopen-api-key", api_key.key.parse().unwrap());
 
     let now_time = (Utc::now() - Duration::days(1))
         .with_timezone(&Seoul)
