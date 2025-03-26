@@ -1,7 +1,10 @@
 import { Route, Routes } from 'react-router-dom';
-import { MainLayout } from '../page';
-import { MainPage } from '../page/MainPage';
-import { SearchPageWrapper } from '../page/SearchPage';
+import {
+	MainLayout,
+	MainPage,
+	CharacterPageWrapper,
+	SearchPageWrapper,
+} from '../page';
 
 export function Router() {
 	return (
@@ -9,6 +12,10 @@ export function Router() {
 			<Route path='/' element={<MainLayout />}>
 				<Route index element={<MainPage />} />
 				<Route path='search' element={<SearchPageWrapper />} />
+				<Route
+					path='character/:nickName'
+					element={<CharacterPageWrapper />}
+				/>
 			</Route>
 			<Route path='*' element={<div>not found</div>} />
 		</Routes>
