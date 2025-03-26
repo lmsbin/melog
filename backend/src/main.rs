@@ -6,9 +6,10 @@ use api::character::{
     get_user_propensity, get_user_set_effect, get_user_stat_info, get_user_symbol_equipment,
     get_user_v_matrix,
 };
+use axum::http::HeaderValue;
 use axum::{Router, extract::Extension, routing::get, routing::post};
 use std::sync::{Arc, Mutex};
-use tower_http::cors::CorsLayer;
+use tower_http::cors::{Any, CorsLayer};
 
 #[tokio::main]
 async fn main() {
@@ -24,12 +25,12 @@ async fn main() {
         ocid: Mutex::new("".to_string()),
     });
 
+    let allowed_origin = HeaderValue::from_static("http://localhost:3000");
+
     let cors = CorsLayer::new()
-        .allow_origin("http://localhost:3000".parse().unwrap())
-        // 허용할 HTTP 메소드 지정 (필요에 따라 추가 가능)
+        .allow_origin(allowed_origin)
         .allow_methods([axum::http::Method::GET, axum::http::Method::POST])
-        // 허용할 헤더 지정 (필요에 따라 추가 가능)
-        .allow_headers([axum::http::header::CONTENT_TYPE]);
+        .allow_headers(Any);
 
     // TODO : VEC 형식으로 가져오는 값 자체가 null인 경우 예외처리 하기
     let app = Router::new()
@@ -49,7 +50,8 @@ async fn main() {
         .route("/getUserVMatrix", get(get_user_v_matrix))
         .route("/getUserHexaMatrix", get(get_user_hexa_matrix))
         .route("/getUserDojang", get(get_user_dojang))
-        .layer(Extension(api_key));
+        .layer(Extension(api_key))
+        .layer(cors);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await.unwrap();
