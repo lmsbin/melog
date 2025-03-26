@@ -1,12 +1,11 @@
-import { memo, useContext, useEffect } from 'react';
-import { BaseInput } from './BaseInput';
-import { useSearch } from '../../hook';
-import { StoreContainerContext } from '../../application';
+import { memo } from 'react';
+import { BaseInput, InputProps } from './BaseInput';
 
-export const SearchInput = memo(function SearchInput() {
-	const { searchData, setInputData } = useContext(StoreContainerContext);
+export type SearchInputProps = Pick<InputProps, 'onChange' | 'onKeyDown'>;
 
-	const { onKeyDown, onChange } = useSearch({ searchData, setInputData });
-
-	return <BaseInput onKeyDown={onKeyDown} onChange={onChange} />;
+export const SearchInput = memo(function SearchInput({
+	onChange,
+	onKeyDown,
+}: SearchInputProps) {
+	return <BaseInput onChange={onChange} onKeyDown={onKeyDown} />;
 });
