@@ -18,11 +18,14 @@ API의 목적과 주요 기능에 대한 간단한 설명입니다.
 - **Method**: POST
 - **쿼리 파라미터**:
   - `nickName` (필수)
+- **헤더**:
+  - `Content-Type`: 전송 데이터 형식 (예: application/json)
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X POST "https://{{ip}}:{{port}}/getOcid" -d '{"nickName": "nickName"}'
+curl -X POST "https://{{ip}}:{{port}}/getOcid" -H "Content-Type: application/json" -H "uuid : {value}" -d '{"nickName": "nickName"}'
 ```
 
 **응답**:
@@ -40,11 +43,13 @@ curl -X POST "https://{{ip}}:{{port}}/getOcid" -d '{"nickName": "nickName"}'
 새로운 리소스를 생성합니다.
 
 - **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X GET "https://{{ip}}:{{port}}/getUserInfo"
+curl -X GET "https://{{ip}}:{{port}}/getUserInfo"  -H "uuid : {value}"
 ```
 
 **응답**:
@@ -71,11 +76,13 @@ curl -X GET "https://{{ip}}:{{port}}/getUserInfo"
 새로운 리소스를 생성합니다.
 
 - **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X GET "https://{{ip}}:{{port}}/getUserStatInfo"
+curl -X GET "https://{{ip}}:{{port}}/getUserStatInfo" -H "uuid : {value}"
 ```
 
 **응답**:
@@ -96,11 +103,13 @@ curl -X GET "https://{{ip}}:{{port}}/getUserStatInfo"
 새로운 리소스를 생성합니다.
 
 - **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X GET "https://{{ip}}:{{port}}/getUserHyperStatInfo"
+curl -X GET "https://{{ip}}:{{port}}/getUserHyperStatInfo" -H "uuid : {value}"
 ```
 
 **응답**:
@@ -142,11 +151,13 @@ curl -X GET "https://{{ip}}:{{port}}/getUserHyperStatInfo"
 새로운 리소스를 생성합니다.
 
 - **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X GET "https://{{ip}}:{{port}}/getUserPropensity"
+curl -X GET "https://{{ip}}:{{port}}/getUserPropensity" -H "uuid : {value}"
 ```
 
 **응답**:
@@ -167,11 +178,13 @@ curl -X GET "https://{{ip}}:{{port}}/getUserPropensity"
 새로운 리소스를 생성합니다.
 
 - **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X GET "https://{{ip}}:{{port}}/getUserAbility"
+curl -X GET "https://{{ip}}:{{port}}/getUserAbility" -H "uuid : {value}"
 ```
 
 **응답**:
@@ -195,11 +208,13 @@ curl -X GET "https://{{ip}}:{{port}}/getUserAbility"
 새로운 리소스를 생성합니다.
 
 - **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X GET "https://{{ip}}:{{port}}/getUserSymbolEquipment"
+curl -X GET "https://{{ip}}:{{port}}/getUserSymbolEquipment" -H "uuid : {value}"
 ```
 
 **응답**:
@@ -233,11 +248,13 @@ curl -X GET "https://{{ip}}:{{port}}/getUserSymbolEquipment"
 새로운 리소스를 생성합니다.
 
 - **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X GET "https://{{ip}}:{{port}}/getUserSetEffect"
+curl -X GET "https://{{ip}}:{{port}}/getUserSetEffect" -H "uuid : {value}"
 ```
 
 **응답**:
@@ -266,11 +283,14 @@ curl -X GET "https://{{ip}}:{{port}}/getUserSetEffect"
 - **Method**: POST
 - **쿼리 파라미터**:
   - `nickName` (필수)
+- **헤더**:
+  - `Content-Type`: 전송 데이터 형식 (예: application/json)
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X POST "https://{{ip}}:{{port}}/getUserCharacterSkill" -d '{"level": level}'
+curl -X POST "https://{{ip}}:{{port}}/getUserCharacterSkill" -H "Content-Type: application/json" -H "uuid : {value}" -d '{"level": level}'
 ```
 
 **응답**:
@@ -295,11 +315,13 @@ curl -X POST "https://{{ip}}:{{port}}/getUserCharacterSkill" -d '{"level": level
 새로운 리소스를 생성합니다.
 
 - **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X GET "https://{{ip}}:{{port}}/getUserCharacterLinkSkill"
+curl -X GET "https://{{ip}}:{{port}}/getUserCharacterLinkSkill" -H "uuid : {value}"
 ```
 
 **응답**:
@@ -324,11 +346,13 @@ curl -X GET "https://{{ip}}:{{port}}/getUserCharacterLinkSkill"
 새로운 리소스를 생성합니다.
 
 - **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X GET "https://{{ip}}:{{port}}/getUserVMatrix"
+curl -X GET "https://{{ip}}:{{port}}/getUserVMatrix" -H "uuid : {value}"
 ```
 
 **응답**:
@@ -356,11 +380,13 @@ curl -X GET "https://{{ip}}:{{port}}/getUserVMatrix"
 새로운 리소스를 생성합니다.
 
 - **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X GET "https://{{ip}}:{{port}}/getUserHexaMatrix"
+curl -X GET "https://{{ip}}:{{port}}/getUserHexaMatrix" -H "uuid : {value}"
 ```
 
 **응답**:
@@ -387,11 +413,13 @@ curl -X GET "https://{{ip}}:{{port}}/getUserHexaMatrix"
 새로운 리소스를 생성합니다.
 
 - **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
 
 **예시 요청**:
 
 ```bash
-curl -X GET "https://{{ip}}:{{port}}/getUserDojang"
+curl -X GET "https://{{ip}}:{{port}}/getUserDojang" -H "uuid : {value}"
 ```
 
 **응답**:
