@@ -22,7 +22,7 @@ async fn main() {
 
     let api_key = Arc::new(API::new(args[1].clone()));
 
-    let allowed_origin = HeaderValue::from_static("http://localhost:3000");
+    let allowed_origin = HeaderValue::from_static("http://localhost:5173");
 
     let cors = CorsLayer::new()
         .allow_origin(allowed_origin)
