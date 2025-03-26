@@ -1,16 +1,21 @@
-import { ChangeEvent, KeyboardEvent, MouseEvent, useCallback } from 'react';
+import {
+	ChangeEvent,
+	KeyboardEvent,
+	MouseEvent,
+	useCallback,
+	useState,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export interface useSearch {
-	searchData: string;
-	setInputData: (inputValue: string) => void;
-}
+export interface useSearch {}
 
-export const useSearch = ({ searchData, setInputData }: useSearch) => {
+export const useSearch = () => {
 	const navigate = useNavigate();
 
+	const [searchValue, setSearchValue] = useState('');
+
 	const searchMainAction = useCallback(() => {
-		const queryString = `?q=${searchData}`;
+		const queryString = `?q=${searchValue}`;
 		const searchURL = `/search${queryString}`;
 
 		console.log(
@@ -18,7 +23,7 @@ export const useSearch = ({ searchData, setInputData }: useSearch) => {
 		);
 
 		navigate(searchURL);
-	}, [searchData]);
+	}, [searchValue]);
 
 	const onKeyDown = useCallback(
 		(e: KeyboardEvent<HTMLInputElement>) => {
@@ -33,11 +38,11 @@ export const useSearch = ({ searchData, setInputData }: useSearch) => {
 		(e: ChangeEvent<HTMLInputElement>) => {
 			const value = e.target.value;
 
-			if (value !== searchData) {
-				setInputData(value);
+			if (value !== searchValue) {
+				setSearchValue(value);
 			}
 		},
-		[searchData, setInputData]
+		[searchValue, setSearchValue]
 	);
 
 	const onClick = useCallback(
