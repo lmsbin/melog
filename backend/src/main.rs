@@ -8,7 +8,7 @@ use api::character::{
 };
 use axum::http::HeaderValue;
 use axum::{Router, extract::Extension, routing::get, routing::post};
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use tower_http::cors::{Any, CorsLayer};
 
 #[tokio::main]
@@ -20,10 +20,7 @@ async fn main() {
         return;
     }
 
-    let api_key = Arc::new(API {
-        key: args[1].clone(),
-        ocid: Mutex::new("".to_string()),
-    });
+    let api_key = Arc::new(API::new(args[1].clone()));
 
     let allowed_origin = HeaderValue::from_static("http://localhost:3000");
 

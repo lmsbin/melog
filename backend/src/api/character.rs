@@ -1,10 +1,14 @@
 use axum::Extension;
-use axum::{http::StatusCode, response::Json};
+use axum::{
+    http::{HeaderMap, StatusCode},
+    response::Json,
+};
 use chrono::{Duration, Utc};
 use chrono_tz::Asia::Seoul;
+use dashmap::DashMap;
 use reqwest::{Client, header};
 use serde::{Deserialize, Serialize};
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct UserOcid {
@@ -19,13 +23,39 @@ pub struct Character {
 
 pub struct API {
     pub key: String,
-    pub ocid: Mutex<String>,
+    pub ocid: DashMap<String, String>,
+}
+
+impl API {
+    // 생성자
+    pub fn new(key: String) -> Self {
+        Self {
+            key,
+            ocid: DashMap::new(),
+        }
+    }
+
+    // uuid에 해당하는 ocid 값을 가져옵니다.
+    pub fn get_ocid_uuid(&self, uuid: &str) -> Option<String> {
+        self.ocid.get(uuid).map(|entry| entry.value().clone())
+    }
+
+    // uuid에 해당하는 ocid 값을 설정합니다.
+    pub fn set_ocid_uuid(&self, uuid: String, ocid: String) {
+        self.ocid.insert(uuid, ocid);
+    }
 }
 
 pub async fn get_ocid(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
     Json(character): Json<Character>,
 ) -> Result<Json<UserOcid>, (StatusCode, &'static str)> {
+    let uuid = header
+        .get("uuid")
+        .and_then(|value| value.to_str().ok())
+        .ok_or((StatusCode::BAD_REQUEST, "Missing or invalid uuid header"))?;
+
     let client = Client::new();
 
     // 요청할 API의 URL
@@ -53,8 +83,7 @@ pub async fn get_ocid(
             .expect("Failed to parse response JSON");
 
         // 전역 변수 업데이트
-        let mut ocid = api_key.ocid.lock().unwrap();
-        *ocid = userocid.ocid.clone();
+        api_key.set_ocid_uuid(uuid.to_string(), userocid.ocid.clone());
 
         Ok(Json(userocid))
     } else {
@@ -62,7 +91,12 @@ pub async fn get_ocid(
     }
 }
 
-pub async fn request_parser(api_key: Arc<API>, kind: &str) -> reqwest::Response {
+pub async fn request_parser(api_key: Arc<API>, header: HeaderMap, kind: &str) -> reqwest::Response {
+    let uuid = header
+        .get("uuid")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default();
+
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
     headers.insert("x-nxopen-api-key", api_key.key.parse().unwrap());
@@ -74,7 +108,7 @@ pub async fn request_parser(api_key: Arc<API>, kind: &str) -> reqwest::Response 
     let url = format!(
         "https://open.api.nexon.com/maplestory/v1/character/{}?ocid={}&date={}",
         kind,
-        api_key.ocid.lock().unwrap().to_string(),
+        api_key.get_ocid_uuid(uuid).unwrap_or_default(),
         now_time
     );
 
@@ -106,9 +140,10 @@ pub struct UserDefaultData {
 
 pub async fn get_user_default_info(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
 ) -> Result<Json<UserDefaultData>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), "basic").await;
+    let response = request_parser(api_key.clone(), header, "basic").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -136,9 +171,10 @@ pub struct UserStatData {
 
 pub async fn get_user_stat_info(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
 ) -> Result<Json<UserStatData>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), "stat").await;
+    let response = request_parser(api_key.clone(), header, "stat").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -174,9 +210,10 @@ pub struct UserHyperStatData {
 //TODO : hyper_stat_preset_1, hyper_stat_preset_2, hyper_stat_preset_3 모두 받도록 수정
 pub async fn get_user_hyper_stat_info(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
 ) -> Result<Json<UserHyperStatData>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), "hyper-stat").await;
+    let response = request_parser(api_key.clone(), header, "hyper-stat").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -226,9 +263,10 @@ pub struct Propensity {
 
 pub async fn get_user_propensity(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
 ) -> Result<Json<Propensity>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), "propensity").await;
+    let response = request_parser(api_key.clone(), header, "propensity").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -258,9 +296,10 @@ pub struct Ability {
 
 pub async fn get_user_ability(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
 ) -> Result<Json<Ability>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), "ability").await;
+    let response = request_parser(api_key.clone(), header, "ability").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -303,9 +342,10 @@ pub struct Symbol {
 
 pub async fn get_user_symbol_equipment(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
 ) -> Result<Json<Symbol>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), "symbol-equipment").await;
+    let response = request_parser(api_key.clone(), header, "symbol-equipment").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -340,9 +380,10 @@ pub struct SetEffect {
 
 pub async fn get_user_set_effect(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
 ) -> Result<Json<SetEffect>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), "set-effect").await;
+    let response = request_parser(api_key.clone(), header, "set-effect").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -407,8 +448,14 @@ pub struct CharacterSkilLevel {
 
 pub async fn get_user_characeter_skill(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
     Json(character_skil_level): Json<CharacterSkilLevel>,
 ) -> Result<Json<CharacterSkill>, (StatusCode, &'static str)> {
+    let uuid = header
+        .get("uuid")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default();
+
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
     headers.insert("x-nxopen-api-key", api_key.key.parse().unwrap());
@@ -419,7 +466,7 @@ pub async fn get_user_characeter_skill(
 
     let url = format!(
         "https://open.api.nexon.com/maplestory/v1/character/skill?ocid={}&date={}&character_skill_grade={}",
-        api_key.ocid.lock().unwrap().to_string(),
+        api_key.get_ocid_uuid(uuid).unwrap_or_default(),
         now_time,
         character_skil_level.level
     );
@@ -467,9 +514,10 @@ pub struct CharacterLinkSkill {
 
 pub async fn get_user_characeter_link_skill(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
 ) -> Result<Json<CharacterLinkSkill>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), "link-skill").await;
+    let response = request_parser(api_key.clone(), header, "link-skill").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -519,9 +567,10 @@ pub struct VMatrix {
 
 pub async fn get_user_v_matrix(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
 ) -> Result<Json<VMatrix>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), "vmatrix").await;
+    let response = request_parser(api_key.clone(), header, "vmatrix").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -575,9 +624,10 @@ pub struct HexaMatrix {
 
 pub async fn get_user_hexa_matrix(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
 ) -> Result<Json<HexaMatrix>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), "hexamatrix").await;
+    let response = request_parser(api_key.clone(), header, "hexamatrix").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
@@ -602,9 +652,10 @@ pub struct Dojang {
 
 pub async fn get_user_dojang(
     Extension(api_key): Extension<Arc<API>>,
+    header: HeaderMap,
 ) -> Result<Json<Dojang>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), "dojang").await;
+    let response = request_parser(api_key.clone(), header, "dojang").await;
 
     // 응답 결과 확인
     if response.status().is_success() {
