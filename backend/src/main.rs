@@ -8,6 +8,7 @@ use api::character::{
 };
 use axum::{Router, extract::Extension, routing::get, routing::post};
 use std::sync::{Arc, Mutex};
+use tower_http::cors::CorsLayer;
 
 #[tokio::main]
 async fn main() {
@@ -22,6 +23,13 @@ async fn main() {
         key: args[1].clone(),
         ocid: Mutex::new("".to_string()),
     });
+
+    let cors = CorsLayer::new()
+        .allow_origin("http://localhost:3000".parse().unwrap())
+        // 허용할 HTTP 메소드 지정 (필요에 따라 추가 가능)
+        .allow_methods([axum::http::Method::GET, axum::http::Method::POST])
+        // 허용할 헤더 지정 (필요에 따라 추가 가능)
+        .allow_headers([axum::http::header::CONTENT_TYPE]);
 
     // TODO : VEC 형식으로 가져오는 값 자체가 null인 경우 예외처리 하기
     let app = Router::new()
