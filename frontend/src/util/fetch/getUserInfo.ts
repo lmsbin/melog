@@ -1,6 +1,7 @@
 import { EN_FETCH_METHOD, UserInfo } from '../../type';
 import { BASE_URL } from '../../type/constant';
 import { baseFetch, fetchWrapper } from './fetch';
+import getOcid from './getOcid';
 
 export interface GetUserInfoRequest {
 	nickName: string;
@@ -15,7 +16,7 @@ async function getUserInfo(request: GetUserInfoRequest) {
 		url: `${BASE_URL}/getUserInfo`,
 		method: EN_FETCH_METHOD.GET,
 		headers: {
-			uuid: Date.now().toString(),
+			uuid: 'asdfafsafawefafewf',
 		},
 	});
 

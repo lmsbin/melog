@@ -31,9 +31,11 @@ export const SearchPageWrapper = memo(function SearchPageWrapper() {
 		})();
 	}, [searchedValue]);
 
-	if (ocid) {
-		navigate(`/character/${searchedValue}`);
-	}
+	useEffect(() => {
+		if (ocid) {
+			navigate(`/character/${searchedValue}`);
+		}
+	}, [ocid, navigate, searchedValue]);
 
 	return <SearchPage />;
 });

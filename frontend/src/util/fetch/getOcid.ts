@@ -17,6 +17,9 @@ async function getOcid(request: GetOcidRequest) {
 		param: {
 			nickName: request.nickName,
 		},
+		headers: {
+			uuid: 'asdfafsafawefafewf',
+		},
 	});
 
 	return result;
