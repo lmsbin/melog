@@ -1,11 +1,12 @@
 mod api;
 
 use api::character::{
-    API, get_ocid, get_user_ability, get_user_characeter_link_skill, get_user_characeter_skill,
+    get_ocid, get_user_ability, get_user_characeter_link_skill, get_user_characeter_skill,
     get_user_default_info, get_user_dojang, get_user_hexa_matrix, get_user_hyper_stat_info,
     get_user_propensity, get_user_set_effect, get_user_stat_info, get_user_symbol_equipment,
     get_user_v_matrix,
 };
+use api::request::API;
 use axum::http::HeaderValue;
 use axum::{Router, extract::Extension, routing::get, routing::post};
 use std::sync::Arc;
