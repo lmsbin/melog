@@ -10,51 +10,51 @@ import getOcid from '../api/getOcid';
  * 현재는 길드 제외하고 캐릭터만 고려하고 있으므로, 항상 바로 정보페이지로 이동
  */
 export const SearchPageWrapper = memo(function SearchPageWrapper() {
-	const { searchedValue, ocid, setOcid } = useSearchPage();
+    const { searchedValue, ocid, setOcid } = useSearchPage();
 
-	const navigate = useNavigate();
+    const navigate = useNavigate();
 
-	useEffect(() => {
-		(async function () {
-			if (searchedValue) {
-				const result = await getOcid({
-					key: searchedValue,
-					data: {
-						nickName: searchedValue,
-					},
-				});
+    useEffect(() => {
+        (async function () {
+            if (searchedValue) {
+                const result = await getOcid({
+                    key: searchedValue,
+                    data: {
+                        nickName: searchedValue,
+                    },
+                });
 
-				if (result) {
-					setOcid(result.ocid);
-				}
-			}
-		})();
-	}, [searchedValue]);
+                if (result) {
+                    setOcid(result.ocid);
+                }
+            }
+        })();
+    }, [searchedValue]);
 
-	useEffect(() => {
-		// 현재는 캐릭터만 고려.
-		// ocid 존재 => 캐릭터 조회 성공 => 바로 캐릭터 정보 페이지로 이동
-		if (ocid) {
-			navigate(`/character/${searchedValue}`);
-		}
-	}, [ocid, navigate, searchedValue]);
+    useEffect(() => {
+        // 현재는 캐릭터만 고려.
+        // ocid 존재 => 캐릭터 조회 성공 => 바로 캐릭터 정보 페이지로 이동
+        if (ocid) {
+            navigate(`/character/${searchedValue}`, { replace: true });
+        }
+    }, [ocid, navigate, searchedValue]);
 
-	return <SearchPage />;
+    return <SearchPage />;
 });
 
 const SearchPage = memo(function SearchPage() {
-	return <div></div>;
+    return <div></div>;
 });
 
 const useSearchPage = () => {
-	const [searchParam] = useSearchParams();
-	const [ocid, setOcid] = useState<string>();
+    const [searchParam] = useSearchParams();
+    const [ocid, setOcid] = useState<string>();
 
-	const searchedValue = searchParam.get('q');
+    const searchedValue = searchParam.get('q');
 
-	return {
-		searchedValue,
-		ocid,
-		setOcid,
-	};
+    return {
+        searchedValue,
+        ocid,
+        setOcid,
+    };
 };
