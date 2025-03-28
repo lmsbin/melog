@@ -432,6 +432,147 @@ curl -X GET "https://{{ip}}:{{port}}/getUserDojang" -H "uuid : {value}"
 }
 ```
 
+### 2.13 GET `/getUserItemEquipment`
+
+새로운 리소스를 생성합니다.
+
+- **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
+
+**예시 요청**:
+
+```bash
+curl -X GET "https://{{ip}}:{{port}}/getUserItemEquipment" -H "uuid : {value}"
+```
+
+**응답**:
+
+```json
+{
+  "item_equipment": [
+    {
+      "item_equipment_part": "string",
+      "item_equipment_slot": "string",
+      "item_name": "string",
+      "item_icon": "string",
+      "item_shape_name": "string",
+      "item_shape_icon": "string",
+      "item_total_option": {
+        "str": "string",
+        "dex": "string",
+        "int": "string",
+        "luk": "string",
+        "max_hp": "string",
+        "max_mp": "string",
+        "attack_power": "string",
+        "magic_power": "string",
+        "armor": "string",
+        "speed": "string",
+        "jump": "string",
+        "boss_damage": "string",
+        "ignore_monster_armor": "string",
+        "all_stat": "string",
+        "damage": "string",
+        "equipment_level_decrease": 0,
+        "max_hp_rate": "string",
+        "max_mp_rate": "string"
+      },
+      "item_base_option": {
+        "str": "string",
+        "dex": "string",
+        "int": "string",
+        "luk": "string",
+        "max_hp": "string",
+        "max_mp": "string",
+        "attack_power": "string",
+        "magic_power": "string",
+        "armor": "string",
+        "speed": "string",
+        "jump": "string",
+        "boss_damage": "string",
+        "ignore_monster_armor": "string",
+        "all_stat": "string",
+        "max_hp_rate": "string",
+        "max_mp_rate": "string",
+        "base_equipment_level": 0
+      },
+      "potential_option_grade": "string",
+      "additional_potential_option_grade": "string",
+      "potential_option_1": "string",
+      "potential_option_2": "string",
+      "potential_option_3": "string",
+      "additional_potential_option_1": "string",
+      "additional_potential_option_2": "string",
+      "additional_potential_option_3": "string",
+      "item_exceptional_option": {
+        "str": "string",
+        "dex": "string",
+        "int": "string",
+        "luk": "string",
+        "max_hp": "string",
+        "max_mp": "string",
+        "attack_power": "string",
+        "magic_power": "string",
+        "exceptional_upgrade": 0
+      },
+      "item_add_option": {
+        "str": "string",
+        "dex": "string",
+        "int": "string",
+        "luk": "string",
+        "max_hp": "string",
+        "max_mp": "string",
+        "attack_power": "string",
+        "magic_power": "string",
+        "armor": "string",
+        "speed": "string",
+        "jump": "string",
+        "boss_damage": "string",
+        "damage": "string",
+        "all_stat": "string",
+        "equipment_level_decrease": 0
+      },
+      "scroll_upgrade": "string",
+      "cuttable_count": "string",
+      "golden_hammer_flag": "string",
+      "scroll_resilience_count": "string",
+      "scroll_upgradeable_count": "string",
+      "soul_name": "string",
+      "soul_option": "string",
+      "item_etc_option": {
+        "str": "string",
+        "dex": "string",
+        "int": "string",
+        "luk": "string",
+        "max_hp": "string",
+        "max_mp": "string",
+        "attack_power": "string",
+        "magic_power": "string",
+        "armor": "string",
+        "speed": "string",
+        "jump": "string"
+      },
+      "starforce": "string",
+      "item_starforce_option": {
+        "str": "string",
+        "dex": "string",
+        "int": "string",
+        "luk": "string",
+        "max_hp": "string",
+        "max_mp": "string",
+        "attack_power": "string",
+        "magic_power": "string",
+        "armor": "string",
+        "speed": "string",
+        "jump": "string"
+      },
+      "special_ring_level": 0
+    }
+  ]
+}
+```
+
 ---
 
 ## 공통 오류
