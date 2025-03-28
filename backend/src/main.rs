@@ -1,12 +1,18 @@
-mod api;
+mod api {
+    pub mod character;
+}
 
+use api::character::character::get_ocid;
+use api::character::request::API;
 use api::character::{
-    get_ocid, get_user_ability, get_user_characeter_link_skill, get_user_characeter_skill,
-    get_user_default_info, get_user_dojang, get_user_hexa_matrix, get_user_hyper_stat_info,
-    get_user_item_equipment, get_user_propensity, get_user_set_effect, get_user_stat_info,
-    get_user_symbol_equipment, get_user_v_matrix,
+    user_ability::get_user_ability, user_characeter_skill::get_user_characeter_link_skill,
+    user_characeter_skill::get_user_characeter_skill, user_default_info::get_user_default_info,
+    user_dojang::get_user_dojang, user_hexa_matrix::get_user_hexa_matrix,
+    user_hyper_stat_info::get_user_hyper_stat_info, user_item_equipment::get_user_item_equipment,
+    user_propensity::get_user_propensity, user_set_effect::get_user_set_effect,
+    user_stat_info::get_user_stat_info, user_symbol_equipment::get_user_symbol_equipment,
+    user_v_matrix::get_user_v_matrix,
 };
-use api::request::API;
 use axum::http::HeaderValue;
 use axum::{Router, extract::Extension, routing::get, routing::post};
 use std::sync::Arc;
