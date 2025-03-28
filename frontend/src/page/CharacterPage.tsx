@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import { UserInfo } from '../type';
 import { useParams } from 'react-router-dom';
-import getUserInfo from '../util/fetch/getUserInfo';
+import getUserInfo from '../api/getUserInfo';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
 	const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
@@ -12,12 +12,10 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
 			if (nickName) {
 				const result = await getUserInfo({
 					key: nickName,
-					data: {
-						nickName,
-					},
+					data: {},
 				});
 
-				setUserInfo(result.userInfo);
+				setUserInfo(result);
 			}
 		})();
 	}, [nickName]);

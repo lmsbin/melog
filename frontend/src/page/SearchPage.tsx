@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import getOcid from '../util/fetch/getOcid';
+import getOcid from '../api/getOcid';
 
 /**
  * 1. queryString을 파싱
@@ -32,6 +32,8 @@ export const SearchPageWrapper = memo(function SearchPageWrapper() {
 	}, [searchedValue]);
 
 	useEffect(() => {
+		// 현재는 캐릭터만 고려.
+		// ocid 존재 => 캐릭터 조회 성공 => 바로 캐릭터 정보 페이지로 이동
 		if (ocid) {
 			navigate(`/character/${searchedValue}`);
 		}

@@ -1,5 +1,4 @@
-import { EN_FETCH_METHOD } from '../../type';
-import { BASE_URL } from '../../type/constant';
+import { EN_FETCH_METHOD, BASE_URL } from '../type';
 import { baseFetch, fetchWrapper } from './fetch';
 
 export interface GetOcidRequest {

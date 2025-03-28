@@ -1,4 +1,4 @@
-import { EN_FETCH_METHOD } from '../../type';
+import { EN_FETCH_METHOD } from '../type';
 
 interface Fetch {
 	url: string;
