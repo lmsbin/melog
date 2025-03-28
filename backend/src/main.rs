@@ -3,8 +3,8 @@ mod api;
 use api::character::{
     get_ocid, get_user_ability, get_user_characeter_link_skill, get_user_characeter_skill,
     get_user_default_info, get_user_dojang, get_user_hexa_matrix, get_user_hyper_stat_info,
-    get_user_propensity, get_user_set_effect, get_user_stat_info, get_user_symbol_equipment,
-    get_user_v_matrix,
+    get_user_item_equipment, get_user_propensity, get_user_set_effect, get_user_stat_info,
+    get_user_symbol_equipment, get_user_v_matrix,
 };
 use api::request::API;
 use axum::http::HeaderValue;
@@ -48,6 +48,7 @@ async fn main() {
         .route("/getUserVMatrix", get(get_user_v_matrix))
         .route("/getUserHexaMatrix", get(get_user_hexa_matrix))
         .route("/getUserDojang", get(get_user_dojang))
+        .route("/getUserItemEquipment", get(get_user_item_equipment))
         .layer(Extension(api_key))
         .layer(cors);
 
