@@ -9,6 +9,7 @@ use chrono::{Duration, Utc};
 use chrono_tz::Asia::Seoul;
 use reqwest::{Client, header};
 use serde::{Deserialize, Serialize};
+use serde_with::{DefaultOnNull, serde_as};
 use std::sync::Arc;
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -284,6 +285,7 @@ pub struct ItemEquipmentInfoOption {
     pub base_equipment_level: i16,
 }
 
+#[serde_as]
 #[derive(Deserialize, Serialize, Debug)]
 pub struct ItemEquipmentInfoExceptionalOption {
     pub str: String,
@@ -295,6 +297,7 @@ pub struct ItemEquipmentInfoExceptionalOption {
     pub attack_power: String,
     pub magic_power: String,
     #[serde(default)]
+    #[serde_as(deserialize_as = "DefaultOnNull")]
     pub exceptional_upgrade: i16,
     #[serde(default)]
     pub armor: String,
@@ -325,6 +328,7 @@ pub struct ItemEquipmentStatOption {
     pub jump: String,
 }
 
+#[serde_as]
 #[derive(Deserialize, Serialize, Debug)]
 pub struct ItemEquipmentInfo {
     pub item_equipment_part: String,
@@ -335,22 +339,22 @@ pub struct ItemEquipmentInfo {
     pub item_shape_icon: String,
     pub item_total_option: ItemEquipmentInfoOption,
     pub item_base_option: ItemEquipmentInfoOption,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub potential_option_grade: Option<String>, // null 가능
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub additional_potential_option_grade: Option<String>, // null 가능
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub potential_option_1: Option<String>, // null 가능
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub potential_option_2: Option<String>, // null 가능
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub potential_option_3: Option<String>, // null 가능
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub additional_potential_option_1: Option<String>, // null 가능
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub additional_potential_option_2: Option<String>, // null 가능
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub additional_potential_option_3: Option<String>, // null 가능
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub potential_option_grade: String, // null 가능
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub additional_potential_option_grade: String, // null 가능
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub potential_option_1: String, // null 가능
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub potential_option_2: String, // null 가능
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub potential_option_3: String, // null 가능
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub additional_potential_option_1: String, // null 가능
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub additional_potential_option_2: String, // null 가능
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub additional_potential_option_3: String, // null 가능
     pub item_exceptional_option: ItemEquipmentInfoExceptionalOption,
     pub item_add_option: ItemEquipmentInfoExceptionalOption,
     pub scroll_upgrade: String,
@@ -358,10 +362,10 @@ pub struct ItemEquipmentInfo {
     pub golden_hammer_flag: String,
     pub scroll_resilience_count: String,
     pub scroll_upgradeable_count: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub soul_name: Option<String>, // null 가능
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub soul_option: Option<String>, // null 가능
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub soul_name: String, // null 가능
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub soul_option: String, // null 가능
     pub starforce: String,
     pub item_etc_option: ItemEquipmentStatOption,
     pub item_starforce_option: ItemEquipmentStatOption,
@@ -504,14 +508,17 @@ pub async fn get_user_set_effect(
 // TODO : 장착 안드로이드 조회
 // TODO : 장착 펫 정보 조회
 
+#[serde_as]
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SkillInfo {
     pub skill_name: String,
     pub skill_description: String,
     pub skill_level: i8,
-    pub skill_effect: Option<String>,
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub skill_effect: String,
     pub skill_icon: String,
-    pub skill_effect_next: Option<String>,
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub skill_effect_next: String,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -564,22 +571,7 @@ pub async fn get_user_characeter_skill(
             .await
             .expect("Failed to parse response JSON");
 
-        let filter_character_skill: CharacterSkill = CharacterSkill {
-            character_skill: user_character_skill
-                .character_skill
-                .into_iter()
-                .map(|skill| SkillInfo {
-                    skill_name: skill.skill_name,
-                    skill_description: skill.skill_description,
-                    skill_level: skill.skill_level,
-                    skill_effect: Some(skill.skill_effect.unwrap_or_default()),
-                    skill_icon: skill.skill_icon,
-                    skill_effect_next: Some(skill.skill_effect_next.unwrap_or_default()),
-                })
-                .collect(),
-        };
-
-        Ok(Json(filter_character_skill))
+        Ok(Json(user_character_skill))
     } else {
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
@@ -604,37 +596,28 @@ pub async fn get_user_characeter_link_skill(
             .await
             .expect("Failed to parse response JSON");
 
-        let filter_character_link_skill: CharacterLinkSkill = CharacterLinkSkill {
-            character_link_skill: user_character_link_skill
-                .character_link_skill
-                .into_iter()
-                .map(|skill| SkillInfo {
-                    skill_name: skill.skill_name,
-                    skill_description: skill.skill_description,
-                    skill_level: skill.skill_level,
-                    skill_effect: Some(skill.skill_effect.unwrap_or_default()),
-                    skill_icon: skill.skill_icon,
-                    skill_effect_next: Some(skill.skill_effect_next.unwrap_or_default()),
-                })
-                .collect(),
-        };
-
-        Ok(Json(filter_character_link_skill))
+        Ok(Json(user_character_link_skill))
     } else {
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
 }
 
+#[serde_as]
 #[derive(Deserialize, Serialize, Debug)]
 pub struct VMatrixInfo {
     pub slot_id: String,
     pub slot_level: i8,
-    pub v_core_name: Option<String>,
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub v_core_name: String,
     pub v_core_level: i8,
-    pub v_core_skill_1: Option<String>,
-    pub v_core_skill_2: Option<String>,
-    pub v_core_skill_3: Option<String>,
-    pub v_core_type: Option<String>,
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub v_core_skill_1: String,
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub v_core_skill_2: String,
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub v_core_skill_3: String,
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub v_core_type: String,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -657,26 +640,7 @@ pub async fn get_user_v_matrix(
             .await
             .expect("Failed to parse response JSON");
 
-        let filter_v_matrix: VMatrix = VMatrix {
-            character_v_core_equipment: user_v_matrix
-                .character_v_core_equipment
-                .into_iter()
-                .map(|matrix| VMatrixInfo {
-                    slot_id: matrix.slot_id,
-                    slot_level: matrix.slot_level,
-                    v_core_name: Some(matrix.v_core_name.unwrap_or_default()),
-                    v_core_level: matrix.v_core_level,
-                    v_core_skill_1: Some(matrix.v_core_skill_1.unwrap_or_default()),
-                    v_core_skill_2: Some(matrix.v_core_skill_2.unwrap_or_default()),
-                    v_core_skill_3: Some(matrix.v_core_skill_3.unwrap_or_default()),
-                    v_core_type: Some(matrix.v_core_type.unwrap_or_default()),
-                })
-                .collect(),
-            character_v_matrix_remain_slot_upgrade_point: user_v_matrix
-                .character_v_matrix_remain_slot_upgrade_point,
-        };
-
-        Ok(Json(filter_v_matrix))
+        Ok(Json(user_v_matrix))
     } else {
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
@@ -691,7 +655,7 @@ pub struct HexaSkillInfo {
 pub struct HexaMatrixInfo {
     pub hexa_core_name: String,
     pub hexa_core_level: i8,
-    pub hexa_core_type: Option<String>,
+    pub hexa_core_type: String,
     pub linked_skill: Vec<HexaSkillInfo>,
 }
 
@@ -721,10 +685,12 @@ pub async fn get_user_hexa_matrix(
 }
 
 // TODO : Hexa 매트릭스 설정 정보 조회
+#[serde_as]
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Dojang {
     pub dojang_best_floor: i8,
-    pub date_dojang_record: Option<String>,
+    #[serde_as(deserialize_as = "DefaultOnNull")]
+    pub date_dojang_record: String,
     pub dojang_best_time: i32,
 }
 
@@ -742,13 +708,7 @@ pub async fn get_user_dojang(
             .await
             .expect("Failed to parse response JSON");
 
-        let filter_dojang: Dojang = Dojang {
-            dojang_best_floor: user_dojang.dojang_best_floor,
-            date_dojang_record: Some(user_dojang.date_dojang_record.unwrap_or_default()),
-            dojang_best_time: user_dojang.dojang_best_time,
-        };
-
-        Ok(Json(filter_dojang))
+        Ok(Json(user_dojang))
     } else {
         Err((StatusCode::BAD_REQUEST, "Failed to fetch OCID"))
     }
