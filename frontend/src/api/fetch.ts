@@ -61,7 +61,7 @@ export function fetchWrapper<T, P>(
             !options?.noCache &&
             isValidCachedData(cachedData)
         ) {
-            console.log(`[INFO] cached data is used: ${cachedData.data}`);
+            console.log(`[INFO] cached data is used: ${cachedData.data} from ${func.name}`);
             return cachedData.data;
         }
 
@@ -70,7 +70,7 @@ export function fetchWrapper<T, P>(
             data: result,
             expiration_time: Date.now() + expiration_time,
         });
-        console.log(`[INFO] fetch executed: ${key}`);
+        console.log(`[INFO] fetch executed: ${key} from ${func.name}`);
         return result;
     };
 }
