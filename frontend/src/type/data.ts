@@ -37,3 +37,12 @@ export interface HyperStatDetail {
     stat_level: number;
     stat_increase: string;
 }
+
+export interface UserPropensity {
+    charisma_level: number;
+    sensibility_level: number;
+    insight_level: number;
+    willingness_level: number;
+    handicraft_level: number;
+    charm_level: number;
+}
