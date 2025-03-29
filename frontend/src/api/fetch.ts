@@ -38,6 +38,11 @@ export interface Cache {
 export interface FetchParam<T> {
     key: any;
     data: T;
+    options?: FetchOptions;
+}
+
+export interface FetchOptions {
+    noCache?: boolean;
 }
 
 export function fetchWrapper<T, P>(
@@ -48,10 +53,10 @@ export function fetchWrapper<T, P>(
     const cache = new Map<any, Cache>(Object.entries(localStorageStore.getData(STORAGE_KEY) ?? {}));
 
     return async (param: FetchParam<T>): Promise<P> => {
-        const { key, data } = param;
+        const { key, data, options } = param;
         const cachedData = cache.get(key);
 
-        if (isValidCachedData(cachedData)) {
+        if (!options?.noCache && isValidCachedData(cachedData)) {
             console.log(`[INFO] cached data is used: ${cachedData.data}`);
             return cachedData.data;
         }
