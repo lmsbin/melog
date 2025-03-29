@@ -4,6 +4,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import getUserInfo from '../api/getUserInfo';
 import { CharacterImg } from '../component/img/CharacterImg';
 import getOcid from '../api/getOcid';
+import { SearchBar } from '../component';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
@@ -49,6 +50,7 @@ const CharacterPage = memo(function CharacterPage({ userInfo }: CharacterPagePro
     return (
         <>
             {JSON.stringify(userInfo)}
+            <SearchBar />
             <CharacterImg src={userInfo.character_image} />
         </>
     );
