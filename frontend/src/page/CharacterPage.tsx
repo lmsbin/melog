@@ -1,13 +1,15 @@
 import { memo, useEffect, useState } from 'react';
-import { MelogLocation, UserInfo } from '../type';
+import { MelogLocation, UserInfo, UserStatInfo } from '../type';
 import { useLocation, useParams } from 'react-router-dom';
 import getUserInfo from '../api/getUserInfo';
 import { CharacterImg } from '../component/img/CharacterImg';
 import getOcid from '../api/getOcid';
 import { SearchBar } from '../component';
+import getUserStatInfo from '../api/getUserStatInfo';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
+    const [userStatInfo, setUserStatInfo] = useState<UserStatInfo>({} as UserStatInfo);
     const location: MelogLocation = useLocation();
     const { nickName } = useParams();
 
@@ -27,11 +29,16 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             }
 
             if (nickName) {
-                const result = await getUserInfo({
+                const userInfo = await getUserInfo({
                     key: nickName,
                 });
 
-                setUserInfo(result);
+                const userStatInfo = await getUserStatInfo({
+                    key: nickName,
+                });
+
+                setUserInfo(userInfo);
+                setUserStatInfo(userStatInfo);
             }
         })();
     }, [nickName, location]);
@@ -50,6 +57,7 @@ const CharacterPage = memo(function CharacterPage({ userInfo }: CharacterPagePro
     return (
         <>
             {JSON.stringify(userInfo)}
+            {}
             <SearchBar />
             <CharacterImg src={userInfo.character_image} />
         </>

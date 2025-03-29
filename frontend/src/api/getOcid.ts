@@ -1,4 +1,4 @@
-import { EN_FETCH_METHOD, BASE_URL } from '../type';
+import { EN_FETCH_METHOD, BASE_URL, TEST_UUID } from '../type';
 import { baseFetch, fetchWrapper } from './fetch';
 
 export interface GetOcidRequest {
@@ -17,7 +17,7 @@ async function getOcid(request: GetOcidRequest) {
             nickName: request.nickName,
         },
         headers: {
-            uuid: 'asdfafsafawefafewf',
+            uuid: TEST_UUID,
         },
     });
 
