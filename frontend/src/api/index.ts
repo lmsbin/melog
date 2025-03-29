@@ -4,3 +4,4 @@ export * from './getUserInfo';
 export * from './getUserStatInfo';
 export * from './getUserHyperStatInfo';
 export * from './getUserPropensity';
+export * from './getUserAbility';

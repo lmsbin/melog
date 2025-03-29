@@ -46,3 +46,13 @@ export interface UserPropensity {
     handicraft_level: number;
     charm_level: number;
 }
+
+export interface UserAbility {
+    date: Date;
+    ability_grade: string;
+    ability_info: {
+        ability_no: string;
+        ability_grade: string;
+        ability_value: string;
+    }[];
+}
