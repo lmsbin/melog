@@ -6,6 +6,7 @@ import {
     UserInfo,
     UserPropensity,
     UserStatInfo,
+    UserSymbolicEquipment,
 } from '../type';
 import { useLocation, useParams } from 'react-router-dom';
 import getUserInfo from '../api/getUserInfo';
@@ -16,6 +17,7 @@ import getUserStatInfo from '../api/getUserStatInfo';
 import getUserHyperStatInfo from '../api/getUserHyperStatInfo';
 import getUserPropensity from '../api/getUserPropensity';
 import getUserAbility from '../api/getUserAbility';
+import getUserSymbolicEquipment from '../api/getUserSymbolicEquipment';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
@@ -25,6 +27,9 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     );
     const [userPropensity, setUserPropensity] = useState<UserPropensity>({} as UserPropensity);
     const [userAbility, setUserAbility] = useState<UserAbility>({} as UserAbility);
+    const [userSymbolicEquipment, setUserSymbolicEquipment] = useState<UserSymbolicEquipment>(
+        {} as UserSymbolicEquipment,
+    );
 
     const location: MelogLocation = useLocation();
     const { nickName } = useParams();
@@ -51,6 +56,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     getUserHyperStatInfo({ key: nickName }),
                     getUserPropensity({ key: nickName }),
                     getUserAbility({ key: nickName }),
+                    getUserSymbolicEquipment({ key: nickName }),
                 ]);
 
                 setUserInfo(result[0]);
@@ -58,6 +64,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserHyperStatInfo(result[2]);
                 setUserPropensity(result[3]);
                 setUserAbility(result[4]);
+                setUserSymbolicEquipment(result[5]);
             }
         })();
     }, [nickName, location]);
@@ -73,6 +80,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             userHyperStatInfo={userHyperStatInfo}
             userPropensity={userPropensity}
             userAbility={userAbility}
+            userSymbolicEquipment={userSymbolicEquipment}
         />
     );
 });
@@ -83,6 +91,7 @@ interface CharacterPageProps {
     userHyperStatInfo: UserHyperStatInfo;
     userPropensity: UserPropensity;
     userAbility: UserAbility;
+    userSymbolicEquipment: UserSymbolicEquipment;
 }
 const CharacterPage = memo(function CharacterPage({
     userInfo,
@@ -90,6 +99,7 @@ const CharacterPage = memo(function CharacterPage({
     userHyperStatInfo,
     userPropensity,
     userAbility,
+    userSymbolicEquipment,
 }: CharacterPageProps) {
     return (
         <>
@@ -98,6 +108,7 @@ const CharacterPage = memo(function CharacterPage({
             <div>{JSON.stringify(userHyperStatInfo)}</div>
             <div>{JSON.stringify(userPropensity)}</div>
             <div>{JSON.stringify(userAbility)}</div>
+            <div>{JSON.stringify(userSymbolicEquipment)}</div>
             <SearchBar />
             <CharacterImg src={userInfo.character_image} />
         </>
