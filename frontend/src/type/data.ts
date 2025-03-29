@@ -21,3 +21,19 @@ export interface UserInfo {
 export interface UserStatInfo {
     final_stat: { stat_name: string; stat_value: string }[];
 }
+
+export interface UserHyperStatInfo {
+    hyper_stat_preset_1: HyperStatDetail[];
+    hyper_stat_preset_1_remain_point: number;
+    hyper_stat_preset_2: HyperStatDetail[];
+    hyper_stat_preset_2_remain_point: number;
+    hyper_stat_preset_3: HyperStatDetail[];
+    hyper_stat_preset_3_remain_point: number;
+}
+
+export interface HyperStatDetail {
+    stat_type: string;
+    stat_point: number;
+    stat_level: number;
+    stat_increase: string;
+}

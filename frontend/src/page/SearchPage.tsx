@@ -34,6 +34,7 @@ export const SearchPageWrapper = memo(function SearchPageWrapper() {
     useEffect(() => {
         // 현재는 캐릭터만 고려.
         // ocid 존재 => 캐릭터 조회 성공 => 바로 캐릭터 정보 페이지로 이동
+        console.log(ocid);
         if (ocid) {
             navigate(`/character/${searchedValue}`, {
                 replace: true,
