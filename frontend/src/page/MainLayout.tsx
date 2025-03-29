@@ -36,7 +36,7 @@ const NavBar = memo(function NavBar() {
                 navigate(targetUrl);
             }
         },
-        [navItems],
+        [navItems, location],
     );
 
     return (
