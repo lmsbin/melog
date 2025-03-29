@@ -1,10 +1,8 @@
 mod api;
 
-use api::character::character::get_ocid;
-use api::character::request::API;
+use api::character::{character::get_ocid, request::API};
 use api::request::user_routes;
-use axum::http::HeaderValue;
-use axum::{Router, extract::Extension, routing::post};
+use axum::{Router, extract::Extension, http::HeaderValue, routing::post};
 use std::sync::Arc;
 use tower_http::cors::{Any, CorsLayer};
 

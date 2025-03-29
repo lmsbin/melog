@@ -1,7 +1,7 @@
 use crate::api::character::request::{API, request_parser};
 
-use axum::Extension;
 use axum::{
+    Extension,
     http::{HeaderMap, StatusCode},
     response::Json,
 };
