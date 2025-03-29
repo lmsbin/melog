@@ -37,7 +37,7 @@ export interface Cache {
 
 export interface FetchParam<T> {
     key: any;
-    data: T;
+    data?: T;
     options?: FetchOptions;
 }
 
@@ -56,12 +56,16 @@ export function fetchWrapper<T, P>(
         const { key, data, options } = param;
         const cachedData = cache.get(key);
 
-        if (!options?.noCache && isValidCachedData(cachedData)) {
+        if (
+            !CACHE_EXCEPTION_FUNC.some((x) => x === func.name) &&
+            !options?.noCache &&
+            isValidCachedData(cachedData)
+        ) {
             console.log(`[INFO] cached data is used: ${cachedData.data}`);
             return cachedData.data;
         }
 
-        const result = await func(data);
+        const result = await func(data!);
         cache.set(key, {
             data: result,
             expiration_time: Date.now() + expiration_time,
@@ -77,3 +81,5 @@ function isValidCachedData(cachedData: Cache | undefined): cachedData is Cache {
     }
     return true;
 }
+
+const CACHE_EXCEPTION_FUNC = ['getOcid'];
