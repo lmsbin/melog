@@ -1,25 +1,39 @@
 import { memo, useEffect, useState } from 'react';
-import { UserInfo } from '../type';
-import { useParams } from 'react-router-dom';
+import { MelogLocation, UserInfo } from '../type';
+import { useLocation, useParams } from 'react-router-dom';
 import getUserInfo from '../api/getUserInfo';
 import { CharacterImg } from '../component/img/CharacterImg';
+import getOcid from '../api/getOcid';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
+    const location: MelogLocation = useLocation();
     const { nickName } = useParams();
+
+    useEffect(() => {}, [location]);
 
     useEffect(() => {
         (async function () {
+            const isFromSearchPage = location?.state?.fromSearchPage;
+
+            if (!isFromSearchPage) {
+                await getOcid({
+                    key: nickName,
+                    data: {
+                        nickName: nickName as string,
+                    },
+                });
+            }
+
             if (nickName) {
                 const result = await getUserInfo({
                     key: nickName,
-                    data: {},
                 });
 
                 setUserInfo(result);
             }
         })();
-    }, [nickName]);
+    }, [nickName, location]);
 
     if (!userInfo) {
         return <div>404</div>;

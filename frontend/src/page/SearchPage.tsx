@@ -35,7 +35,10 @@ export const SearchPageWrapper = memo(function SearchPageWrapper() {
         // 현재는 캐릭터만 고려.
         // ocid 존재 => 캐릭터 조회 성공 => 바로 캐릭터 정보 페이지로 이동
         if (ocid) {
-            navigate(`/character/${searchedValue}`, { replace: true });
+            navigate(`/character/${searchedValue}`, {
+                replace: true,
+                state: { fromSearchPage: true },
+            });
         }
     }, [ocid, navigate, searchedValue]);
 
