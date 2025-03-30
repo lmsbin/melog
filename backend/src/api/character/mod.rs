@@ -1,6 +1,7 @@
 pub mod character;
 pub mod request;
 pub mod user_ability;
+pub mod user_android_equipment;
 pub mod user_characeter_skill;
 pub mod user_default_info;
 pub mod user_dojang;

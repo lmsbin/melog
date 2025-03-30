@@ -1,5 +1,6 @@
 use crate::api::character::{
-    user_ability::get_user_ability, user_characeter_skill::get_user_characeter_link_skill,
+    user_ability::get_user_ability, user_android_equipment::get_user_android_equipment,
+    user_characeter_skill::get_user_characeter_link_skill,
     user_characeter_skill::get_user_characeter_skill, user_default_info::get_user_default_info,
     user_dojang::get_user_dojang, user_hexa_matrix::get_user_hexa_matrix,
     user_hyper_stat_info::get_user_hyper_stat_info, user_item_equipment::get_user_item_equipment,
@@ -27,4 +28,5 @@ pub fn user_routes() -> Router {
         .route("/getUserHexaMatrix", get(get_user_hexa_matrix))
         .route("/getUserDojang", get(get_user_dojang))
         .route("/getUserItemEquipment", get(get_user_item_equipment))
+        .route("/getUserAndroidEquipment", get(get_user_android_equipment))
 }
