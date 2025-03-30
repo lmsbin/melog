@@ -23,7 +23,7 @@ struct ErrorResponse {
 
 async fn fallback() -> impl IntoResponse {
     (
-        StatusCode::NOT_FOUND,
+        StatusCode::BAD_REQUEST,
         Json(ErrorResponse {
             message: "Not Found",
         }),
