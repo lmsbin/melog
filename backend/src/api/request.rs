@@ -8,7 +8,27 @@ use crate::api::character::{
     user_stat_info::get_user_stat_info, user_symbol_equipment::get_user_symbol_equipment,
     user_v_matrix::get_user_v_matrix,
 };
-use axum::{Router, routing::get, routing::post};
+use axum::{
+    Json, Router,
+    http::StatusCode,
+    response::IntoResponse,
+    routing::{get, post},
+};
+use serde::Serialize;
+
+#[derive(Serialize)]
+struct ErrorResponse {
+    message: &'static str,
+}
+
+async fn fallback() -> impl IntoResponse {
+    (
+        StatusCode::NOT_FOUND,
+        Json(ErrorResponse {
+            message: "Not Found",
+        }),
+    )
+}
 
 pub fn user_routes() -> Router {
     Router::new()
@@ -29,4 +49,5 @@ pub fn user_routes() -> Router {
         .route("/getUserDojang", get(get_user_dojang))
         .route("/getUserItemEquipment", get(get_user_item_equipment))
         .route("/getUserAndroidEquipment", get(get_user_android_equipment))
+        .fallback(fallback)
 }
