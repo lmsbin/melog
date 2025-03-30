@@ -7,7 +7,7 @@ export type GetUserSetEffectResponse = UserSetEffect;
 
 async function getUserSetEffect() {
     const result = await baseFetch({
-        url: `${BASE_URL}/GetUserSetEffect`,
+        url: `${BASE_URL}/getUserSetEffect`,
         method: EN_FETCH_METHOD.GET,
         headers: {
             uuid: TEST_UUID,

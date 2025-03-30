@@ -8,7 +8,7 @@ import {
     UserPropensity,
     UserSetEffect,
     UserStatInfo,
-    UserSymbolicEquipment,
+    UserSymbolEquipment,
 } from '../type';
 import { useLocation, useParams } from 'react-router-dom';
 import getUserInfo from '../api/getUserInfo';
@@ -19,9 +19,10 @@ import getUserStatInfo from '../api/getUserStatInfo';
 import getUserHyperStatInfo from '../api/getUserHyperStatInfo';
 import getUserPropensity from '../api/getUserPropensity';
 import getUserAbility from '../api/getUserAbility';
-import getUserSymbolicEquipment from '../api/getUserSymbolicEquipment';
+import getUserSymbolicEquipment from '../api/getUserSymbolEquipment';
 import getUserSetEffect from '../api/getUserSetEffect';
 import getUserCharacterSkill from '../api/getUserCharacterSkill';
+import getUserSymbolEquipment from '../api/getUserSymbolEquipment';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
@@ -31,8 +32,8 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     );
     const [userPropensity, setUserPropensity] = useState<UserPropensity>({} as UserPropensity);
     const [userAbility, setUserAbility] = useState<UserAbility>({} as UserAbility);
-    const [userSymbolicEquipment, setUserSymbolicEquipment] = useState<UserSymbolicEquipment>(
-        {} as UserSymbolicEquipment,
+    const [userSymbolicEquipment, setUserSymbolEquipment] = useState<UserSymbolEquipment>(
+        {} as UserSymbolEquipment,
     );
     const [userSetEffect, setUserSetEffect] = useState<UserSetEffect>({} as UserSetEffect);
     const [userCharacterSkill, setUserCharacterSkill] = useState<UserCharacterSkill>(
@@ -58,15 +59,20 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             }
 
             if (nickName) {
-                const result = await Promise.all([
+                const result: any = await Promise.all([
                     getUserInfo({ key: nickName }),
                     getUserStatInfo({ key: nickName }),
                     getUserHyperStatInfo({ key: nickName }),
                     getUserPropensity({ key: nickName }),
                     getUserAbility({ key: nickName }),
-                    getUserSymbolicEquipment({ key: nickName }),
+                    getUserSymbolEquipment({ key: nickName }),
                     getUserSetEffect({ key: nickName }),
-                    getUserCharacterSkill({ key: nickName }),
+                    // getUserCharacterSkill({
+                    //     key: nickName,
+                    //     data: {
+                    //         nickName: nickName,
+                    //     },
+                    // }),
                 ]);
 
                 setUserInfo(result[0]);
@@ -74,12 +80,25 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserHyperStatInfo(result[2]);
                 setUserPropensity(result[3]);
                 setUserAbility(result[4]);
-                setUserSymbolicEquipment(result[5]);
+                setUserSymbolEquipment(result[5]);
                 setUserSetEffect(result[6]);
-                setUserCharacterSkill(result[7]);
+                // setUserCharacterSkill(result[7]);
             }
         })();
     }, [nickName, location]);
+
+    useEffect(() => {
+        (async function () {
+            const result = await getUserCharacterSkill({
+                key: nickName,
+                data: {
+                    level: userInfo.character_level,
+                },
+            });
+
+            setUserCharacterSkill(result);
+        })();
+    }, [userInfo.character_level]);
 
     if (!userInfo) {
         return <div>404</div>;
@@ -105,7 +124,7 @@ interface CharacterPageProps {
     userHyperStatInfo: UserHyperStatInfo;
     userPropensity: UserPropensity;
     userAbility: UserAbility;
-    userSymbolicEquipment: UserSymbolicEquipment;
+    userSymbolicEquipment: UserSymbolEquipment;
     userSetEffect: UserSetEffect;
     userCharacterSkill: UserCharacterSkill;
 }

@@ -8,6 +8,7 @@ export interface UserInfo {
     date: Date;
     character_name: string;
     world_name: string;
+    character_level: number;
     character_gender: string;
     character_class: string;
     character_class_level: string;
@@ -57,7 +58,7 @@ export interface UserAbility {
     }[];
 }
 
-export interface UserSymbolicEquipment {
+export interface UserSymbolEquipment {
     symbol: Symbol[];
 }
 
