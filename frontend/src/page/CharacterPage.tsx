@@ -2,6 +2,7 @@ import { memo, useEffect, useState } from 'react';
 import {
     MelogLocation,
     UserAbility,
+    UserCharacterSkill,
     UserHyperStatInfo,
     UserInfo,
     UserPropensity,
@@ -20,6 +21,7 @@ import getUserPropensity from '../api/getUserPropensity';
 import getUserAbility from '../api/getUserAbility';
 import getUserSymbolicEquipment from '../api/getUserSymbolicEquipment';
 import getUserSetEffect from '../api/getUserSetEffect';
+import getUserCharacterSkill from '../api/getUserCharacterSkill';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
@@ -33,6 +35,9 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
         {} as UserSymbolicEquipment,
     );
     const [userSetEffect, setUserSetEffect] = useState<UserSetEffect>({} as UserSetEffect);
+    const [userCharacterSkill, setUserCharacterSkill] = useState<UserCharacterSkill>(
+        {} as UserCharacterSkill,
+    );
 
     const location: MelogLocation = useLocation();
     const { nickName } = useParams();
@@ -61,6 +66,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     getUserAbility({ key: nickName }),
                     getUserSymbolicEquipment({ key: nickName }),
                     getUserSetEffect({ key: nickName }),
+                    getUserCharacterSkill({ key: nickName }),
                 ]);
 
                 setUserInfo(result[0]);
@@ -70,6 +76,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserAbility(result[4]);
                 setUserSymbolicEquipment(result[5]);
                 setUserSetEffect(result[6]);
+                setUserCharacterSkill(result[7]);
             }
         })();
     }, [nickName, location]);
@@ -87,6 +94,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             userAbility={userAbility}
             userSymbolicEquipment={userSymbolicEquipment}
             userSetEffect={userSetEffect}
+            userCharacterSkill={userCharacterSkill}
         />
     );
 });
@@ -99,6 +107,7 @@ interface CharacterPageProps {
     userAbility: UserAbility;
     userSymbolicEquipment: UserSymbolicEquipment;
     userSetEffect: UserSetEffect;
+    userCharacterSkill: UserCharacterSkill;
 }
 const CharacterPage = memo(function CharacterPage({
     userInfo,
@@ -108,6 +117,7 @@ const CharacterPage = memo(function CharacterPage({
     userAbility,
     userSymbolicEquipment,
     userSetEffect,
+    userCharacterSkill,
 }: CharacterPageProps) {
     return (
         <>
@@ -118,6 +128,7 @@ const CharacterPage = memo(function CharacterPage({
             <div>{JSON.stringify(userAbility)}</div>
             <div>{JSON.stringify(userSymbolicEquipment)}</div>
             <div>{JSON.stringify(userSetEffect)}</div>
+            <div>{JSON.stringify(userCharacterSkill)}</div>
             <SearchBar />
             <CharacterImg src={userInfo.character_image} />
         </>
