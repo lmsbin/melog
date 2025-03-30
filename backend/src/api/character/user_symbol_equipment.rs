@@ -6,8 +6,10 @@ use axum::{
     response::Json,
 };
 use serde::{Deserialize, Serialize};
+use serde_with::{DefaultOnNull, serde_as};
 use std::sync::Arc;
 
+#[serde_as]
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SymbolInfo {
     pub symbol_name: String,
@@ -19,8 +21,11 @@ pub struct SymbolInfo {
     pub symbol_int: String,
     pub symbol_luk: String,
     pub symbol_hp: String,
+    #[serde_as(deserialize_as = "DefaultOnNull")]
     pub symbol_drop_rate: String,
+    #[serde_as(deserialize_as = "DefaultOnNull")]
     pub symbol_meso_rate: String,
+    #[serde_as(deserialize_as = "DefaultOnNull")]
     pub symbol_exp_rate: String,
     pub symbol_growth_count: i32,
     pub symbol_require_growth_count: i32,
