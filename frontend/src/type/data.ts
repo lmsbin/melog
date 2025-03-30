@@ -78,3 +78,14 @@ export interface Symbol {
     symbol_growth_count: number;
     symbol_require_growth_count: number;
 }
+
+export interface UserSetEffect {
+    set_effect: {
+        set_name: string;
+        total_set_count: number;
+        set_effect_full_info: {
+            set_count: number;
+            set_option: string;
+        }[];
+    }[];
+}

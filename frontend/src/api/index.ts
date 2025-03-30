@@ -6,3 +6,4 @@ export * from './getUserHyperStatInfo';
 export * from './getUserPropensity';
 export * from './getUserAbility';
 export * from './getUserSymbolicEquipment';
+export * from './getUserSetEffect';

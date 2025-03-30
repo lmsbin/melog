@@ -5,6 +5,7 @@ import {
     UserHyperStatInfo,
     UserInfo,
     UserPropensity,
+    UserSetEffect,
     UserStatInfo,
     UserSymbolicEquipment,
 } from '../type';
@@ -18,6 +19,7 @@ import getUserHyperStatInfo from '../api/getUserHyperStatInfo';
 import getUserPropensity from '../api/getUserPropensity';
 import getUserAbility from '../api/getUserAbility';
 import getUserSymbolicEquipment from '../api/getUserSymbolicEquipment';
+import getUserSetEffect from '../api/getUserSetEffect';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
@@ -30,6 +32,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userSymbolicEquipment, setUserSymbolicEquipment] = useState<UserSymbolicEquipment>(
         {} as UserSymbolicEquipment,
     );
+    const [userSetEffect, setUserSetEffect] = useState<UserSetEffect>({} as UserSetEffect);
 
     const location: MelogLocation = useLocation();
     const { nickName } = useParams();
@@ -57,6 +60,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     getUserPropensity({ key: nickName }),
                     getUserAbility({ key: nickName }),
                     getUserSymbolicEquipment({ key: nickName }),
+                    getUserSetEffect({ key: nickName }),
                 ]);
 
                 setUserInfo(result[0]);
@@ -65,6 +69,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserPropensity(result[3]);
                 setUserAbility(result[4]);
                 setUserSymbolicEquipment(result[5]);
+                setUserSetEffect(result[6]);
             }
         })();
     }, [nickName, location]);
@@ -81,6 +86,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             userPropensity={userPropensity}
             userAbility={userAbility}
             userSymbolicEquipment={userSymbolicEquipment}
+            userSetEffect={userSetEffect}
         />
     );
 });
@@ -92,6 +98,7 @@ interface CharacterPageProps {
     userPropensity: UserPropensity;
     userAbility: UserAbility;
     userSymbolicEquipment: UserSymbolicEquipment;
+    userSetEffect: UserSetEffect;
 }
 const CharacterPage = memo(function CharacterPage({
     userInfo,
@@ -100,6 +107,7 @@ const CharacterPage = memo(function CharacterPage({
     userPropensity,
     userAbility,
     userSymbolicEquipment,
+    userSetEffect,
 }: CharacterPageProps) {
     return (
         <>
@@ -109,6 +117,7 @@ const CharacterPage = memo(function CharacterPage({
             <div>{JSON.stringify(userPropensity)}</div>
             <div>{JSON.stringify(userAbility)}</div>
             <div>{JSON.stringify(userSymbolicEquipment)}</div>
+            <div>{JSON.stringify(userSetEffect)}</div>
             <SearchBar />
             <CharacterImg src={userInfo.character_image} />
         </>
