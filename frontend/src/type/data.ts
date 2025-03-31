@@ -101,3 +101,14 @@ export interface UserCharacterSkill {
         skill_icon: string;
     };
 }
+
+export interface UserCharacterLinkSkill {
+    character_link_skill: {
+        skill_name: string;
+        skill_description: string;
+        skill_level: number;
+        skill_effect: string;
+        skill_effect_next: string;
+        skill_icon: string;
+    };
+}

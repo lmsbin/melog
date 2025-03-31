@@ -2,6 +2,7 @@ import { memo, useEffect, useState } from 'react';
 import {
     MelogLocation,
     UserAbility,
+    UserCharacterLinkSkill,
     UserCharacterSkill,
     UserHyperStatInfo,
     UserInfo,
@@ -23,6 +24,9 @@ import getUserSymbolicEquipment from '../api/getUserSymbolEquipment';
 import getUserSetEffect from '../api/getUserSetEffect';
 import getUserCharacterSkill from '../api/getUserCharacterSkill';
 import getUserSymbolEquipment from '../api/getUserSymbolEquipment';
+import getUserCharacterLinkSkill, {
+    GetUserCharacterLinkSkillResponse,
+} from '../api/getUserCharacterLinkSkill';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [ocid, setOcid] = useState<string>('');
@@ -40,6 +44,9 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userCharacterSkill, setUserCharacterSkill] = useState<UserCharacterSkill>(
         {} as UserCharacterSkill,
     );
+    const [userCharacterLinkSkill, setUserCharacterLinkSkill] = useState<UserCharacterLinkSkill>(
+        {} as UserCharacterLinkSkill,
+    );
 
     const location: MelogLocation = useLocation();
     const { nickName } = useParams();
@@ -47,7 +54,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     useEffect(() => {
         (async function () {
             const result = await getOcid({
-                key: nickName,
+                key: `cache$nickname$${nickName}`,
                 data: {
                     nickName: nickName as string,
                 },
@@ -64,7 +71,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
 
                 result.push(
                     await getUserInfo({
-                        key: nickName,
+                        key: `cache$nickname$${nickName}`,
                         data: {
                             ocid,
                         },
@@ -79,7 +86,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
 
                 result.push(
                     await getUserStatInfo({
-                        key: nickName,
+                        key: `cache$nickname$${nickName}`,
                         data: {
                             ocid,
                         },
@@ -94,7 +101,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
 
                 result.push(
                     await getUserHyperStatInfo({
-                        key: nickName,
+                        key: `cache$nickname$${nickName}`,
                         data: {
                             ocid,
                         },
@@ -109,7 +116,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
 
                 result.push(
                     await getUserPropensity({
-                        key: nickName,
+                        key: `cache$nickname$${nickName}`,
                         data: {
                             ocid,
                         },
@@ -124,7 +131,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
 
                 result.push(
                     await getUserAbility({
-                        key: nickName,
+                        key: `cache$nickname$${nickName}`,
                         data: {
                             ocid,
                         },
@@ -139,7 +146,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
 
                 result.push(
                     await getUserSymbolEquipment({
-                        key: nickName,
+                        key: `cache$nickname$${nickName}`,
                         data: {
                             ocid,
                         },
@@ -154,7 +161,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
 
                 result.push(
                     await getUserSetEffect({
-                        key: nickName,
+                        key: `cache$nickname$${nickName}`,
                         data: {
                             ocid,
                         },
@@ -167,6 +174,15 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     }, 500);
                 });
 
+                result.push(
+                    await getUserCharacterLinkSkill({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
+
                 setUserInfo(result[0]);
                 setUserStatInfo(result[1]);
                 setUserHyperStatInfo(result[2]);
@@ -174,6 +190,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserAbility(result[4]);
                 setUserSymbolEquipment(result[5]);
                 setUserSetEffect(result[6]);
+                setUserCharacterLinkSkill(result[7]);
             }
         })();
     }, [nickName, location, ocid]);
@@ -182,7 +199,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
         (async function () {
             if (typeof userInfo?.character_level === 'number') {
                 const result = await getUserCharacterSkill({
-                    key: nickName,
+                    key: `cache$nickname$${nickName}`,
                     data: {
                         level: userInfo.character_level,
                         ocid: ocid,
@@ -208,6 +225,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             userSymbolicEquipment={userSymbolicEquipment}
             userSetEffect={userSetEffect}
             userCharacterSkill={userCharacterSkill}
+            userCharacterLinkSkill={userCharacterLinkSkill}
         />
     );
 });
@@ -221,6 +239,7 @@ interface CharacterPageProps {
     userSymbolicEquipment: UserSymbolEquipment;
     userSetEffect: UserSetEffect;
     userCharacterSkill: UserCharacterSkill;
+    userCharacterLinkSkill: UserCharacterLinkSkill;
 }
 const CharacterPage = memo(function CharacterPage({
     userInfo,
@@ -231,6 +250,7 @@ const CharacterPage = memo(function CharacterPage({
     userSymbolicEquipment,
     userSetEffect,
     userCharacterSkill,
+    userCharacterLinkSkill,
 }: CharacterPageProps) {
     return (
         <>
@@ -242,6 +262,7 @@ const CharacterPage = memo(function CharacterPage({
             <div>{JSON.stringify(userSymbolicEquipment)}</div>
             <div>{JSON.stringify(userSetEffect)}</div>
             <div>{JSON.stringify(userCharacterSkill)}</div>
+            <div>{JSON.stringify(userCharacterLinkSkill)}</div>
             <SearchBar />
             <CharacterImg src={userInfo.character_image} />
         </>

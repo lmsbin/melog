@@ -8,3 +8,4 @@ export * from './getUserAbility';
 export * from './getUserSymbolEquipment';
 export * from './getUserSetEffect';
 export * from './getUserCharacterSkill';
+export * from './getUserCharacterLinkSkill';
