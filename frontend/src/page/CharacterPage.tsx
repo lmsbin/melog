@@ -27,6 +27,7 @@ import getUserSymbolEquipment from '../api/getUserSymbolEquipment';
 import getUserCharacterLinkSkill, {
     GetUserCharacterLinkSkillResponse,
 } from '../api/getUserCharacterLinkSkill';
+import { WorldLabel } from '../component/label';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [ocid, setOcid] = useState<string>('');
@@ -265,6 +266,7 @@ const CharacterPage = memo(function CharacterPage({
             <div>{JSON.stringify(userCharacterLinkSkill)}</div>
             <SearchBar />
             <CharacterImg src={userInfo.character_image} />
+            <WorldLabel worldName={userInfo.world_name} />
         </>
     );
 });
