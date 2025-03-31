@@ -1,17 +1,13 @@
 use crate::api::character::request::API;
 
-use axum::{
-    Extension,
-    http::{HeaderMap, StatusCode},
-    response::Json,
-};
+use axum::{Extension, http::StatusCode, response::Json};
 use reqwest::{Client, header};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct UserOcid {
-    ocid: String,
+    pub ocid: String,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -22,14 +18,8 @@ pub struct Character {
 
 pub async fn get_ocid(
     Extension(api_key): Extension<Arc<API>>,
-    header: HeaderMap,
     Json(character): Json<Character>,
 ) -> Result<Json<UserOcid>, (StatusCode, &'static str)> {
-    let uuid = header
-        .get("uuid")
-        .and_then(|value| value.to_str().ok())
-        .ok_or((StatusCode::BAD_REQUEST, "Missing or invalid uuid header"))?;
-
     let client = Client::new();
 
     // 요청할 API의 URL
@@ -55,9 +45,6 @@ pub async fn get_ocid(
             .json()
             .await
             .expect("Failed to parse response JSON");
-
-        // 전역 변수 업데이트
-        api_key.set_ocid_uuid(uuid.to_string(), userocid.ocid.clone());
 
         Ok(Json(userocid))
     } else {

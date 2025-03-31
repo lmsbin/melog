@@ -1,10 +1,8 @@
 use crate::api::character::request::{API, request_parser};
 
-use axum::{
-    Extension,
-    http::{HeaderMap, StatusCode},
-    response::Json,
-};
+use super::character::UserOcid;
+
+use axum::{Extension, http::StatusCode, response::Json};
 use chrono::{Duration, Utc};
 use chrono_tz::Asia::Seoul;
 use reqwest::{Client, header};
@@ -32,19 +30,14 @@ pub struct CharacterSkill {
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct CharacterSkilLevel {
+    pub user_ocid: UserOcid,
     pub level: i8,
 }
 
 pub async fn get_user_characeter_skill(
     Extension(api_key): Extension<Arc<API>>,
-    header: HeaderMap,
     Json(character_skil_level): Json<CharacterSkilLevel>,
 ) -> Result<Json<CharacterSkill>, (StatusCode, &'static str)> {
-    let uuid = header
-        .get("uuid")
-        .and_then(|value| value.to_str().ok())
-        .unwrap_or_default();
-
     // 요청 헤더 정의
     let mut headers = header::HeaderMap::new();
     headers.insert("x-nxopen-api-key", api_key.key.parse().unwrap());
@@ -55,9 +48,7 @@ pub async fn get_user_characeter_skill(
 
     let url = format!(
         "https://open.api.nexon.com/maplestory/v1/character/skill?ocid={}&date={}&character_skill_grade={}",
-        api_key.get_ocid_uuid(uuid).unwrap_or_default(),
-        now_time,
-        character_skil_level.level
+        character_skil_level.user_ocid.ocid, now_time, character_skil_level.level
     );
 
     // POST 요청 보내기
@@ -88,10 +79,10 @@ pub struct CharacterLinkSkill {
 
 pub async fn get_user_characeter_link_skill(
     Extension(api_key): Extension<Arc<API>>,
-    header: HeaderMap,
+    Json(user_ocid): Json<UserOcid>,
 ) -> Result<Json<CharacterLinkSkill>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), header, "link-skill").await;
+    let response = request_parser(api_key.clone(), "link-skill", &user_ocid.ocid).await;
 
     // 응답 결과 확인
     if response.status().is_success() {

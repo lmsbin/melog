@@ -1,10 +1,8 @@
 use crate::api::character::request::{API, request_parser};
 
-use axum::{
-    Extension,
-    http::{HeaderMap, StatusCode},
-    response::Json,
-};
+use super::character::UserOcid;
+
+use axum::{Extension, http::StatusCode, response::Json};
 use serde::{Deserialize, Serialize};
 use serde_with::{DefaultOnNull, serde_as};
 use std::sync::Arc;
@@ -38,10 +36,10 @@ pub struct Symbol {
 
 pub async fn get_user_symbol_equipment(
     Extension(api_key): Extension<Arc<API>>,
-    header: HeaderMap,
+    Json(user_ocid): Json<UserOcid>,
 ) -> Result<Json<Symbol>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), header, "symbol-equipment").await;
+    let response = request_parser(api_key.clone(), "symbol-equipment", &user_ocid.ocid).await;
 
     // 응답 결과 확인
     if response.status().is_success() {

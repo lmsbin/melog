@@ -1,12 +1,10 @@
 use crate::api::character::request::{API, request_parser};
 
-use axum::{
-    Extension,
-    http::{HeaderMap, StatusCode},
-    response::Json,
-};
+use axum::{Extension, http::StatusCode, response::Json};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+
+use super::character::UserOcid;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserDefaultData {
@@ -25,10 +23,10 @@ pub struct UserDefaultData {
 
 pub async fn get_user_default_info(
     Extension(api_key): Extension<Arc<API>>,
-    header: HeaderMap,
+    Json(user_ocid): Json<UserOcid>,
 ) -> Result<Json<UserDefaultData>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), header, "basic").await;
+    let response = request_parser(api_key.clone(), "basic", &user_ocid.ocid).await;
 
     // 응답 결과 확인
     if response.status().is_success() {

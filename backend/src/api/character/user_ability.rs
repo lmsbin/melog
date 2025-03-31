@@ -1,12 +1,10 @@
 use crate::api::character::request::{API, request_parser};
 
-use axum::{
-    Extension,
-    http::{HeaderMap, StatusCode},
-    response::Json,
-};
+use axum::{Extension, http::StatusCode, response::Json};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+
+use super::character::UserOcid;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct AbilityInfo {
@@ -23,10 +21,10 @@ pub struct Ability {
 
 pub async fn get_user_ability(
     Extension(api_key): Extension<Arc<API>>,
-    header: HeaderMap,
+    Json(user_ocid): Json<UserOcid>,
 ) -> Result<Json<Ability>, (StatusCode, &'static str)> {
     // POST 요청 보내기
-    let response = request_parser(api_key.clone(), header, "ability").await;
+    let response = request_parser(api_key.clone(), "ability", &user_ocid.ocid).await;
 
     // 응답 결과 확인
     if response.status().is_success() {
