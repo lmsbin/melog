@@ -1,17 +1,17 @@
-import { BASE_URL, EN_FETCH_METHOD, TEST_UUID, UserAbility } from '../type';
+import { BASE_URL, EN_FETCH_METHOD, UserAbility } from '../type';
 import { baseFetch, fetchWrapper } from './fetch';
 
-export interface GetUserAbilityRequest {}
+export interface GetUserAbilityRequest {
+    ocid: string;
+}
 
 export type GetUserAbilityResponse = UserAbility;
 
-async function getUserAbility() {
+async function getUserAbility({ ocid }: GetUserAbilityRequest) {
     const result = await baseFetch({
         url: `${BASE_URL}/getUserAbility`,
-        method: EN_FETCH_METHOD.GET,
-        headers: {
-            uuid: TEST_UUID,
-        },
+        method: EN_FETCH_METHOD.POST,
+        param: { ocid },
     });
 
     return result;

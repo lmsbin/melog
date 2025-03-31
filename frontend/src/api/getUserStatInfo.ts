@@ -1,16 +1,18 @@
-import { BASE_URL, EN_FETCH_METHOD, TEST_UUID, UserStatInfo } from '../type';
+import { BASE_URL, EN_FETCH_METHOD, UserStatInfo } from '../type';
 import { baseFetch, fetchWrapper } from './fetch';
 
-export interface GetUserStatInfoRequest {}
+export interface GetUserStatInfoRequest {
+    ocid: string;
+}
 
 export type GetUserStatInfoResponse = UserStatInfo;
 
-async function getUserStatInfo() {
+async function getUserStatInfo({ ocid }: GetUserStatInfoRequest) {
     const result = await baseFetch({
         url: `${BASE_URL}/getUserStatInfo`,
-        method: EN_FETCH_METHOD.GET,
-        headers: {
-            uuid: TEST_UUID,
+        method: EN_FETCH_METHOD.POST,
+        param: {
+            ocid,
         },
     });
 

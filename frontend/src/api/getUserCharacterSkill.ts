@@ -3,6 +3,7 @@ import { baseFetch, fetchWrapper } from './fetch';
 
 export interface GetUserCharacterSkillRequest {
     level: number;
+    ocid: string;
 }
 
 export type GetUserCharacterSkillResponse = UserCharacterSkill;
@@ -13,9 +14,7 @@ async function getUserCharacterSkill(request: GetUserCharacterSkillRequest) {
         method: EN_FETCH_METHOD.POST,
         param: {
             level: request.level,
-        },
-        headers: {
-            uuid: TEST_UUID,
+            ocid: request.ocid,
         },
     });
 

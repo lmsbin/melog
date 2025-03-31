@@ -1,16 +1,18 @@
-import { BASE_URL, EN_FETCH_METHOD, TEST_UUID, UserPropensity } from '../type';
+import { BASE_URL, EN_FETCH_METHOD, UserPropensity } from '../type';
 import { baseFetch, fetchWrapper } from './fetch';
 
-export interface GetUserPropensityRequest {}
+export interface GetUserPropensityRequest {
+    ocid: string;
+}
 
 export type GetUserPropensityResponse = UserPropensity;
 
-async function getUserPropensity() {
+async function getUserPropensity({ ocid }: GetUserPropensityRequest) {
     const result = await baseFetch({
         url: `${BASE_URL}/getUserPropensity`,
-        method: EN_FETCH_METHOD.GET,
-        headers: {
-            uuid: TEST_UUID,
+        method: EN_FETCH_METHOD.POST,
+        param: {
+            ocid,
         },
     });
 

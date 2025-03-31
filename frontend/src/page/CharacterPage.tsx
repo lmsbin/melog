@@ -25,6 +25,7 @@ import getUserCharacterSkill from '../api/getUserCharacterSkill';
 import getUserSymbolEquipment from '../api/getUserSymbolEquipment';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
+    const [ocid, setOcid] = useState<string>('');
     const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
     const [userStatInfo, setUserStatInfo] = useState<UserStatInfo>({} as UserStatInfo);
     const [userHyperStatInfo, setUserHyperStatInfo] = useState<UserHyperStatInfo>(
@@ -43,37 +44,128 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const location: MelogLocation = useLocation();
     const { nickName } = useParams();
 
-    useEffect(() => {}, [location]);
+    useEffect(() => {
+        (async function () {
+            const result = await getOcid({
+                key: nickName,
+                data: {
+                    nickName: nickName as string,
+                },
+            });
+
+            setOcid(result.ocid);
+        })();
+    }, [location]);
 
     useEffect(() => {
         (async function () {
-            const isFromSearchPage = location?.state?.fromSearchPage;
+            if (ocid && nickName) {
+                const result: any = [];
 
-            if (!isFromSearchPage) {
-                await getOcid({
-                    key: nickName,
-                    data: {
-                        nickName: nickName as string,
-                    },
+                result.push(
+                    await getUserInfo({
+                        key: nickName,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
+
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
                 });
-            }
 
-            if (nickName) {
-                const result: any = await Promise.all([
-                    getUserInfo({ key: nickName }),
-                    getUserStatInfo({ key: nickName }),
-                    getUserHyperStatInfo({ key: nickName }),
-                    getUserPropensity({ key: nickName }),
-                    getUserAbility({ key: nickName }),
-                    getUserSymbolEquipment({ key: nickName }),
-                    getUserSetEffect({ key: nickName }),
-                    // getUserCharacterSkill({
-                    //     key: nickName,
-                    //     data: {
-                    //         nickName: nickName,
-                    //     },
-                    // }),
-                ]);
+                result.push(
+                    await getUserStatInfo({
+                        key: nickName,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
+
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
+
+                result.push(
+                    await getUserHyperStatInfo({
+                        key: nickName,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
+
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
+
+                result.push(
+                    await getUserPropensity({
+                        key: nickName,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
+
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
+
+                result.push(
+                    await getUserAbility({
+                        key: nickName,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
+
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
+
+                result.push(
+                    await getUserSymbolEquipment({
+                        key: nickName,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
+
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
+
+                result.push(
+                    await getUserSetEffect({
+                        key: nickName,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
+
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
 
                 setUserInfo(result[0]);
                 setUserStatInfo(result[1]);
@@ -82,21 +174,23 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserAbility(result[4]);
                 setUserSymbolEquipment(result[5]);
                 setUserSetEffect(result[6]);
-                // setUserCharacterSkill(result[7]);
             }
         })();
-    }, [nickName, location]);
+    }, [nickName, location, ocid]);
 
     useEffect(() => {
         (async function () {
-            const result = await getUserCharacterSkill({
-                key: nickName,
-                data: {
-                    level: userInfo.character_level,
-                },
-            });
+            if (typeof userInfo?.character_level === 'number') {
+                const result = await getUserCharacterSkill({
+                    key: nickName,
+                    data: {
+                        level: userInfo.character_level,
+                        ocid: ocid,
+                    },
+                });
 
-            setUserCharacterSkill(result);
+                setUserCharacterSkill(result);
+            }
         })();
     }, [userInfo.character_level]);
 

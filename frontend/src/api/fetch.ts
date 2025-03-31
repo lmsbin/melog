@@ -82,4 +82,4 @@ function isValidCachedData(cachedData: Cache | undefined): cachedData is Cache {
     return true;
 }
 
-const CACHE_EXCEPTION_FUNC = ['getOcid'];
+const CACHE_EXCEPTION_FUNC: string[] = [];
