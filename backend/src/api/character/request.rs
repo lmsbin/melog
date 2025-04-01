@@ -1,19 +1,9 @@
-use std::sync::Arc;
+use crate::api::request::API;
 
 use chrono::{Duration, Utc};
 use chrono_tz::Asia::Seoul;
 use reqwest::{Client, header};
-
-pub struct API {
-    pub key: String,
-}
-
-impl API {
-    // 생성자
-    pub fn new(key: String) -> Self {
-        Self { key }
-    }
-}
+use std::sync::Arc;
 
 pub async fn request_parser(api_key: Arc<API>, kind: &str, user_ocid: &str) -> reqwest::Response {
     // 요청 헤더 정의
@@ -28,8 +18,6 @@ pub async fn request_parser(api_key: Arc<API>, kind: &str, user_ocid: &str) -> r
         "https://open.api.nexon.com/maplestory/v1/character/{}?ocid={}&date={}",
         kind, user_ocid, now_time
     );
-
-    println!("{}", url);
 
     // POST 요청 보내기
     let response = Client::new()

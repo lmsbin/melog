@@ -11,6 +11,17 @@ use crate::api::character::{
 use axum::{Json, Router, http::StatusCode, response::IntoResponse, routing::post};
 use serde::Serialize;
 
+pub struct API {
+    pub key: String,
+}
+
+impl API {
+    // 생성자
+    pub fn new(key: String) -> Self {
+        Self { key }
+    }
+}
+
 #[derive(Serialize)]
 struct ErrorResponse {
     message: &'static str,

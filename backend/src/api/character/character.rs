@@ -1,4 +1,4 @@
-use crate::api::character::request::API;
+use crate::api::request::API;
 
 use axum::{Extension, http::StatusCode, response::Json};
 use reqwest::{Client, header};

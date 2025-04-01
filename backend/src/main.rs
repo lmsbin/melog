@@ -1,6 +1,7 @@
 mod api;
 
-use api::character::{character::get_ocid, request::API};
+use api::character::character::get_ocid;
+use api::request::API;
 use api::request::user_routes;
 use axum::{Router, extract::Extension, http::HeaderValue, routing::post};
 use std::sync::Arc;

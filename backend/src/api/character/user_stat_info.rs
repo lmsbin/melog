@@ -1,4 +1,5 @@
-use crate::api::character::request::{API, request_parser};
+use crate::api::character::request::request_parser;
+use crate::api::request::API;
 
 use super::character::UserOcid;
 
