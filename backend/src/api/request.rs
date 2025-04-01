@@ -1,5 +1,6 @@
 use crate::api::character::{
-    user_ability::get_user_ability, user_android_equipment::get_user_android_equipment,
+    character::get_ocid, user_ability::get_user_ability,
+    user_android_equipment::get_user_android_equipment,
     user_characeter_skill::get_user_characeter_link_skill,
     user_characeter_skill::get_user_characeter_skill, user_default_info::get_user_default_info,
     user_dojang::get_user_dojang, user_hexa_matrix::get_user_hexa_matrix,
@@ -8,7 +9,7 @@ use crate::api::character::{
     user_stat_info::get_user_stat_info, user_symbol_equipment::get_user_symbol_equipment,
     user_v_matrix::get_user_v_matrix,
 };
-use crate::api::guild::guild_default_info::get_guild_default_info;
+use crate::api::guild::{guild::get_guild_ocid, guild_default_info::get_guild_default_info};
 use crate::api::notice::notice::get_notice;
 use axum::{Json, Router, http::StatusCode, response::IntoResponse, routing::get, routing::post};
 use serde::Serialize;
@@ -38,8 +39,17 @@ async fn fallback() -> impl IntoResponse {
     )
 }
 
+pub fn get_routes() -> Router {
+    Router::new()
+        .merge(user_routes())
+        .merge(guild_route())
+        .merge(notice_route())
+        .fallback(fallback)
+}
+
 pub fn user_routes() -> Router {
     Router::new()
+        .route("/getOcid", post(get_ocid))
         .route("/getUserInfo", post(get_user_default_info))
         .route("/getUserStatInfo", post(get_user_stat_info))
         .route("/getUserHyperStatInfo", post(get_user_hyper_stat_info))
@@ -57,7 +67,15 @@ pub fn user_routes() -> Router {
         .route("/getUserDojang", post(get_user_dojang))
         .route("/getUserItemEquipment", post(get_user_item_equipment))
         .route("/getUserAndroidEquipment", post(get_user_android_equipment))
-        .route("/getGuildInfo", post(get_guild_default_info))
         .route("/getNotice", get(get_notice))
-        .fallback(fallback)
+}
+
+pub fn guild_route() -> Router {
+    Router::new()
+        .route("/getGuildOcid", post(get_guild_ocid))
+        .route("/getGuildInfo", post(get_guild_default_info))
+}
+
+pub fn notice_route() -> Router {
+    Router::new().route("/getNotice", get(get_notice))
 }
