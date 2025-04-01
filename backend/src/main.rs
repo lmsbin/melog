@@ -1,9 +1,8 @@
 mod api;
 
-use api::guild::guild::get_guild_ocid;
 use api::request::API;
 use api::request::get_routes;
-use axum::{Router, extract::Extension, http::HeaderValue, routing::post};
+use axum::{Router, extract::Extension, http::HeaderValue};
 use std::sync::Arc;
 use tower_http::cors::{Any, CorsLayer};
 

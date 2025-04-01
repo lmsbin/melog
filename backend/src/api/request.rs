@@ -10,7 +10,10 @@ use crate::api::character::{
     user_v_matrix::get_user_v_matrix,
 };
 use crate::api::guild::{guild::get_guild_ocid, guild_default_info::get_guild_default_info};
-use crate::api::notice::notice::get_notice;
+use crate::api::notice::{
+    get_cash_shop_notice::get_cash_shop_notice, get_event_notice::get_event_notice,
+    get_notice::get_notice, get_update_notice::get_update_notice,
+};
 use axum::{Json, Router, http::StatusCode, response::IntoResponse, routing::get, routing::post};
 use serde::Serialize;
 
@@ -67,7 +70,6 @@ pub fn user_routes() -> Router {
         .route("/getUserDojang", post(get_user_dojang))
         .route("/getUserItemEquipment", post(get_user_item_equipment))
         .route("/getUserAndroidEquipment", post(get_user_android_equipment))
-        .route("/getNotice", get(get_notice))
 }
 
 pub fn guild_route() -> Router {
@@ -77,5 +79,9 @@ pub fn guild_route() -> Router {
 }
 
 pub fn notice_route() -> Router {
-    Router::new().route("/getNotice", get(get_notice))
+    Router::new()
+        .route("/getNotice", get(get_notice))
+        .route("/getUpdateNotice", get(get_update_notice))
+        .route("/getEvnetNotice", get(get_event_notice))
+        .route("/getCashShopNotice", get(get_cash_shop_notice))
 }
