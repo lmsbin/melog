@@ -8,6 +8,7 @@ use crate::api::character::{
     user_stat_info::get_user_stat_info, user_symbol_equipment::get_user_symbol_equipment,
     user_v_matrix::get_user_v_matrix,
 };
+use crate::api::guild::guild_default_info::get_guild_default_info;
 use axum::{Json, Router, http::StatusCode, response::IntoResponse, routing::post};
 use serde::Serialize;
 
@@ -55,5 +56,6 @@ pub fn user_routes() -> Router {
         .route("/getUserDojang", post(get_user_dojang))
         .route("/getUserItemEquipment", post(get_user_item_equipment))
         .route("/getUserAndroidEquipment", post(get_user_android_equipment))
+        .route("/getGuildInfo", post(get_guild_default_info))
         .fallback(fallback)
 }

@@ -1,6 +1,7 @@
 mod api;
 
 use api::character::character::get_ocid;
+use api::guild::guild::get_guild_ocid;
 use api::request::API;
 use api::request::user_routes;
 use axum::{Router, extract::Extension, http::HeaderValue, routing::post};
@@ -28,6 +29,7 @@ async fn main() {
     // TODO : VEC 형식으로 가져오는 값 자체가 null인 경우 예외처리 하기
     let app = Router::new()
         .route("/getOcid", post(get_ocid))
+        .route("/getGuildOcid", post(get_guild_ocid))
         .merge(user_routes())
         .layer(Extension(api_key))
         .layer(cors);
