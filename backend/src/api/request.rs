@@ -14,6 +14,7 @@ use crate::api::notice::{
     get_cash_shop_notice::get_cash_shop_notice, get_event_notice::get_event_notice,
     get_notice::get_notice, get_update_notice::get_update_notice,
 };
+use crate::api::ranking::get_overall_ranking::get_over_all_ranking;
 use crate::api::union::{
     get_union::get_user_union_info, get_union_artifact::get_user_union_artifact_info,
     get_union_champion::get_user_union_champion_info, get_union_raider::get_user_union_raider_info,
@@ -52,6 +53,7 @@ pub fn get_routes() -> Router {
         .merge(guild_route())
         .merge(notice_route())
         .merge(union_route())
+        .merge(ranking_route())
         .fallback(fallback)
 }
 
@@ -97,4 +99,8 @@ pub fn union_route() -> Router {
         .route("/getUnionRaider", post(get_user_union_raider_info))
         .route("/getUnionArtifact", post(get_user_union_artifact_info))
         .route("/getUnionChampion", post(get_user_union_champion_info))
+}
+
+pub fn ranking_route() -> Router {
+    Router::new().route("/getOverAllRanking", post(get_over_all_ranking))
 }
