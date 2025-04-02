@@ -14,6 +14,10 @@ use crate::api::notice::{
     get_cash_shop_notice::get_cash_shop_notice, get_event_notice::get_event_notice,
     get_notice::get_notice, get_update_notice::get_update_notice,
 };
+use crate::api::union::{
+    get_union::get_user_union_info, get_union_artifact::get_user_union_artifact_info,
+    get_union_champion::get_user_union_champion_info, get_union_raider::get_user_union_raider_info,
+};
 use axum::{Json, Router, http::StatusCode, response::IntoResponse, routing::get, routing::post};
 use serde::Serialize;
 
@@ -47,6 +51,7 @@ pub fn get_routes() -> Router {
         .merge(user_routes())
         .merge(guild_route())
         .merge(notice_route())
+        .merge(union_route())
         .fallback(fallback)
 }
 
@@ -84,4 +89,12 @@ pub fn notice_route() -> Router {
         .route("/getUpdateNotice", get(get_update_notice))
         .route("/getEvnetNotice", get(get_event_notice))
         .route("/getCashShopNotice", get(get_cash_shop_notice))
+}
+
+pub fn union_route() -> Router {
+    Router::new()
+        .route("/getUnion", post(get_user_union_info))
+        .route("/getUnionRaider", post(get_user_union_raider_info))
+        .route("/getUnionArtifact", post(get_user_union_artifact_info))
+        .route("/getUnionChampion", post(get_user_union_champion_info))
 }
