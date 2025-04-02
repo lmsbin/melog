@@ -29,26 +29,20 @@ import getUserCharacterLinkSkill, {
 } from '../api/getUserCharacterLinkSkill';
 import { WorldLabel } from '../component/label';
 import { NicknameLabel } from '../component/label/NicknameLabel';
+import CharacterCard from '../component/CharacterCard';
+import CharacterCardWrapper from '../component/CharacterCard';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [ocid, setOcid] = useState<string>('');
-    const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
-    const [userStatInfo, setUserStatInfo] = useState<UserStatInfo>({} as UserStatInfo);
-    const [userHyperStatInfo, setUserHyperStatInfo] = useState<UserHyperStatInfo>(
-        {} as UserHyperStatInfo,
-    );
-    const [userPropensity, setUserPropensity] = useState<UserPropensity>({} as UserPropensity);
-    const [userAbility, setUserAbility] = useState<UserAbility>({} as UserAbility);
-    const [userSymbolicEquipment, setUserSymbolEquipment] = useState<UserSymbolEquipment>(
-        {} as UserSymbolEquipment,
-    );
-    const [userSetEffect, setUserSetEffect] = useState<UserSetEffect>({} as UserSetEffect);
-    const [userCharacterSkill, setUserCharacterSkill] = useState<UserCharacterSkill>(
-        {} as UserCharacterSkill,
-    );
-    const [userCharacterLinkSkill, setUserCharacterLinkSkill] = useState<UserCharacterLinkSkill>(
-        {} as UserCharacterLinkSkill,
-    );
+    const [userInfo, setUserInfo] = useState<UserInfo>();
+    const [userStatInfo, setUserStatInfo] = useState<UserStatInfo>();
+    const [userHyperStatInfo, setUserHyperStatInfo] = useState<UserHyperStatInfo>();
+    const [userPropensity, setUserPropensity] = useState<UserPropensity>();
+    const [userAbility, setUserAbility] = useState<UserAbility>();
+    const [userSymbolicEquipment, setUserSymbolEquipment] = useState<UserSymbolEquipment>();
+    const [userSetEffect, setUserSetEffect] = useState<UserSetEffect>();
+    const [userCharacterSkill, setUserCharacterSkill] = useState<UserCharacterSkill>();
+    const [userCharacterLinkSkill, setUserCharacterLinkSkill] = useState<UserCharacterLinkSkill>();
 
     const location: MelogLocation = useLocation();
     const { nickName } = useParams();
@@ -211,7 +205,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserCharacterSkill(result);
             }
         })();
-    }, [userInfo.character_level]);
+    }, [userInfo?.character_level]);
 
     if (!userInfo) {
         return <div>404</div>;
@@ -233,15 +227,15 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
 });
 
 interface CharacterPageProps {
-    userInfo: UserInfo;
-    userStatInfo: UserStatInfo;
-    userHyperStatInfo: UserHyperStatInfo;
-    userPropensity: UserPropensity;
-    userAbility: UserAbility;
-    userSymbolicEquipment: UserSymbolEquipment;
-    userSetEffect: UserSetEffect;
-    userCharacterSkill: UserCharacterSkill;
-    userCharacterLinkSkill: UserCharacterLinkSkill;
+    userInfo?: UserInfo;
+    userStatInfo?: UserStatInfo;
+    userHyperStatInfo?: UserHyperStatInfo;
+    userPropensity?: UserPropensity;
+    userAbility?: UserAbility;
+    userSymbolicEquipment?: UserSymbolEquipment;
+    userSetEffect?: UserSetEffect;
+    userCharacterSkill?: UserCharacterSkill;
+    userCharacterLinkSkill?: UserCharacterLinkSkill;
 }
 const CharacterPage = memo(function CharacterPage({
     userInfo,
@@ -255,8 +249,13 @@ const CharacterPage = memo(function CharacterPage({
     userCharacterLinkSkill,
 }: CharacterPageProps) {
     return (
-        <>
-            <div>{JSON.stringify(userInfo)}</div>
+        <div className="flex w-full flex-col items-center justify-center gap-10">
+            <SearchBar />
+            {/* <CharacterImg src={userInfo.character_image} />
+            <WorldLabel worldName={userInfo.world_name} />
+            <NicknameLabel nickName={userInfo.character_name} /> */}
+            <CharacterCardWrapper userInfo={userInfo} />
+            {/* <div>{JSON.stringify(userInfo)}</div>
             <div>{JSON.stringify(userStatInfo)}</div>
             <div>{JSON.stringify(userHyperStatInfo)}</div>
             <div>{JSON.stringify(userPropensity)}</div>
@@ -264,11 +263,7 @@ const CharacterPage = memo(function CharacterPage({
             <div>{JSON.stringify(userSymbolicEquipment)}</div>
             <div>{JSON.stringify(userSetEffect)}</div>
             <div>{JSON.stringify(userCharacterSkill)}</div>
-            <div>{JSON.stringify(userCharacterLinkSkill)}</div>
-            <SearchBar />
-            <CharacterImg src={userInfo.character_image} />
-            <WorldLabel worldName={userInfo.world_name} />
-            <NicknameLabel nickName={userInfo.character_name} />
-        </>
+            <div>{JSON.stringify(userCharacterLinkSkill)}</div> */}
+        </div>
     );
 });

@@ -7,8 +7,10 @@ export const MainLayout = memo(function MainLayout() {
         <div>
             <header>헤더입니다</header>
             <NavBar />
-            <div className="container">
+            <div className="flex w-full justify-around">
+                <div className="w-1/5"></div>
                 <Outlet />
+                <div className="w-1/5"></div>
             </div>
         </div>
     );
