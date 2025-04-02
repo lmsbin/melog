@@ -207,10 +207,6 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
         })();
     }, [userInfo?.character_level]);
 
-    if (!userInfo) {
-        return <div>404</div>;
-    }
-
     return (
         <CharacterPage
             userInfo={userInfo}
@@ -249,7 +245,7 @@ const CharacterPage = memo(function CharacterPage({
     userCharacterLinkSkill,
 }: CharacterPageProps) {
     return (
-        <div className="flex w-full flex-col items-center justify-center gap-10">
+        <div className="flex flex-col items-center gap-6">
             <SearchBar />
             {/* <CharacterImg src={userInfo.character_image} />
             <WorldLabel worldName={userInfo.world_name} />

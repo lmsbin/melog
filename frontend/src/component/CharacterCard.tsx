@@ -2,15 +2,19 @@ import { memo } from 'react';
 import { UserInfo } from '../type';
 import { CharacterImg } from './img/CharacterImg';
 
-
-const CharacterCardWrapper = memo(function CharacterCardWrapper({ userInfo }: Partial<CharacterCardProps>) {
+const CharacterCardWrapper = memo(function CharacterCardWrapper({
+    userInfo,
+}: Partial<CharacterCardProps>) {
     if (!userInfo) {
-        return <div className="flex min-h-60 w-full min-w-sm flex-col justify-center rounded-2xl bg-white p-4 shadow-md transition duration-500 hover:shadow-lg">Now Loading...</div>
+        return (
+            <div className="flex min-h-60 w-full min-w-sm flex-col justify-center rounded-2xl bg-white p-4 shadow-md transition duration-500 hover:shadow-lg">
+                <div className="flex items-center justify-center">Now Loading...</div>
+            </div>
+        );
     }
 
-    return <CharacterCard userInfo={userInfo} />
-})
-
+    return <CharacterCard userInfo={userInfo} />;
+});
 
 export interface CharacterCardProps {
     userInfo: UserInfo;

@@ -5,12 +5,16 @@ import { BaseButton, NavButton } from '../component';
 export const MainLayout = memo(function MainLayout() {
     return (
         <div>
-            <header>헤더입니다</header>
+            <header className="flex h-40 items-center justify-center border-b border-gray-200 bg-gray-50">
+                헤더입니다
+            </header>
             <NavBar />
             <div className="flex w-full justify-around">
-                <div className="w-1/5"></div>
-                <Outlet />
-                <div className="w-1/5"></div>
+                <div className="w-1/5 p-4"></div>
+                <div className="flex w-full flex-col p-4">
+                    <Outlet />
+                </div>
+                <div className="w-1/5 p-4"></div>
             </div>
         </div>
     );
