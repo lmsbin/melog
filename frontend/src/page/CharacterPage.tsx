@@ -28,6 +28,7 @@ import getUserCharacterLinkSkill, {
     GetUserCharacterLinkSkillResponse,
 } from '../api/getUserCharacterLinkSkill';
 import { WorldLabel } from '../component/label';
+import { NicknameLabel } from '../component/label/NicknameLabel';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [ocid, setOcid] = useState<string>('');
@@ -267,6 +268,7 @@ const CharacterPage = memo(function CharacterPage({
             <SearchBar />
             <CharacterImg src={userInfo.character_image} />
             <WorldLabel worldName={userInfo.world_name} />
+            <NicknameLabel nickName={userInfo.character_name} />
         </>
     );
 });

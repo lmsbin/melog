@@ -1,1 +1,14 @@
 @import 'tailwindcss';
+
+@font-face {
+    font-family: 'nexon_gothic';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff')
+        format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: 'nexon_gothic', sans-serif;
+    line-height: 1.75;
+}
