@@ -14,7 +14,10 @@ use crate::api::notice::{
     get_cash_shop_notice::get_cash_shop_notice, get_event_notice::get_event_notice,
     get_notice::get_notice, get_update_notice::get_update_notice,
 };
-use crate::api::ranking::get_overall_ranking::get_over_all_ranking;
+use crate::api::ranking::{
+    get_guild_ranking::get_guild_ranking, get_overall_ranking::get_over_all_ranking,
+    get_union_ranking::get_union_ranking,
+};
 use crate::api::union::{
     get_union::get_user_union_info, get_union_artifact::get_user_union_artifact_info,
     get_union_champion::get_user_union_champion_info, get_union_raider::get_user_union_raider_info,
@@ -102,5 +105,8 @@ pub fn union_route() -> Router {
 }
 
 pub fn ranking_route() -> Router {
-    Router::new().route("/getOverAllRanking", post(get_over_all_ranking))
+    Router::new()
+        .route("/getOverAllRanking", post(get_over_all_ranking))
+        .route("/getUnionRanking", post(get_union_ranking))
+        .route("/getGuildRanking", post(get_guild_ranking))
 }
