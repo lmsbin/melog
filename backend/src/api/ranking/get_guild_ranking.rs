@@ -1,12 +1,13 @@
 use crate::api::request::API;
 
 use axum::{Extension, http::StatusCode, response::Json};
-use reqwest::{Client, header};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
 use chrono::{Duration, Utc};
 use chrono_tz::Asia::Seoul;
+
+use super::request::request_parser;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Guild {
@@ -39,8 +40,6 @@ pub async fn get_guild_ranking(
     Extension(api_key): Extension<Arc<API>>,
     Json(guild): Json<Guild>,
 ) -> Result<Json<Ranking>, (StatusCode, &'static str)> {
-    let client = Client::new();
-
     let now_time = (Utc::now() - Duration::days(1))
         .with_timezone(&Seoul)
         .format("%Y-%m-%d");
@@ -64,19 +63,8 @@ pub async fn get_guild_ranking(
         }
     }
 
-    println!("{}", url);
-
-    // 요청 헤더 정의
-    let mut headers = header::HeaderMap::new();
-    headers.insert("x-nxopen-api-key", api_key.key.parse().unwrap());
-
     // POST 요청 보내기
-    let response = client
-        .get(url)
-        .headers(headers)
-        .send()
-        .await
-        .expect("Failed to send request");
+    let response = request_parser(api_key, &url).await;
 
     // 응답 결과 확인
     if response.status().is_success() {
