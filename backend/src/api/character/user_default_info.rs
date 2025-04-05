@@ -31,10 +31,12 @@ pub async fn get_user_default_info(
 
     // 응답 결과 확인
     if response.status().is_success() {
-        let user_data: UserDefaultData = response
+        let mut user_data: UserDefaultData = response
             .json()
             .await
             .expect("Failed to parse response JSON");
+
+        user_data.character_date_create = user_data.character_date_create[..10].to_string();
 
         Ok(Json(user_data))
     } else {
