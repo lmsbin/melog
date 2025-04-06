@@ -9,20 +9,20 @@ use std::sync::Arc;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct SetEffectInfoFull {
-    pub set_count: i8,
-    pub set_option: String,
+    set_count: i8,
+    set_option: String,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct SetEffectInfo {
-    pub set_name: String,
-    pub total_set_count: i8,
-    pub set_option_full: Vec<SetEffectInfoFull>,
+    set_name: String,
+    total_set_count: i8,
+    set_option_full: Vec<SetEffectInfoFull>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SetEffect {
-    pub set_effect: Vec<SetEffectInfo>,
+    set_effect: Vec<SetEffectInfo>,
 }
 
 pub async fn get_user_set_effect(

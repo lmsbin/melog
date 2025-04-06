@@ -11,25 +11,25 @@ use std::sync::Arc;
 #[serde_as]
 #[derive(Deserialize, Serialize, Debug)]
 pub struct VMatrixInfo {
-    pub slot_id: String,
-    pub slot_level: i8,
+    slot_id: String,
+    slot_level: i8,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub v_core_name: String,
-    pub v_core_level: i8,
+    v_core_name: String,
+    v_core_level: i8,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub v_core_skill_1: String,
+    v_core_skill_1: String,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub v_core_skill_2: String,
+    v_core_skill_2: String,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub v_core_skill_3: String,
+    v_core_skill_3: String,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub v_core_type: String,
+    v_core_type: String,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct VMatrix {
-    pub character_v_core_equipment: Vec<VMatrixInfo>,
-    pub character_v_matrix_remain_slot_upgrade_point: i8,
+    character_v_core_equipment: Vec<VMatrixInfo>,
+    character_v_matrix_remain_slot_upgrade_point: i8,
 }
 
 pub async fn get_user_v_matrix(

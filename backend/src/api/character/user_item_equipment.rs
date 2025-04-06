@@ -10,120 +10,120 @@ use std::sync::Arc;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct ItemEquipmentInfoOption {
-    pub str: String,
-    pub dex: String,
-    pub int: String,
-    pub luk: String,
-    pub max_hp: String,
-    pub max_mp: String,
-    pub attack_power: String,
-    pub magic_power: String,
-    pub armor: String,
-    pub speed: String,
-    pub jump: String,
-    pub boss_damage: String,
-    pub ignore_monster_armor: String,
-    pub all_stat: String,
+    str: String,
+    dex: String,
+    int: String,
+    luk: String,
+    max_hp: String,
+    max_mp: String,
+    attack_power: String,
+    magic_power: String,
+    armor: String,
+    speed: String,
+    jump: String,
+    boss_damage: String,
+    ignore_monster_armor: String,
+    all_stat: String,
     #[serde(default)]
-    pub damage: String,
+    damage: String,
     #[serde(default)]
-    pub equipment_level_decrease: i8,
-    pub max_hp_rate: String,
-    pub max_mp_rate: String,
+    equipment_level_decrease: i8,
+    max_hp_rate: String,
+    max_mp_rate: String,
     #[serde(default)]
-    pub base_equipment_level: i16,
+    base_equipment_level: i16,
 }
 
 #[serde_as]
 #[derive(Deserialize, Serialize, Debug)]
 pub struct ItemEquipmentInfoExceptionalOption {
-    pub str: String,
-    pub dex: String,
-    pub int: String,
-    pub luk: String,
-    pub max_hp: String,
-    pub max_mp: String,
-    pub attack_power: String,
-    pub magic_power: String,
+    str: String,
+    dex: String,
+    int: String,
+    luk: String,
+    max_hp: String,
+    max_mp: String,
+    attack_power: String,
+    magic_power: String,
     #[serde(default)]
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub exceptional_upgrade: i16,
+    exceptional_upgrade: i16,
     #[serde(default)]
-    pub armor: String,
+    armor: String,
     #[serde(default)]
-    pub speed: String,
+    speed: String,
     #[serde(default)]
-    pub jump: String,
+    jump: String,
     #[serde(default)]
-    pub damage: String,
+    damage: String,
     #[serde(default)]
-    pub all_stat: String,
+    all_stat: String,
     #[serde(default)]
-    pub equipment_level_decrease: i16,
+    equipment_level_decrease: i16,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct ItemEquipmentStatOption {
-    pub str: String,
-    pub dex: String,
-    pub int: String,
-    pub luk: String,
-    pub max_hp: String,
-    pub max_mp: String,
-    pub attack_power: String,
-    pub magic_power: String,
-    pub armor: String,
-    pub speed: String,
-    pub jump: String,
+    str: String,
+    dex: String,
+    int: String,
+    luk: String,
+    max_hp: String,
+    max_mp: String,
+    attack_power: String,
+    magic_power: String,
+    armor: String,
+    speed: String,
+    jump: String,
 }
 
 #[serde_as]
 #[derive(Deserialize, Serialize, Debug)]
 pub struct ItemEquipmentInfo {
-    pub item_equipment_part: String,
-    pub item_equipment_slot: String,
-    pub item_name: String,
-    pub item_icon: String,
-    pub item_shape_name: String,
-    pub item_shape_icon: String,
-    pub item_total_option: ItemEquipmentInfoOption,
-    pub item_base_option: ItemEquipmentInfoOption,
+    item_equipment_part: String,
+    item_equipment_slot: String,
+    item_name: String,
+    item_icon: String,
+    item_shape_name: String,
+    item_shape_icon: String,
+    item_total_option: ItemEquipmentInfoOption,
+    item_base_option: ItemEquipmentInfoOption,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub potential_option_grade: String, // null 가능
+    potential_option_grade: String, // null 가능
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub additional_potential_option_grade: String, // null 가능
+    additional_potential_option_grade: String, // null 가능
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub potential_option_1: String, // null 가능
+    potential_option_1: String, // null 가능
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub potential_option_2: String, // null 가능
+    potential_option_2: String, // null 가능
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub potential_option_3: String, // null 가능
+    potential_option_3: String, // null 가능
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub additional_potential_option_1: String, // null 가능
+    additional_potential_option_1: String, // null 가능
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub additional_potential_option_2: String, // null 가능
+    additional_potential_option_2: String, // null 가능
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub additional_potential_option_3: String, // null 가능
-    pub item_exceptional_option: ItemEquipmentInfoExceptionalOption,
-    pub item_add_option: ItemEquipmentInfoExceptionalOption,
-    pub scroll_upgrade: String,
-    pub cuttable_count: String,
-    pub golden_hammer_flag: String,
-    pub scroll_resilience_count: String,
-    pub scroll_upgradeable_count: String,
+    additional_potential_option_3: String, // null 가능
+    item_exceptional_option: ItemEquipmentInfoExceptionalOption,
+    item_add_option: ItemEquipmentInfoExceptionalOption,
+    scroll_upgrade: String,
+    cuttable_count: String,
+    golden_hammer_flag: String,
+    scroll_resilience_count: String,
+    scroll_upgradeable_count: String,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub soul_name: String, // null 가능
+    soul_name: String, // null 가능
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub soul_option: String, // null 가능
-    pub starforce: String,
-    pub item_etc_option: ItemEquipmentStatOption,
-    pub item_starforce_option: ItemEquipmentStatOption,
-    pub special_ring_level: i8,
+    soul_option: String, // null 가능
+    starforce: String,
+    item_etc_option: ItemEquipmentStatOption,
+    item_starforce_option: ItemEquipmentStatOption,
+    special_ring_level: i8,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct ItemEquipment {
-    pub item_equipment: Vec<ItemEquipmentInfo>,
+    item_equipment: Vec<ItemEquipmentInfo>,
 }
 
 pub async fn get_user_item_equipment(

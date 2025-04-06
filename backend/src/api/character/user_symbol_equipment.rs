@@ -11,28 +11,28 @@ use std::sync::Arc;
 #[serde_as]
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SymbolInfo {
-    pub symbol_name: String,
-    pub symbol_icon: String,
-    pub symbol_force: String,
-    pub symbol_level: i8,
-    pub symbol_str: String,
-    pub symbol_dex: String,
-    pub symbol_int: String,
-    pub symbol_luk: String,
-    pub symbol_hp: String,
+    symbol_name: String,
+    symbol_icon: String,
+    symbol_force: String,
+    symbol_level: i8,
+    symbol_str: String,
+    symbol_dex: String,
+    symbol_int: String,
+    symbol_luk: String,
+    symbol_hp: String,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub symbol_drop_rate: String,
+    symbol_drop_rate: String,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub symbol_meso_rate: String,
+    symbol_meso_rate: String,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub symbol_exp_rate: String,
-    pub symbol_growth_count: i32,
-    pub symbol_require_growth_count: i32,
+    symbol_exp_rate: String,
+    symbol_growth_count: i32,
+    symbol_require_growth_count: i32,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Symbol {
-    pub symbol: Vec<SymbolInfo>,
+    symbol: Vec<SymbolInfo>,
 }
 
 pub async fn get_user_symbol_equipment(

@@ -14,25 +14,25 @@ use std::sync::Arc;
 #[serde_as]
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SkillInfo {
-    pub skill_name: String,
-    pub skill_description: String,
-    pub skill_level: i8,
+    skill_name: String,
+    skill_description: String,
+    skill_level: i8,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub skill_effect: String,
-    pub skill_icon: String,
+    skill_effect: String,
+    skill_icon: String,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub skill_effect_next: String,
+    skill_effect_next: String,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct CharacterSkill {
-    pub character_skill: Vec<SkillInfo>,
+    character_skill: Vec<SkillInfo>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct CharacterSkilLevel {
-    pub user_ocid: UserOcid,
-    pub level: i8,
+    user_ocid: UserOcid,
+    level: i8,
 }
 
 pub async fn get_user_characeter_skill(

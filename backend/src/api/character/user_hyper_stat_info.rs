@@ -9,20 +9,20 @@ use std::sync::Arc;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct HyperStat {
-    pub stat_type: String,
-    pub stat_point: Option<u32>, // null을 허용하기 위해 Option 사용
-    pub stat_level: u32,
-    pub stat_increase: Option<String>,
+    stat_type: String,
+    stat_point: Option<u32>, // null을 허용하기 위해 Option 사용
+    stat_level: u32,
+    stat_increase: Option<String>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct UserHyperStatData {
-    pub hyper_stat_preset_1: Vec<HyperStat>,
-    pub hyper_stat_preset_1_remain_point: i32,
-    pub hyper_stat_preset_2: Vec<HyperStat>,
-    pub hyper_stat_preset_2_remain_point: i32,
-    pub hyper_stat_preset_3: Vec<HyperStat>,
-    pub hyper_stat_preset_3_remain_point: i32,
+    hyper_stat_preset_1: Vec<HyperStat>,
+    hyper_stat_preset_1_remain_point: i32,
+    hyper_stat_preset_2: Vec<HyperStat>,
+    hyper_stat_preset_2_remain_point: i32,
+    hyper_stat_preset_3: Vec<HyperStat>,
+    hyper_stat_preset_3_remain_point: i32,
 }
 
 pub async fn get_user_hyper_stat_info(

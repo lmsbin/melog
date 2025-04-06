@@ -9,15 +9,15 @@ use super::character::UserOcid;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct AbilityInfo {
-    pub ability_no: String,
-    pub ability_grade: String,
-    pub ability_value: String,
+    ability_no: String,
+    ability_grade: String,
+    ability_value: String,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Ability {
-    pub ability_grade: String,
-    pub ability_info: Vec<AbilityInfo>,
+    ability_grade: String,
+    ability_info: Vec<AbilityInfo>,
 }
 
 pub async fn get_user_ability(
