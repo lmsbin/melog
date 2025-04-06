@@ -9,10 +9,10 @@ use std::sync::Arc;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct AndroidEquipment {
-    pub android_name: String,
-    pub android_nickname: String,
-    pub android_icon: String,
-    pub android_description: String,
+    android_name: String,
+    android_nickname: String,
+    android_icon: String,
+    android_description: String,
 }
 
 pub async fn get_user_android_equipment(

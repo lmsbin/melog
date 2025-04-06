@@ -9,13 +9,13 @@ use std::sync::Arc;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Stat {
-    pub stat_name: String,
-    pub stat_value: String,
+    stat_name: String,
+    stat_value: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserStatData {
-    pub final_stat: Vec<Stat>,
+    final_stat: Vec<Stat>,
 }
 
 pub async fn get_user_stat_info(

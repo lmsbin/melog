@@ -9,12 +9,12 @@ use std::sync::Arc;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Propensity {
-    pub charisma_level: i8,
-    pub sensibility_level: i8,
-    pub insight_level: i8,
-    pub willingness_level: i8,
-    pub handicraft_level: i8,
-    pub charm_level: i8,
+    charisma_level: i8,
+    sensibility_level: i8,
+    insight_level: i8,
+    willingness_level: i8,
+    handicraft_level: i8,
+    charm_level: i8,
 }
 
 pub async fn get_user_propensity(

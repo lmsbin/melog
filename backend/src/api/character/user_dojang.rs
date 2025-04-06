@@ -11,10 +11,10 @@ use std::sync::Arc;
 #[serde_as]
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Dojang {
-    pub dojang_best_floor: i8,
+    dojang_best_floor: i8,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    pub date_dojang_record: String,
-    pub dojang_best_time: i32,
+    date_dojang_record: String,
+    dojang_best_time: i32,
 }
 
 pub async fn get_user_dojang(

@@ -9,20 +9,20 @@ use std::sync::Arc;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct HexaSkillInfo {
-    pub hexa_skill_id: String,
+    hexa_skill_id: String,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct HexaMatrixInfo {
-    pub hexa_core_name: String,
-    pub hexa_core_level: i8,
-    pub hexa_core_type: String,
-    pub linked_skill: Vec<HexaSkillInfo>,
+    hexa_core_name: String,
+    hexa_core_level: i8,
+    hexa_core_type: String,
+    linked_skill: Vec<HexaSkillInfo>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct HexaMatrix {
-    pub character_hexa_core_equipment: Vec<HexaMatrixInfo>,
+    character_hexa_core_equipment: Vec<HexaMatrixInfo>,
 }
 
 pub async fn get_user_hexa_matrix(
