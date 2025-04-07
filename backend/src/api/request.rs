@@ -1,6 +1,7 @@
 use crate::api::character::{
     character::get_ocid, user_ability::get_user_ability,
     user_android_equipment::get_user_android_equipment,
+    user_cashitem_equipment::get_user_cash_item_equipment,
     user_characeter_skill::get_user_characeter_link_skill,
     user_characeter_skill::get_user_characeter_skill, user_default_info::get_user_default_info,
     user_dojang::get_user_dojang, user_hexa_matrix::get_user_hexa_matrix,
@@ -81,6 +82,10 @@ pub fn user_routes() -> Router {
         .route("/getUserDojang", post(get_user_dojang))
         .route("/getUserItemEquipment", post(get_user_item_equipment))
         .route("/getUserAndroidEquipment", post(get_user_android_equipment))
+        .route(
+            "/getUserCashItemEquipment",
+            post(get_user_cash_item_equipment),
+        )
 }
 
 pub fn guild_route() -> Router {
