@@ -52,9 +52,6 @@ pub async fn get_ocid(
     }
 }
 
-// TODO : 캐시 사용자 착용 아이템 정보
 // TODO : 장착 헤어, 성형, 피부 정보 조회
 // TODO : 장착 안드로이드 조회
 // TODO : 장착 펫 정보 조회
-
-// TODO : Hexa 매트릭스 설정 정보 조회

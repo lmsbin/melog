@@ -7,6 +7,7 @@ pub mod user_characeter_skill;
 pub mod user_default_info;
 pub mod user_dojang;
 pub mod user_hexa_matrix;
+pub mod user_hexa_matrix_stat;
 pub mod user_hyper_stat_info;
 pub mod user_item_equipment;
 pub mod user_propensity;

@@ -5,10 +5,10 @@ use crate::api::character::{
     user_characeter_skill::get_user_characeter_link_skill,
     user_characeter_skill::get_user_characeter_skill, user_default_info::get_user_default_info,
     user_dojang::get_user_dojang, user_hexa_matrix::get_user_hexa_matrix,
-    user_hyper_stat_info::get_user_hyper_stat_info, user_item_equipment::get_user_item_equipment,
-    user_propensity::get_user_propensity, user_set_effect::get_user_set_effect,
-    user_stat_info::get_user_stat_info, user_symbol_equipment::get_user_symbol_equipment,
-    user_v_matrix::get_user_v_matrix,
+    user_hexa_matrix_stat::get_user_hexa_stat_info, user_hyper_stat_info::get_user_hyper_stat_info,
+    user_item_equipment::get_user_item_equipment, user_propensity::get_user_propensity,
+    user_set_effect::get_user_set_effect, user_stat_info::get_user_stat_info,
+    user_symbol_equipment::get_user_symbol_equipment, user_v_matrix::get_user_v_matrix,
 };
 use crate::api::guild::{guild::get_guild_ocid, guild_default_info::get_guild_default_info};
 use crate::api::notice::{
@@ -86,6 +86,7 @@ pub fn user_routes() -> Router {
             "/getUserCashItemEquipment",
             post(get_user_cash_item_equipment),
         )
+        .route("/getUserHexStatInfo", post(get_user_hexa_stat_info))
 }
 
 pub fn guild_route() -> Router {
