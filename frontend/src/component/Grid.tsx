@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import React, { memo } from 'react';
 import { EMPTY_CELL } from '../type';
 
 export interface GridProps {
@@ -31,28 +31,34 @@ export const Grid = memo(function Grid({ data, layout }: GridProps) {
     });
 
     return (
-        <table>
-            {grid.map((rowCells, rowIndex) => {
-                return (
-                    <tr>
-                        {rowCells.map((cell, cellIndex) => {
-                            if (cell === EMPTY_CELL) return cell;
+        <table className='border-collapse" w-auto max-w-max table-auto'>
+            <tbody>
+                {grid.map((rowCells, rowIndex) => {
+                    return (
+                        <tr>
+                            {rowCells.map((cell, cellIndex) => {
+                                if (cell === EMPTY_CELL) return cell;
 
-                            const { col, row, colSpan, dataKey, render, rowSpan } = cell;
+                                const { col, row, colSpan, dataKey, render, rowSpan } = cell;
 
-                            const innerContent = render
-                                ? render(data[dataKey ?? ''])
-                                : data[dataKey ?? ''];
+                                const innerContent = render
+                                    ? render(data[dataKey ?? ''])
+                                    : data[dataKey ?? ''];
 
-                            return (
-                                <td rowSpan={rowSpan} colSpan={colSpan}>
-                                    {innerContent}
-                                </td>
-                            );
-                        })}
-                    </tr>
-                );
-            })}
+                                return (
+                                    <td rowSpan={rowSpan} colSpan={colSpan}>
+                                        {React.isValidElement(innerContent) ? (
+                                            innerContent
+                                        ) : (
+                                            <span>{innerContent}</span>
+                                        )}
+                                    </td>
+                                );
+                            })}
+                        </tr>
+                    );
+                })}
+            </tbody>
         </table>
     );
 });

@@ -65,119 +65,119 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             if (ocid && nickName) {
                 const result: any = [];
 
-                result.push(
-                    await getUserInfo({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
+                // result.push(
+                //     await getUserInfo({
+                //         key: `cache$nickname$${nickName}`,
+                //         data: {
+                //             ocid,
+                //         },
+                //     }),
+                // );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
+                // await new Promise((resolve) => {
+                //     setTimeout(() => {
+                //         resolve(true);
+                //     }, 500);
+                // });
 
-                result.push(
-                    await getUserStatInfo({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
+                // result.push(
+                //     await getUserStatInfo({
+                //         key: `cache$nickname$${nickName}`,
+                //         data: {
+                //             ocid,
+                //         },
+                //     }),
+                // );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
+                // await new Promise((resolve) => {
+                //     setTimeout(() => {
+                //         resolve(true);
+                //     }, 500);
+                // });
 
-                result.push(
-                    await getUserHyperStatInfo({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
+                // result.push(
+                //     await getUserHyperStatInfo({
+                //         key: `cache$nickname$${nickName}`,
+                //         data: {
+                //             ocid,
+                //         },
+                //     }),
+                // );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
+                // await new Promise((resolve) => {
+                //     setTimeout(() => {
+                //         resolve(true);
+                //     }, 500);
+                // });
 
-                result.push(
-                    await getUserPropensity({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
+                // result.push(
+                //     await getUserPropensity({
+                //         key: `cache$nickname$${nickName}`,
+                //         data: {
+                //             ocid,
+                //         },
+                //     }),
+                // );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
+                // await new Promise((resolve) => {
+                //     setTimeout(() => {
+                //         resolve(true);
+                //     }, 500);
+                // });
 
-                result.push(
-                    await getUserAbility({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
+                // result.push(
+                //     await getUserAbility({
+                //         key: `cache$nickname$${nickName}`,
+                //         data: {
+                //             ocid,
+                //         },
+                //     }),
+                // );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
+                // await new Promise((resolve) => {
+                //     setTimeout(() => {
+                //         resolve(true);
+                //     }, 500);
+                // });
 
-                result.push(
-                    await getUserSymbolEquipment({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
+                // result.push(
+                //     await getUserSymbolEquipment({
+                //         key: `cache$nickname$${nickName}`,
+                //         data: {
+                //             ocid,
+                //         },
+                //     }),
+                // );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
+                // await new Promise((resolve) => {
+                //     setTimeout(() => {
+                //         resolve(true);
+                //     }, 500);
+                // });
 
-                result.push(
-                    await getUserSetEffect({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
+                // result.push(
+                //     await getUserSetEffect({
+                //         key: `cache$nickname$${nickName}`,
+                //         data: {
+                //             ocid,
+                //         },
+                //     }),
+                // );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
+                // await new Promise((resolve) => {
+                //     setTimeout(() => {
+                //         resolve(true);
+                //     }, 500);
+                // });
 
-                result.push(
-                    await getUserCharacterLinkSkill({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
+                // result.push(
+                //     await getUserCharacterLinkSkill({
+                //         key: `cache$nickname$${nickName}`,
+                //         data: {
+                //             ocid,
+                //         },
+                //     }),
+                // );
 
                 setUserInfo(result[0]);
                 setUserStatInfo(result[1]);
@@ -187,6 +187,20 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserSymbolEquipment(result[5]);
                 setUserSetEffect(result[6]);
                 setUserCharacterLinkSkill(result[7]);
+                setUserInfo({
+                    character_name: '아델',
+                    world_name: '스카니아',
+                    character_gender: '남',
+                    character_class: '아델',
+                    character_class_level: '6',
+                    character_level: 291,
+                    character_exp: 61832816332337,
+                    character_exp_rate: '19.100',
+                    character_guild_name: '리더',
+                    character_image:
+                        'https://open.api.nexon.com/static/maplestory/character/look/OBLGBFIENHHKCBMGHGGGHNDDACNOOGIIFEPCDJFPOMKFPFLFFMDDHIMCDCLNICCPAFEHHEFLIIFKIPOMAPPHGHKOLNADCJBGOMIKIBBPCHIPEOHLIIFDFPBADCILNOIHEIIIHPMGDJPHCLDLFIJFJKFBGPAFHBBNNAFCDFHJIOFKPDJLEGMIEIICMPGOMMAPAPFDHNKDDPKBIDPCHPKDGHBMIEDPFPIBBLDPOFMFPCELEFONOIAOAEAFGEJKODOE',
+                    character_date_create: '2020-01-16T00:00+09:00',
+                });
             }
         })();
     }, [nickName, location, ocid]);
