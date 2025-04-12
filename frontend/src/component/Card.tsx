@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { Grid, GridLayout } from './Grid';
 
 export const Card = memo(function Card() {
-    const data = { name: '사랑법사', level: 250 };
+    const data = { name: '아델', level: 250 };
     const layout = {
         rows: 3,
         cols: 3,
