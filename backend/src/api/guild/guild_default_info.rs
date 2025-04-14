@@ -6,8 +6,6 @@ use std::sync::Arc;
 
 use super::guild::GuildOcid;
 
-use chrono::{Duration, Utc};
-use chrono_tz::Asia::Seoul;
 use reqwest::{Client, header};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -39,13 +37,9 @@ pub async fn get_guild_default_info(
     let mut headers = header::HeaderMap::new();
     headers.insert("x-nxopen-api-key", api_key.key.parse().unwrap());
 
-    let now_time = (Utc::now() - Duration::days(1))
-        .with_timezone(&Seoul)
-        .format("%Y-%m-%d");
-
     let url = format!(
-        "https://open.api.nexon.com/maplestory/v1/guild/basic?oguild_id={}&date={}",
-        guild_ocid.oguild_id, now_time
+        "https://open.api.nexon.com/maplestory/v1/guild/basic?oguild_id={}",
+        guild_ocid.oguild_id
     );
 
     // POST 요청 보내기

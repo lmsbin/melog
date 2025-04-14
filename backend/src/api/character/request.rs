@@ -1,7 +1,5 @@
 use crate::api::request::API;
 
-use chrono::{Duration, Utc};
-use chrono_tz::Asia::Seoul;
 use reqwest::{Client, header};
 use std::sync::Arc;
 
@@ -10,13 +8,9 @@ pub async fn request_parser(api_key: Arc<API>, kind: &str, user_ocid: &str) -> r
     let mut headers = header::HeaderMap::new();
     headers.insert("x-nxopen-api-key", api_key.key.parse().unwrap());
 
-    let now_time = (Utc::now() - Duration::days(1))
-        .with_timezone(&Seoul)
-        .format("%Y-%m-%d");
-
     let url = format!(
-        "https://open.api.nexon.com/maplestory/v1/character/{}?ocid={}&date={}",
-        kind, user_ocid, now_time
+        "https://open.api.nexon.com/maplestory/v1/character/{}?ocid={}",
+        kind, user_ocid
     );
 
     // POST 요청 보내기

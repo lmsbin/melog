@@ -4,8 +4,6 @@ use crate::api::request::API;
 use super::character::UserOcid;
 
 use axum::{Extension, http::StatusCode, response::Json};
-use chrono::{Duration, Utc};
-use chrono_tz::Asia::Seoul;
 use reqwest::{Client, header};
 use serde::{Deserialize, Serialize};
 use serde_with::{DefaultOnNull, serde_as};
@@ -43,13 +41,9 @@ pub async fn get_user_characeter_skill(
     let mut headers = header::HeaderMap::new();
     headers.insert("x-nxopen-api-key", api_key.key.parse().unwrap());
 
-    let now_time = (Utc::now() - Duration::days(1))
-        .with_timezone(&Seoul)
-        .format("%Y-%m-%d");
-
     let url = format!(
-        "https://open.api.nexon.com/maplestory/v1/character/skill?ocid={}&date={}&character_skill_grade={}",
-        character_skil_level.user_ocid.ocid, now_time, character_skil_level.level
+        "https://open.api.nexon.com/maplestory/v1/character/skill?ocid={}&character_skill_grade={}",
+        character_skil_level.user_ocid.ocid, character_skil_level.level
     );
 
     // POST 요청 보내기
