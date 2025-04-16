@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { UserInfo } from '../type';
+import { EN_ALIGN_OPTION, UserInfo } from '../type';
 import { CharacterImg } from './img/CharacterImg';
 import { Grid, GridLayout } from './Grid';
 import { Card } from './Card';
@@ -114,7 +114,7 @@ const UserInfoCard = memo(function UserInfoCard({ userInfo }: UserInfoProps) {
                 </div>
             </Card>
 
-            <Card>
+            <Card width="fit" align={{ horizontal: EN_ALIGN_OPTION.CENTER }}>
                 <div className="flex justify-center">
                     <CharacterImg src={character_image} />
                 </div>
@@ -128,7 +128,7 @@ const UserInfoCard = memo(function UserInfoCard({ userInfo }: UserInfoProps) {
                         <VerticalLine />
                     </div>
                     <div className="text-sm text-gray-500">Lv.{character_level}</div>
-                    <div>
+                    <div className="flex h-3/5">
                         <VerticalLine />
                     </div>
                     <div className="text-sm text-gray-500">{character_guild_name}</div>

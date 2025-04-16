@@ -7,15 +7,17 @@ export interface CardProps {
         horizontal?: EN_ALIGN_OPTION;
         vertical?: EN_ALIGN_OPTION;
     };
+    width?: 'full' | 'fit';
 }
 
-export const Card = memo(function Card({ children, align }: CardProps) {
+export const Card = memo(function Card({ children, align, ...props }: CardProps) {
     const horizontalAlign = align?.horizontal ? `items-${align.horizontal}` : 'items-start';
     const verticalAlign = align?.vertical ? `justify-${align.vertical}` : 'justify-start';
+    const width = props.width ?? 'full';
 
     return (
         <div
-            className={`flex min-h-60 w-full min-w-sm flex-col rounded-2xl bg-white p-4 shadow-md transition duration-500 hover:shadow-lg ${horizontalAlign} ${verticalAlign}`}
+            className={`flex min-h-60 w-${width} min-w-sm flex-col rounded-2xl bg-white p-4 shadow-md transition duration-500 hover:shadow-lg ${horizontalAlign} ${verticalAlign}`}
         >
             {children}
         </div>
