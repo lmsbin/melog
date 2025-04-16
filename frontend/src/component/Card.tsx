@@ -1,24 +1,23 @@
 import { memo } from 'react';
-import { Grid, GridLayout } from './Grid';
+import { EN_ALIGN_OPTION } from '../type';
 
-export const Card = memo(function Card() {
-    const data = { name: '아델', level: 250 };
-    const layout = {
-        rows: 3,
-        cols: 3,
-        cells: [
-            { row: 0, col: 0, rowSpan: 1, dataKey: 'name' },
-            { row: 0, col: 1, rowSpan: 1, dataKey: 'name' },
-            { row: 0, col: 2, rowSpan: 1, dataKey: 'name' },
-            { row: 2, col: 0, rowSpan: 1, dataKey: 'name' },
-            { row: 2, col: 1, rowSpan: 1, dataKey: 'name' },
-            { row: 2, col: 2, rowSpan: 1, dataKey: 'name' },
-        ],
-    } as GridLayout;
+export interface CardProps {
+    children?: React.ReactNode;
+    align?: {
+        horizontal?: EN_ALIGN_OPTION;
+        vertical?: EN_ALIGN_OPTION;
+    };
+}
+
+export const Card = memo(function Card({ children, align }: CardProps) {
+    const horizontalAlign = align?.horizontal ? `items-${align.horizontal}` : 'items-start';
+    const verticalAlign = align?.vertical ? `justify-${align.vertical}` : 'justify-start';
 
     return (
-        <div className="flex min-h-60 w-full min-w-sm flex-col justify-center rounded-2xl bg-white p-4 shadow-md transition duration-500 hover:shadow-lg">
-            <Grid data={data} layout={layout} />
+        <div
+            className={`flex min-h-60 w-full min-w-sm flex-col rounded-2xl bg-white p-4 shadow-md transition duration-500 hover:shadow-lg ${horizontalAlign} ${verticalAlign}`}
+        >
+            {children}
         </div>
     );
 });

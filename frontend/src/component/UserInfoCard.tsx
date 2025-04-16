@@ -2,10 +2,12 @@ import { memo } from 'react';
 import { UserInfo } from '../type';
 import { CharacterImg } from './img/CharacterImg';
 import { Grid, GridLayout } from './Grid';
+import { Card } from './Card';
+import { HorizontalLine, VerticalLine } from './line';
 
-const CharacterCardWrapper = memo(function CharacterCardWrapper({
+const UserInfoCardWrapper = memo(function UserInfoCardWrapper({
     userInfo,
-}: Partial<CharacterCardProps>) {
+}: Partial<UserInfoProps>) {
     if (!userInfo) {
         return (
             <div className="flex min-h-60 w-full min-w-sm flex-col justify-center rounded-2xl bg-white p-4 shadow-md transition duration-500 hover:shadow-lg">
@@ -14,14 +16,14 @@ const CharacterCardWrapper = memo(function CharacterCardWrapper({
         );
     }
 
-    return <CharacterCard userInfo={userInfo} />;
+    return <UserInfoCard userInfo={userInfo} />;
 });
 
-export interface CharacterCardProps {
+export interface UserInfoProps {
     userInfo: UserInfo;
 }
 
-const CharacterCard = memo(function CharacterCard({ userInfo }: CharacterCardProps) {
+const UserInfoCard = memo(function UserInfoCard({ userInfo }: UserInfoProps) {
     const data = userInfo;
     const {
         character_class,
@@ -38,7 +40,7 @@ const CharacterCard = memo(function CharacterCard({ userInfo }: CharacterCardPro
     } = userInfo;
 
     const layout = {
-        rows: 5,
+        rows: 7,
         cols: 2,
         cells: [
             {
@@ -51,41 +53,51 @@ const CharacterCard = memo(function CharacterCard({ userInfo }: CharacterCardPro
             {
                 row: 0,
                 col: 1,
-                dataKey: 'character_name',
+                render: data.character_name,
             },
             {
                 row: 1,
                 col: 1,
-                dataKey: 'world_name',
+                render: data.world_name,
             },
             {
                 row: 2,
                 col: 1,
-                dataKey: 'character_class',
+                render: data.character_class,
             },
             {
                 row: 3,
                 col: 1,
-                render: () => `LV. ${data.character_level}`,
+                render: `LV. ${data.character_level}`,
             },
             {
                 row: 4,
                 col: 1,
                 colSpan: 2,
-                render: () => '그리드 테스트 컴포넌트',
+                render: `EXP: ${character_exp_rate}%`,
+            },
+            {
+                row: 5,
+                col: 1,
+                colSpan: 2,
+                render: `길드: ${character_guild_name}`,
+            },
+            {
+                row: 6,
+                col: 1,
+                colSpan: 2,
+                render: `생성일: ${character_date_create}`,
             },
         ],
     } as GridLayout;
 
-    // @TODO - GridCell 인터페이스 dataKey 사용않고 render로 통일
-
     return (
         <>
-            <div className="flex min-h-60 w-full min-w-sm flex-col justify-center rounded-2xl bg-white p-4 shadow-md transition duration-500 hover:shadow-lg">
+            <Card>
                 <Grid data={data} layout={layout} />
-            </div>
+            </Card>
 
-            <div className="flex min-h-60 w-full min-w-sm flex-col justify-center rounded-2xl bg-white p-4 shadow-md transition duration-500 hover:shadow-lg">
+            <Card>
                 <div className="flex items-center">
                     <CharacterImg src={character_image} />
                     <div className="ml-4">
@@ -100,9 +112,30 @@ const CharacterCard = memo(function CharacterCard({ userInfo }: CharacterCardPro
                     <p>길드: {character_guild_name}</p>
                     <p>생성일: {character_date_create}</p>
                 </div>
-            </div>
+            </Card>
+
+            <Card>
+                <div className="flex justify-center">
+                    <CharacterImg src={character_image} />
+                </div>
+                <div className="flex items-baseline gap-2">
+                    <div className="text-xl font-bold">{character_name}</div>
+                    <div className="text-sm text-gray-500">{world_name}</div>
+                </div>
+                <div className="flex items-center gap-3">
+                    <div className="text-sm text-gray-500">{character_class}</div>
+                    <div className="flex h-3/5">
+                        <VerticalLine />
+                    </div>
+                    <div className="text-sm text-gray-500">Lv.{character_level}</div>
+                    <div>
+                        <VerticalLine />
+                    </div>
+                    <div className="text-sm text-gray-500">{character_guild_name}</div>
+                </div>
+            </Card>
         </>
     );
 });
 
-export default CharacterCardWrapper;
+export default UserInfoCardWrapper;

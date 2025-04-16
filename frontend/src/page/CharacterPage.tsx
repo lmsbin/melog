@@ -15,7 +15,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import getUserInfo from '../api/getUserInfo';
 import { CharacterImg } from '../component/img/CharacterImg';
 import getOcid from '../api/getOcid';
-import { SearchBar } from '../component';
+import { Card, SearchBar } from '../component';
 import getUserStatInfo from '../api/getUserStatInfo';
 import getUserHyperStatInfo from '../api/getUserHyperStatInfo';
 import getUserPropensity from '../api/getUserPropensity';
@@ -29,8 +29,9 @@ import getUserCharacterLinkSkill, {
 } from '../api/getUserCharacterLinkSkill';
 import { WorldLabel } from '../component/label';
 import { NicknameLabel } from '../component/label/NicknameLabel';
-import CharacterCard from '../component/CharacterCard';
-import CharacterCardWrapper from '../component/CharacterCard';
+import CharacterCard from '../component/UserInfoCard';
+import CharacterCardWrapper from '../component/UserInfoCard';
+import UserStatInfoCardWrapper from '../component/UserStatInfoCard';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [ocid, setOcid] = useState<string>('');
@@ -65,119 +66,119 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             if (ocid && nickName) {
                 const result: any = [];
 
-                // result.push(
-                //     await getUserInfo({
-                //         key: `cache$nickname$${nickName}`,
-                //         data: {
-                //             ocid,
-                //         },
-                //     }),
-                // );
+                result.push(
+                    await getUserInfo({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
 
-                // await new Promise((resolve) => {
-                //     setTimeout(() => {
-                //         resolve(true);
-                //     }, 500);
-                // });
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
 
-                // result.push(
-                //     await getUserStatInfo({
-                //         key: `cache$nickname$${nickName}`,
-                //         data: {
-                //             ocid,
-                //         },
-                //     }),
-                // );
+                result.push(
+                    await getUserStatInfo({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
 
-                // await new Promise((resolve) => {
-                //     setTimeout(() => {
-                //         resolve(true);
-                //     }, 500);
-                // });
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
 
-                // result.push(
-                //     await getUserHyperStatInfo({
-                //         key: `cache$nickname$${nickName}`,
-                //         data: {
-                //             ocid,
-                //         },
-                //     }),
-                // );
+                result.push(
+                    await getUserHyperStatInfo({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
 
-                // await new Promise((resolve) => {
-                //     setTimeout(() => {
-                //         resolve(true);
-                //     }, 500);
-                // });
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
 
-                // result.push(
-                //     await getUserPropensity({
-                //         key: `cache$nickname$${nickName}`,
-                //         data: {
-                //             ocid,
-                //         },
-                //     }),
-                // );
+                result.push(
+                    await getUserPropensity({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
 
-                // await new Promise((resolve) => {
-                //     setTimeout(() => {
-                //         resolve(true);
-                //     }, 500);
-                // });
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
 
-                // result.push(
-                //     await getUserAbility({
-                //         key: `cache$nickname$${nickName}`,
-                //         data: {
-                //             ocid,
-                //         },
-                //     }),
-                // );
+                result.push(
+                    await getUserAbility({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
 
-                // await new Promise((resolve) => {
-                //     setTimeout(() => {
-                //         resolve(true);
-                //     }, 500);
-                // });
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
 
-                // result.push(
-                //     await getUserSymbolEquipment({
-                //         key: `cache$nickname$${nickName}`,
-                //         data: {
-                //             ocid,
-                //         },
-                //     }),
-                // );
+                result.push(
+                    await getUserSymbolEquipment({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
 
-                // await new Promise((resolve) => {
-                //     setTimeout(() => {
-                //         resolve(true);
-                //     }, 500);
-                // });
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
 
-                // result.push(
-                //     await getUserSetEffect({
-                //         key: `cache$nickname$${nickName}`,
-                //         data: {
-                //             ocid,
-                //         },
-                //     }),
-                // );
+                result.push(
+                    await getUserSetEffect({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
 
-                // await new Promise((resolve) => {
-                //     setTimeout(() => {
-                //         resolve(true);
-                //     }, 500);
-                // });
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
 
-                // result.push(
-                //     await getUserCharacterLinkSkill({
-                //         key: `cache$nickname$${nickName}`,
-                //         data: {
-                //             ocid,
-                //         },
-                //     }),
-                // );
+                result.push(
+                    await getUserCharacterLinkSkill({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
 
                 setUserInfo(result[0]);
                 setUserStatInfo(result[1]);
@@ -187,20 +188,6 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserSymbolEquipment(result[5]);
                 setUserSetEffect(result[6]);
                 setUserCharacterLinkSkill(result[7]);
-                setUserInfo({
-                    character_name: '아델',
-                    world_name: '스카니아',
-                    character_gender: '남',
-                    character_class: '아델',
-                    character_class_level: '6',
-                    character_level: 291,
-                    character_exp: 61832816332337,
-                    character_exp_rate: '19.100',
-                    character_guild_name: '리더',
-                    character_image:
-                        'https://open.api.nexon.com/static/maplestory/character/look/OBLGBFIENHHKCBMGHGGGHNDDACNOOGIIFEPCDJFPOMKFPFLFFMDDHIMCDCLNICCPAFEHHEFLIIFKIPOMAPPHGHKOLNADCJBGOMIKIBBPCHIPEOHLIIFDFPBADCILNOIHEIIIHPMGDJPHCLDLFIJFJKFBGPAFHBBNNAFCDFHJIOFKPDJLEGMIEIICMPGOMMAPAPFDHNKDDPKBIDPCHPKDGHBMIEDPFPIBBLDPOFMFPCELEFONOIAOAEAFGEJKODOE',
-                    character_date_create: '2020-01-16T00:00+09:00',
-                });
             }
         })();
     }, [nickName, location, ocid]);
@@ -261,19 +248,17 @@ const CharacterPage = memo(function CharacterPage({
     return (
         <div className="flex flex-col items-center gap-6">
             <SearchBar />
-            {/* <CharacterImg src={userInfo.character_image} />
-            <WorldLabel worldName={userInfo.world_name} />
-            <NicknameLabel nickName={userInfo.character_name} /> */}
             <CharacterCardWrapper userInfo={userInfo} />
-            {/* <div>{JSON.stringify(userInfo)}</div>
-            <div>{JSON.stringify(userStatInfo)}</div>
-            <div>{JSON.stringify(userHyperStatInfo)}</div>
-            <div>{JSON.stringify(userPropensity)}</div>
-            <div>{JSON.stringify(userAbility)}</div>
-            <div>{JSON.stringify(userSymbolicEquipment)}</div>
-            <div>{JSON.stringify(userSetEffect)}</div>
-            <div>{JSON.stringify(userCharacterSkill)}</div>
-            <div>{JSON.stringify(userCharacterLinkSkill)}</div> */}
+            <UserStatInfoCardWrapper userStatInfo={userStatInfo} />
+            {/* <Card>{JSON.stringify(userInfo)}</Card>
+            <Card>{JSON.stringify(userStatInfo)}</Card>
+            <Card>{JSON.stringify(userHyperStatInfo)}</Card>
+            <Card>{JSON.stringify(userPropensity)}</Card>
+            <Card>{JSON.stringify(userAbility)}</Card>
+            <Card>{JSON.stringify(userSymbolicEquipment)}</Card>
+            <Card>{JSON.stringify(userSetEffect)}</Card>
+            <Card>{JSON.stringify(userCharacterSkill)}</Card>
+            <Card>{JSON.stringify(userCharacterLinkSkill)}</Card> */}
         </div>
     );
 });

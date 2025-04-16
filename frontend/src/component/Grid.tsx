@@ -18,13 +18,14 @@ export interface GridCell {
     rowSpan?: number;
     colSpan?: number;
     dataKey?: string;
-    render?: (data: any) => React.ReactNode;
+    render?: string | ((data: any) => React.ReactNode);
 }
 
 export const Grid = memo(function Grid({ data, layout }: GridProps) {
     const grid: (GridCell | EMPTY_CELL)[][] = Array(layout.rows)
         .fill(EMPTY_CELL)
         .map(() => Array(layout.cols).fill(EMPTY_CELL));
+
     layout.cells.forEach((cell) => {
         const { col, row } = cell;
         grid[row][col] = cell;
@@ -41,10 +42,12 @@ export const Grid = memo(function Grid({ data, layout }: GridProps) {
 
                                 const { col, row, colSpan, dataKey, render, rowSpan } = cell;
 
-                                const innerContent = render
-                                    ? render(data[dataKey ?? ''])
-                                    : data[dataKey ?? ''];
+                                const innerContent =
+                                    typeof render === 'function'
+                                        ? render(data[dataKey ?? ''])
+                                        : render;
 
+                                console.log(innerContent);
                                 return (
                                     <td rowSpan={rowSpan} colSpan={colSpan}>
                                         {React.isValidElement(innerContent) ? (
