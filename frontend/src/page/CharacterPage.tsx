@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import {
+    EN_ALIGN_OPTION,
     MelogLocation,
     UserAbility,
     UserCharacterLinkSkill,
@@ -15,7 +16,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import getUserInfo from '../api/getUserInfo';
 import { CharacterImg } from '../component/img/CharacterImg';
 import getOcid from '../api/getOcid';
-import { Card, SearchBar } from '../component';
+import { Card, Loading, SearchBar, VerticalLine } from '../component';
 import getUserStatInfo from '../api/getUserStatInfo';
 import getUserHyperStatInfo from '../api/getUserHyperStatInfo';
 import getUserPropensity from '../api/getUserPropensity';
@@ -208,6 +209,19 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
         })();
     }, [userInfo?.character_level]);
 
+    const isLoading =
+        !userInfo ||
+        !userStatInfo ||
+        !userHyperStatInfo ||
+        !userPropensity ||
+        !userAbility ||
+        !userSymbolicEquipment ||
+        !userSetEffect;
+
+    if (isLoading) {
+        return <Loading />;
+    }
+
     return (
         <CharacterPage
             userInfo={userInfo}
@@ -217,23 +231,22 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             userAbility={userAbility}
             userSymbolicEquipment={userSymbolicEquipment}
             userSetEffect={userSetEffect}
-            userCharacterSkill={userCharacterSkill}
-            userCharacterLinkSkill={userCharacterLinkSkill}
         />
     );
 });
 
 interface CharacterPageProps {
-    userInfo?: UserInfo;
-    userStatInfo?: UserStatInfo;
-    userHyperStatInfo?: UserHyperStatInfo;
-    userPropensity?: UserPropensity;
-    userAbility?: UserAbility;
-    userSymbolicEquipment?: UserSymbolEquipment;
-    userSetEffect?: UserSetEffect;
-    userCharacterSkill?: UserCharacterSkill;
-    userCharacterLinkSkill?: UserCharacterLinkSkill;
+    userInfo: UserInfo;
+    userStatInfo: UserStatInfo;
+    userHyperStatInfo: UserHyperStatInfo;
+    userPropensity: UserPropensity;
+    userAbility: UserAbility;
+    userSymbolicEquipment: UserSymbolEquipment;
+    userSetEffect: UserSetEffect;
+    // userCharacterSkill: UserCharacterSkill;
+    // userCharacterLinkSkill: UserCharacterLinkSkill;
 }
+
 const CharacterPage = memo(function CharacterPage({
     userInfo,
     userStatInfo,
@@ -242,23 +255,32 @@ const CharacterPage = memo(function CharacterPage({
     userAbility,
     userSymbolicEquipment,
     userSetEffect,
-    userCharacterSkill,
-    userCharacterLinkSkill,
+    // userCharacterSkill,
+    // userCharacterLinkSkill,
 }: CharacterPageProps) {
     return (
         <div className="flex flex-col items-center gap-6">
             <SearchBar />
-            <CharacterCardWrapper userInfo={userInfo} />
-            <UserStatInfoCardWrapper userStatInfo={userStatInfo} />
-            {/* <Card>{JSON.stringify(userInfo)}</Card>
-            <Card>{JSON.stringify(userStatInfo)}</Card>
-            <Card>{JSON.stringify(userHyperStatInfo)}</Card>
-            <Card>{JSON.stringify(userPropensity)}</Card>
-            <Card>{JSON.stringify(userAbility)}</Card>
-            <Card>{JSON.stringify(userSymbolicEquipment)}</Card>
-            <Card>{JSON.stringify(userSetEffect)}</Card>
-            <Card>{JSON.stringify(userCharacterSkill)}</Card>
-            <Card>{JSON.stringify(userCharacterLinkSkill)}</Card> */}
+            <Card width="fit" align={{ horizontal: EN_ALIGN_OPTION.CENTER }}>
+                <div className="flex justify-center">
+                    <CharacterImg src={userInfo?.character_image as string} />
+                </div>
+                <div className="flex items-baseline gap-2">
+                    <div className="text-xl font-bold">{userInfo?.character_name}</div>
+                    <div className="text-sm text-gray-500">{userInfo?.world_name}</div>
+                </div>
+                <div className="flex items-center gap-3">
+                    <div className="text-sm text-gray-500">{userInfo?.character_class}</div>
+                    <div className="flex h-3/5">
+                        <VerticalLine />
+                    </div>
+                    <div className="text-sm text-gray-500">Lv.{userInfo?.character_level}</div>
+                    <div className="flex h-3/5">
+                        <VerticalLine />
+                    </div>
+                    <div className="text-sm text-gray-500">{userInfo?.character_guild_name}</div>
+                </div>
+            </Card>
         </div>
     );
 });
