@@ -127,3 +127,18 @@ export interface CharacterVCoreEquipment {
     v_core_skill_2: string;
     v_core_skill_3: string;
 }
+
+export interface UserHexaMatrix {
+    character_hexa_core_equipment: HexaCoreEquipment[];
+}
+
+export interface HexaSkill {
+    hexa_skill_id: string;
+}
+
+export interface HexaCoreEquipment {
+    hexa_core_name: string;
+    hexa_core_level: number;
+    hexa_core_type: string;
+    linked_skill: HexaSkill[];
+}

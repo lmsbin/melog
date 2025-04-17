@@ -9,3 +9,5 @@ export * from './getUserSymbolEquipment';
 export * from './getUserSetEffect';
 export * from './getUserCharacterSkill';
 export * from './getUserCharacterLinkSkill';
+export * from './getUserVMatrix';
+export * from './getUserHexaMatrix';

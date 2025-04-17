@@ -5,6 +5,7 @@ import {
     UserAbility,
     UserCharacterLinkSkill,
     UserCharacterSkill,
+    UserHexaMatrix,
     UserHyperStatInfo,
     UserInfo,
     UserPropensity,
@@ -35,6 +36,7 @@ import CharacterCard from '../component/UserInfoCard';
 import CharacterCardWrapper from '../component/UserInfoCard';
 import UserStatInfoCardWrapper from '../component/UserStatInfoCard';
 import getUserVMatrix from '../api/getUserVMatrix';
+import getUserHexaMatrix from '../api/getUserHexaMatrix';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [ocid, setOcid] = useState<string>('');
@@ -48,6 +50,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userCharacterSkill, setUserCharacterSkill] = useState<UserCharacterSkill>();
     const [userCharacterLinkSkill, setUserCharacterLinkSkill] = useState<UserCharacterLinkSkill>();
     const [userVMatrix, setUserVMatrix] = useState<UserVMatrix>();
+    const [userHexaMatrix, setUserHexaMatrix] = useState<UserHexaMatrix>();
 
     const location: MelogLocation = useLocation();
     const { nickName } = useParams();
@@ -199,6 +202,21 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     }),
                 );
 
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
+
+                result.push(
+                    await getUserHexaMatrix({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
+
                 setUserInfo(result[0]);
                 setUserStatInfo(result[1]);
                 setUserHyperStatInfo(result[2]);
@@ -208,25 +226,26 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserSetEffect(result[6]);
                 setUserCharacterLinkSkill(result[7]);
                 setUserVMatrix(result[8]);
+                setUserHexaMatrix(result[9]);
             }
         })();
     }, [nickName, location, ocid]);
 
-    useEffect(() => {
-        (async function () {
-            if (typeof userInfo?.character_level === 'number') {
-                const result = await getUserCharacterSkill({
-                    key: `cache$nickname$${nickName}`,
-                    data: {
-                        level: userInfo.character_level,
-                        ocid: ocid,
-                    },
-                });
+    // useEffect(() => {
+    //     (async function () {
+    //         if (typeof userInfo?.character_level === 'number') {
+    //             const result = await getUserCharacterSkill({
+    //                 key: `cache$nickname$${nickName}`,
+    //                 data: {
+    //                     level: userInfo.character_level,
+    //                     ocid: ocid,
+    //                 },
+    //             });
 
-                setUserCharacterSkill(result);
-            }
-        })();
-    }, [userInfo?.character_level]);
+    //             setUserCharacterSkill(result);
+    //         }
+    //     })();
+    // }, [userInfo?.character_level]);
 
     const isLoading =
         !userInfo ||
@@ -236,7 +255,8 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
         !userAbility ||
         !userSymbolicEquipment ||
         !userSetEffect ||
-        !userVMatrix;
+        !userVMatrix ||
+        !userHexaMatrix;
 
     if (isLoading) {
         return <Loading />;
@@ -252,6 +272,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             userSymbolicEquipment={userSymbolicEquipment}
             userSetEffect={userSetEffect}
             userVMatrix={userVMatrix}
+            userHexaMatrix={userHexaMatrix}
         />
     );
 });
@@ -267,6 +288,7 @@ interface CharacterPageProps {
     // userCharacterSkill: UserCharacterSkill;
     // userCharacterLinkSkill: UserCharacterLinkSkill;
     userVMatrix: UserVMatrix;
+    userHexaMatrix: UserHexaMatrix;
 }
 
 const CharacterPage = memo(function CharacterPage({
@@ -280,6 +302,7 @@ const CharacterPage = memo(function CharacterPage({
     // userCharacterSkill,
     // userCharacterLinkSkill,
     userVMatrix,
+    userHexaMatrix,
 }: CharacterPageProps) {
     return (
         <div className="flex flex-col items-center gap-6">
