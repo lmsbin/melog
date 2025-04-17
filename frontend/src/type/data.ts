@@ -142,3 +142,9 @@ export interface HexaCoreEquipment {
     hexa_core_type: string;
     linked_skill: HexaSkill[];
 }
+
+export interface UserDojang {
+    dojang_best_floor: number;
+    date_dojang_record: string;
+    dojang_best_time: number;
+}

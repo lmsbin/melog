@@ -5,6 +5,7 @@ import {
     UserAbility,
     UserCharacterLinkSkill,
     UserCharacterSkill,
+    UserDojang,
     UserHexaMatrix,
     UserHyperStatInfo,
     UserInfo,
@@ -37,6 +38,7 @@ import CharacterCardWrapper from '../component/UserInfoCard';
 import UserStatInfoCardWrapper from '../component/UserStatInfoCard';
 import getUserVMatrix from '../api/getUserVMatrix';
 import getUserHexaMatrix from '../api/getUserHexaMatrix';
+import getUserDojang from '../api/getUserDojang';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [ocid, setOcid] = useState<string>('');
@@ -51,6 +53,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userCharacterLinkSkill, setUserCharacterLinkSkill] = useState<UserCharacterLinkSkill>();
     const [userVMatrix, setUserVMatrix] = useState<UserVMatrix>();
     const [userHexaMatrix, setUserHexaMatrix] = useState<UserHexaMatrix>();
+    const [userDojang, setUserDojang] = useState<UserDojang>();
 
     const location: MelogLocation = useLocation();
     const { nickName } = useParams();
@@ -217,6 +220,21 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     }),
                 );
 
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
+
+                result.push(
+                    await getUserDojang({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
+
                 setUserInfo(result[0]);
                 setUserStatInfo(result[1]);
                 setUserHyperStatInfo(result[2]);
@@ -227,6 +245,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserCharacterLinkSkill(result[7]);
                 setUserVMatrix(result[8]);
                 setUserHexaMatrix(result[9]);
+                setUserDojang(result[10]);
             }
         })();
     }, [nickName, location, ocid]);
@@ -256,7 +275,8 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
         !userSymbolicEquipment ||
         !userSetEffect ||
         !userVMatrix ||
-        !userHexaMatrix;
+        !userHexaMatrix ||
+        !userDojang;
 
     if (isLoading) {
         return <Loading />;
@@ -273,6 +293,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             userSetEffect={userSetEffect}
             userVMatrix={userVMatrix}
             userHexaMatrix={userHexaMatrix}
+            userDojang={userDojang}
         />
     );
 });
@@ -289,6 +310,7 @@ interface CharacterPageProps {
     // userCharacterLinkSkill: UserCharacterLinkSkill;
     userVMatrix: UserVMatrix;
     userHexaMatrix: UserHexaMatrix;
+    userDojang: UserDojang;
 }
 
 const CharacterPage = memo(function CharacterPage({
@@ -303,6 +325,7 @@ const CharacterPage = memo(function CharacterPage({
     // userCharacterLinkSkill,
     userVMatrix,
     userHexaMatrix,
+    userDojang,
 }: CharacterPageProps) {
     return (
         <div className="flex flex-col items-center gap-6">
