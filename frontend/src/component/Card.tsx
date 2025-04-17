@@ -17,7 +17,7 @@ export const Card = memo(function Card({ children, align, ...props }: CardProps)
 
     return (
         <div
-            className={`flex min-h-60 w-${width} min-w-sm flex-col rounded-2xl bg-white p-4 shadow-md transition duration-500 hover:shadow-lg ${horizontalAlign} ${verticalAlign}`}
+            className={`flex min-h-60 w-${width} min-w-fit flex-col rounded-2xl bg-white p-4 shadow-md transition duration-500 hover:shadow-lg ${horizontalAlign} ${verticalAlign}`}
         >
             {children}
         </div>

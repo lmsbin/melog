@@ -11,12 +11,13 @@ import {
     UserSetEffect,
     UserStatInfo,
     UserSymbolEquipment,
+    UserVMatrix,
 } from '../type';
 import { useLocation, useParams } from 'react-router-dom';
 import getUserInfo from '../api/getUserInfo';
 import { CharacterImg } from '../component/img/CharacterImg';
 import getOcid from '../api/getOcid';
-import { Card, Loading, SearchBar, VerticalLine } from '../component';
+import { Card, HorizontalLine, Loading, SearchBar, VerticalLine } from '../component';
 import getUserStatInfo from '../api/getUserStatInfo';
 import getUserHyperStatInfo from '../api/getUserHyperStatInfo';
 import getUserPropensity from '../api/getUserPropensity';
@@ -33,6 +34,7 @@ import { NicknameLabel } from '../component/label/NicknameLabel';
 import CharacterCard from '../component/UserInfoCard';
 import CharacterCardWrapper from '../component/UserInfoCard';
 import UserStatInfoCardWrapper from '../component/UserStatInfoCard';
+import getUserVMatrix from '../api/getUserVMatrix';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [ocid, setOcid] = useState<string>('');
@@ -45,6 +47,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userSetEffect, setUserSetEffect] = useState<UserSetEffect>();
     const [userCharacterSkill, setUserCharacterSkill] = useState<UserCharacterSkill>();
     const [userCharacterLinkSkill, setUserCharacterLinkSkill] = useState<UserCharacterLinkSkill>();
+    const [userVMatrix, setUserVMatrix] = useState<UserVMatrix>();
 
     const location: MelogLocation = useLocation();
     const { nickName } = useParams();
@@ -181,6 +184,21 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     }),
                 );
 
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 500);
+                });
+
+                result.push(
+                    await getUserVMatrix({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
+
                 setUserInfo(result[0]);
                 setUserStatInfo(result[1]);
                 setUserHyperStatInfo(result[2]);
@@ -189,6 +207,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserSymbolEquipment(result[5]);
                 setUserSetEffect(result[6]);
                 setUserCharacterLinkSkill(result[7]);
+                setUserVMatrix(result[8]);
             }
         })();
     }, [nickName, location, ocid]);
@@ -216,7 +235,8 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
         !userPropensity ||
         !userAbility ||
         !userSymbolicEquipment ||
-        !userSetEffect;
+        !userSetEffect ||
+        !userVMatrix;
 
     if (isLoading) {
         return <Loading />;
@@ -231,6 +251,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             userAbility={userAbility}
             userSymbolicEquipment={userSymbolicEquipment}
             userSetEffect={userSetEffect}
+            userVMatrix={userVMatrix}
         />
     );
 });
@@ -245,6 +266,7 @@ interface CharacterPageProps {
     userSetEffect: UserSetEffect;
     // userCharacterSkill: UserCharacterSkill;
     // userCharacterLinkSkill: UserCharacterLinkSkill;
+    userVMatrix: UserVMatrix;
 }
 
 const CharacterPage = memo(function CharacterPage({
@@ -257,6 +279,7 @@ const CharacterPage = memo(function CharacterPage({
     userSetEffect,
     // userCharacterSkill,
     // userCharacterLinkSkill,
+    userVMatrix,
 }: CharacterPageProps) {
     return (
         <div className="flex flex-col items-center gap-6">
@@ -279,6 +302,12 @@ const CharacterPage = memo(function CharacterPage({
                         <VerticalLine />
                     </div>
                     <div className="text-sm text-gray-500">{userInfo?.character_guild_name}</div>
+                </div>
+                <div className="flex h-3 w-full items-center">
+                    <HorizontalLine />
+                </div>
+                <div className="flex justify-start">
+                    <div></div>
                 </div>
             </Card>
         </div>
