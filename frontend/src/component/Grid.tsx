@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { EMPTY_CELL } from '../type';
 
 export interface GridProps {
-    data: Record<string, any>;
+    data?: Record<string, any>;
     layout: GridLayout;
 }
 
@@ -44,7 +44,7 @@ export const Grid = memo(function Grid({ data, layout }: GridProps) {
 
                                 const innerContent =
                                     typeof render === 'function'
-                                        ? render(data[dataKey ?? ''])
+                                        ? render((data ?? {})[dataKey ?? ''])
                                         : render;
 
                                 console.log(innerContent);

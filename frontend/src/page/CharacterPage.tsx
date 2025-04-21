@@ -9,6 +9,7 @@ import {
     UserHexaMatrix,
     UserHyperStatInfo,
     UserInfo,
+    UserItemEquipment,
     UserPropensity,
     UserSetEffect,
     UserStatInfo,
@@ -19,7 +20,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import getUserInfo from '../api/getUserInfo';
 import { CharacterImg } from '../component/img/CharacterImg';
 import getOcid from '../api/getOcid';
-import { Card, HorizontalLine, Loading, SearchBar, VerticalLine } from '../component';
+import { Card, HorizontalLine, Loading, SearchBar, Symbol, VerticalLine } from '../component';
 import getUserStatInfo from '../api/getUserStatInfo';
 import getUserHyperStatInfo from '../api/getUserHyperStatInfo';
 import getUserPropensity from '../api/getUserPropensity';
@@ -39,6 +40,8 @@ import UserStatInfoCardWrapper from '../component/UserStatInfoCard';
 import getUserVMatrix from '../api/getUserVMatrix';
 import getUserHexaMatrix from '../api/getUserHexaMatrix';
 import getUserDojang from '../api/getUserDojang';
+import getUserItemEquipment from '../api/getUserItemEquipment';
+import { BaseImg } from '../component/img';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [ocid, setOcid] = useState<string>('');
@@ -54,6 +57,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     const [userVMatrix, setUserVMatrix] = useState<UserVMatrix>();
     const [userHexaMatrix, setUserHexaMatrix] = useState<UserHexaMatrix>();
     const [userDojang, setUserDojang] = useState<UserDojang>();
+    const [userItemEquipment, setUserItemEquipment] = useState<UserItemEquipment>();
 
     const location: MelogLocation = useLocation();
     const { nickName } = useParams();
@@ -85,12 +89,6 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     }),
                 );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
-
                 result.push(
                     await getUserStatInfo({
                         key: `cache$nickname$${nickName}`,
@@ -99,12 +97,6 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                         },
                     }),
                 );
-
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
 
                 result.push(
                     await getUserHyperStatInfo({
@@ -115,12 +107,6 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     }),
                 );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
-
                 result.push(
                     await getUserPropensity({
                         key: `cache$nickname$${nickName}`,
@@ -129,12 +115,6 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                         },
                     }),
                 );
-
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
 
                 result.push(
                     await getUserAbility({
@@ -145,12 +125,6 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     }),
                 );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
-
                 result.push(
                     await getUserSymbolEquipment({
                         key: `cache$nickname$${nickName}`,
@@ -159,12 +133,6 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                         },
                     }),
                 );
-
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
 
                 result.push(
                     await getUserSetEffect({
@@ -175,12 +143,6 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     }),
                 );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
-
                 result.push(
                     await getUserCharacterLinkSkill({
                         key: `cache$nickname$${nickName}`,
@@ -189,12 +151,6 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                         },
                     }),
                 );
-
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
 
                 result.push(
                     await getUserVMatrix({
@@ -205,12 +161,6 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     }),
                 );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
-
                 result.push(
                     await getUserHexaMatrix({
                         key: `cache$nickname$${nickName}`,
@@ -220,14 +170,17 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                     }),
                 );
 
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 500);
-                });
-
                 result.push(
                     await getUserDojang({
+                        key: `cache$nickname$${nickName}`,
+                        data: {
+                            ocid,
+                        },
+                    }),
+                );
+
+                result.push(
+                    await getUserItemEquipment({
                         key: `cache$nickname$${nickName}`,
                         data: {
                             ocid,
@@ -246,6 +199,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
                 setUserVMatrix(result[8]);
                 setUserHexaMatrix(result[9]);
                 setUserDojang(result[10]);
+                setUserItemEquipment(result[11]);
             }
         })();
     }, [nickName, location, ocid]);
@@ -276,7 +230,8 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
         !userSetEffect ||
         !userVMatrix ||
         !userHexaMatrix ||
-        !userDojang;
+        !userDojang ||
+        !userItemEquipment;
 
     if (isLoading) {
         return <Loading />;
@@ -294,6 +249,7 @@ export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
             userVMatrix={userVMatrix}
             userHexaMatrix={userHexaMatrix}
             userDojang={userDojang}
+            userItemEquipment={userItemEquipment}
         />
     );
 });
@@ -311,6 +267,7 @@ interface CharacterPageProps {
     userVMatrix: UserVMatrix;
     userHexaMatrix: UserHexaMatrix;
     userDojang: UserDojang;
+    userItemEquipment: UserItemEquipment;
 }
 
 const CharacterPage = memo(function CharacterPage({
@@ -326,36 +283,55 @@ const CharacterPage = memo(function CharacterPage({
     userVMatrix,
     userHexaMatrix,
     userDojang,
+    userItemEquipment,
 }: CharacterPageProps) {
     return (
-        <div className="flex flex-col items-center gap-6">
+        <div className="flex w-full flex-col items-center gap-6">
             <SearchBar />
-            <Card width="fit" align={{ horizontal: EN_ALIGN_OPTION.CENTER }}>
-                <div className="flex justify-center">
-                    <CharacterImg src={userInfo?.character_image as string} />
-                </div>
-                <div className="flex items-baseline gap-2">
-                    <div className="text-xl font-bold">{userInfo?.character_name}</div>
-                    <div className="text-sm text-gray-500">{userInfo?.world_name}</div>
-                </div>
-                <div className="flex items-center gap-3">
-                    <div className="text-sm text-gray-500">{userInfo?.character_class}</div>
-                    <div className="flex h-3/5">
-                        <VerticalLine />
+            {/* 캐릭터 */}
+            <div className="flex w-full">
+                <Card width="fit" height="fit" align={{ horizontal: EN_ALIGN_OPTION.CENTER }}>
+                    <div className="w-full flex-col items-center justify-center">
+                        <div className="flex justify-center">
+                            <CharacterImg src={userInfo?.character_image as string} />
+                        </div>
+                        <div className="flex items-baseline justify-center gap-2">
+                            <div className="text-xl font-bold">{userInfo?.character_name}</div>
+                            <div className="text-sm text-gray-500">{userInfo?.world_name}</div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <div className="text-sm text-gray-500">{userInfo?.character_class}</div>
+                            <div className="flex h-3/5">
+                                <VerticalLine />
+                            </div>
+                            <div className="text-sm text-gray-500">
+                                Lv.{userInfo?.character_level}
+                            </div>
+                            <div className="flex h-3/5">
+                                <VerticalLine />
+                            </div>
+                            <div className="text-sm text-gray-500">
+                                {userInfo?.character_guild_name}
+                            </div>
+                        </div>
+                        <div className="flex h-3 w-full items-center">
+                            <HorizontalLine />
+                        </div>
+                        <div className="flex justify-start">
+                            <div></div>
+                        </div>
                     </div>
-                    <div className="text-sm text-gray-500">Lv.{userInfo?.character_level}</div>
-                    <div className="flex h-3/5">
-                        <VerticalLine />
+                </Card>
+
+                {/* 심볼 */}
+                <Card width="full" align={{ horizontal: EN_ALIGN_OPTION.CENTER }}>
+                    <div className="flex w-full max-w-full flex-wrap gap-3">
+                        {userSymbolicEquipment.symbol.map((symbol, index) => (
+                            <Symbol {...symbol} key={index} />
+                        ))}
                     </div>
-                    <div className="text-sm text-gray-500">{userInfo?.character_guild_name}</div>
-                </div>
-                <div className="flex h-3 w-full items-center">
-                    <HorizontalLine />
-                </div>
-                <div className="flex justify-start">
-                    <div></div>
-                </div>
-            </Card>
+                </Card>
+            </div>
         </div>
     );
 });

@@ -12,3 +12,4 @@ export * from './getUserCharacterLinkSkill';
 export * from './getUserVMatrix';
 export * from './getUserHexaMatrix';
 export * from './getUserDojang';
+export * from './getUserItemEquipment';

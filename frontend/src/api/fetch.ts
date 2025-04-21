@@ -66,6 +66,8 @@ export function fetchWrapper<T, P>(
         }
 
         const result = await func(data!);
+        // 테스트용 임시 지연 로직
+        await new Promise((resolve) => setTimeout(resolve, 500));
         cache.set(key, {
             data: result,
             expiration_time: Date.now() + expiration_time,

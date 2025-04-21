@@ -7,3 +7,4 @@ export * from './Card';
 export * from './Grid';
 export * from './line';
 export * from './Loading';
+export * from './data';
