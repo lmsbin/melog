@@ -47,7 +47,7 @@ export interface FetchOptions {
 
 export function fetchWrapper<T, P>(
     func: (param: T) => Promise<any>,
-    expiration_time: number = 604_800_000,
+    expiration_time: number = 3_600_000, // 1시간
 ) {
     const STORAGE_KEY = func.name;
     const cache = new Map<any, Cache>(Object.entries(localStorageStore.getData(STORAGE_KEY) ?? {}));
@@ -66,12 +66,17 @@ export function fetchWrapper<T, P>(
         }
 
         const result = await func(data!);
+
         // 테스트용 임시 지연 로직
         await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Cache 정보 저장
         cache.set(key, {
             data: result,
             expiration_time: Date.now() + expiration_time,
         });
+        localStorageStore.setData(STORAGE_KEY, Object.fromEntries(cache));
+
         console.log(`[INFO] fetch executed: ${key} from ${func.name}`);
         return result;
     };
