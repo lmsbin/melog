@@ -12,9 +12,9 @@ export interface CardProps {
 }
 
 export const Card = memo(function Card({ children, align, ...props }: CardProps) {
-    const horizontalAlign = align?.horizontal ? `items-${align.horizontal}` : 'items-start';
+    const horizontalAlign = align?.horizontal ? `justify-${align.horizontal}` : 'justify-start';
 
-    const verticalAlign = align?.vertical ? `justify-${align.vertical}` : 'justify-start';
+    const verticalAlign = align?.vertical ? `items-${align.vertical}` : 'items-start';
 
     const width = props.width ?? 'full';
     const height = props.height ?? 'full';

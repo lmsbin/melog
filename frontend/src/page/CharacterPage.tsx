@@ -20,7 +20,15 @@ import { useLocation, useParams } from 'react-router-dom';
 import getUserInfo from '../api/getUserInfo';
 import { CharacterImg } from '../component/img/CharacterImg';
 import getOcid from '../api/getOcid';
-import { Card, HorizontalLine, Loading, SearchBar, Symbol, VerticalLine } from '../component';
+import {
+    Card,
+    HorizontalLine,
+    Loading,
+    PropensityChart,
+    SearchBar,
+    Symbol,
+    VerticalLine,
+} from '../component';
 import getUserStatInfo from '../api/getUserStatInfo';
 import getUserHyperStatInfo from '../api/getUserHyperStatInfo';
 import getUserPropensity from '../api/getUserPropensity';
@@ -289,8 +297,12 @@ const CharacterPage = memo(function CharacterPage({
         <div className="flex w-full flex-col items-center gap-6">
             <SearchBar />
             {/* 캐릭터 */}
-            <div className="flex w-full">
-                <Card width="fit" height="fit" align={{ horizontal: EN_ALIGN_OPTION.CENTER }}>
+            <div className="flex w-full gap-6">
+                <Card
+                    width="fit"
+                    height="fit"
+                    align={{ horizontal: EN_ALIGN_OPTION.CENTER, vertical: EN_ALIGN_OPTION.CENTER }}
+                >
                     <div className="w-full flex-col items-center justify-center">
                         <div className="flex justify-center">
                             <CharacterImg src={userInfo?.character_image as string} />
@@ -314,24 +326,29 @@ const CharacterPage = memo(function CharacterPage({
                                 {userInfo?.character_guild_name}
                             </div>
                         </div>
-                        <div className="flex h-3 w-full items-center">
+                        {/* <div className="flex h-3 w-full items-center">
                             <HorizontalLine />
                         </div>
                         <div className="flex justify-start">
                             <div></div>
-                        </div>
+                        </div> */}
                     </div>
                 </Card>
 
-                {/* 심볼 */}
-                <Card width="full" align={{ horizontal: EN_ALIGN_OPTION.CENTER }}>
-                    <div className="flex w-full max-w-full flex-wrap gap-3">
-                        {userSymbolicEquipment.symbol.map((symbol, index) => (
-                            <Symbol {...symbol} key={index} />
-                        ))}
-                    </div>
+                {/* Propensity */}
+                <Card width="fit">
+                    <PropensityChart propensity={userPropensity} />
                 </Card>
             </div>
+
+            {/* 심볼 */}
+            <Card width="full">
+                <div className="flex w-full max-w-full flex-wrap justify-center gap-3">
+                    {userSymbolicEquipment.symbol.map((symbol, index) => (
+                        <Symbol {...symbol} key={index} />
+                    ))}
+                </div>
+            </Card>
         </div>
     );
 });

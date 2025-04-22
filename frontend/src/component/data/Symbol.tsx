@@ -38,6 +38,11 @@ export const Symbol = memo(function Symbol({
         { col: 1, row: 1, render: mainStat },
     ] as GridCell[];
 
+    const gridProps = {
+        layout: { cols: 2, rows: 2, cells: symbolData },
+        style: { space_x: 2 },
+    };
+
     return (
         <div className="flex flex-col gap-1">
             <div className="flex w-50 gap-2" key={symbol_name}>
@@ -50,7 +55,7 @@ export const Symbol = memo(function Symbol({
                     </div>
                 </div>
                 <div>
-                    <Grid layout={{ cols: 2, rows: 2, cells: symbolData }} />
+                    <Grid {...gridProps} />
                 </div>
             </div>
             <div>

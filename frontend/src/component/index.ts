@@ -8,3 +8,4 @@ export * from './Grid';
 export * from './line';
 export * from './Loading';
 export * from './data';
+export * from './chart';
