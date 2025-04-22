@@ -45,6 +45,8 @@ export const PropensityChart = memo(function PropensityChart({ propensity }: Pro
     };
 
     const options = {
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
             r: {
                 min: 0,
@@ -63,7 +65,7 @@ export const PropensityChart = memo(function PropensityChart({ propensity }: Pro
     };
 
     return (
-        <div className="h-80 w-80">
+        <div className="h-60 w-80">
             <Radar data={data} options={options} /> {/* Radar 컴포넌트 사용 */}
         </div>
     );

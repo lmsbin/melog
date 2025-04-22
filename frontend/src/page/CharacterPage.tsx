@@ -301,7 +301,8 @@ const CharacterPage = memo(function CharacterPage({
                 <Card
                     width="fit"
                     height="fit"
-                    align={{ horizontal: EN_ALIGN_OPTION.CENTER, vertical: EN_ALIGN_OPTION.CENTER }}
+                    align={{ horizontal: EN_ALIGN_OPTION.CENTER }}
+                    label="기본정보"
                 >
                     <div className="w-full flex-col items-center justify-center">
                         <div className="flex justify-center">
@@ -311,7 +312,7 @@ const CharacterPage = memo(function CharacterPage({
                             <div className="text-xl font-bold">{userInfo?.character_name}</div>
                             <div className="text-sm text-gray-500">{userInfo?.world_name}</div>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-center gap-3">
                             <div className="text-sm text-gray-500">{userInfo?.character_class}</div>
                             <div className="flex h-3/5">
                                 <VerticalLine />
@@ -336,13 +337,18 @@ const CharacterPage = memo(function CharacterPage({
                 </Card>
 
                 {/* Propensity */}
-                <Card width="fit">
+                <Card
+                    width="fit"
+                    height="fit"
+                    label="성향"
+                    align={{ horizontal: EN_ALIGN_OPTION.CENTER, vertical: EN_ALIGN_OPTION.CENTER }}
+                >
                     <PropensityChart propensity={userPropensity} />
                 </Card>
             </div>
 
             {/* 심볼 */}
-            <Card width="full">
+            <Card width="full" label="심볼">
                 <div className="flex w-full max-w-full flex-wrap justify-center gap-3">
                     {userSymbolicEquipment.symbol.map((symbol, index) => (
                         <Symbol {...symbol} key={index} />
