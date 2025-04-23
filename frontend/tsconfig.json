@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "jsx": "react-jsx",
         "baseUrl": "./",
         "paths": {
             "@api/*": ["src/api/*"]
