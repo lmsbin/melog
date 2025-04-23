@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { EN_ALIGN_OPTION, UserStatInfo } from '../type';
+import { EN_ALIGN_OPTION, UserStatInfo } from '../shared';
 import { CharacterImg } from './img/CharacterImg';
 import { Grid, GridLayout } from './Grid';
 import { Card } from './Card';

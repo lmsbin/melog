@@ -1,5 +1,5 @@
 import { memo, MouseEvent, useCallback } from 'react';
-import { BaseComponentProps } from '../../type';
+import { BaseComponentProps } from '../../shared';
 
 interface ImgProps extends BaseComponentProps {
     src: string;

@@ -1,5 +1,5 @@
 import localStorageStore from '../store/localStorageStore';
-import { EN_FETCH_METHOD } from '../type';
+import { EN_FETCH_METHOD } from '../shared';
 
 interface Fetch {
     url: string;

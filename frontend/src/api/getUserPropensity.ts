@@ -1,4 +1,4 @@
-import { BASE_URL, EN_FETCH_METHOD, UserPropensity } from '../type';
+import { BASE_URL, EN_FETCH_METHOD, UserPropensity } from '../shared';
 import { baseFetch, fetchWrapper } from './fetch';
 
 export interface GetUserPropensityRequest {

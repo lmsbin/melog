@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { EMPTY_CELL } from '../type';
+import { EMPTY_CELL } from '../shared';
 
 export interface GridProps {
     data?: Record<string, any>;

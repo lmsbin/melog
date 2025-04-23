@@ -15,7 +15,7 @@ import {
     UserStatInfo,
     UserSymbolEquipment,
     UserVMatrix,
-} from '../type';
+} from '../shared';
 import { useLocation, useParams } from 'react-router-dom';
 import getUserInfo from '../api/getUserInfo';
 import { CharacterImg } from '../component/img/CharacterImg';

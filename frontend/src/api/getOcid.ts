@@ -1,4 +1,4 @@
-import { EN_FETCH_METHOD, BASE_URL, TEST_UUID } from '../type';
+import { EN_FETCH_METHOD, BASE_URL, TEST_UUID } from '../shared';
 import { baseFetch, fetchWrapper } from './fetch';
 
 export interface GetOcidRequest {

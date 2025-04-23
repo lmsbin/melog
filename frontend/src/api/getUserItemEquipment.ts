@@ -1,4 +1,4 @@
-import { BASE_URL, EN_FETCH_METHOD, UserItemEquipment } from '../type';
+import { BASE_URL, EN_FETCH_METHOD, UserItemEquipment } from '../shared';
 import { baseFetch, fetchWrapper } from './fetch';
 
 export interface GetUserItemEquipmentRequest {

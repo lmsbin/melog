@@ -1,4 +1,4 @@
-import { BASE_URL, EN_FETCH_METHOD, TEST_UUID, UserCharacterSkill } from '../type';
+import { BASE_URL, EN_FETCH_METHOD, TEST_UUID, UserCharacterSkill } from '../shared';
 import { baseFetch, fetchWrapper } from './fetch';
 
 export interface GetUserCharacterSkillRequest {

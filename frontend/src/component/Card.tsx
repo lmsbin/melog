@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { EN_ALIGN_OPTION } from '../type';
+import { EN_ALIGN_OPTION } from '../shared';
 
 export interface CardProps {
     children?: React.ReactNode;
@@ -7,8 +7,8 @@ export interface CardProps {
         horizontal?: EN_ALIGN_OPTION;
         vertical?: EN_ALIGN_OPTION;
     };
-    width?: 'full' | 'fit';
-    height?: 'full' | 'fit';
+    width?: 'full' | 'fit' | string;
+    height?: 'full' | 'fit' | string;
     label?: string;
 }
 

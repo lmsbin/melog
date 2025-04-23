@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { UserSymbolEquipment } from '../../type';
+import { UserSymbolEquipment } from '../../shared';
 import { BaseImg } from '../img';
 import { Grid, GridCell } from '../Grid';
 

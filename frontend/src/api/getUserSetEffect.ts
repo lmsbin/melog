@@ -1,4 +1,4 @@
-import { BASE_URL, EN_FETCH_METHOD, TEST_UUID, UserSetEffect } from '../type';
+import { BASE_URL, EN_FETCH_METHOD, TEST_UUID, UserSetEffect } from '../shared';
 import { baseFetch, fetchWrapper } from './fetch';
 
 export interface GetUserSetEffectRequest {

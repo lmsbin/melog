@@ -1,4 +1,4 @@
-import { BASE_URL, EN_FETCH_METHOD, UserDojang } from '../type';
+import { BASE_URL, EN_FETCH_METHOD, UserDojang } from '../shared';
 import { baseFetch, fetchWrapper } from './fetch';
 
 export interface GetUserDojangRequest {

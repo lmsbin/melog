@@ -1,4 +1,4 @@
-import { BASE_URL, EN_FETCH_METHOD, TEST_UUID, UserInfo } from '../type';
+import { BASE_URL, EN_FETCH_METHOD, TEST_UUID, UserInfo } from '../shared';
 import { baseFetch, fetchWrapper } from './fetch';
 
 export interface GetUserInfoRequest {

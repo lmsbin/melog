@@ -1,4 +1,4 @@
-import { BASE_URL, EN_FETCH_METHOD, UserAbility } from '../type';
+import { BASE_URL, EN_FETCH_METHOD, UserAbility } from '../shared';
 import { baseFetch, fetchWrapper } from './fetch';
 
 export interface GetUserAbilityRequest {
