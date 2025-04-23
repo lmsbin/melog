@@ -1,7 +1,9 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "@api/*": ["src/api/*"]
+        }
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
