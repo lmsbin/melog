@@ -178,6 +178,10 @@ const CharacterPage = memo(function CharacterPage({
                     ))}
                 </div>
             </Card>
+
+            <Card label="스탯"></Card>
+            <Card label="하이퍼스탯"></Card>
+            <Card label="장비"></Card>
         </div>
     );
 });
