@@ -30,6 +30,7 @@ import {
     VerticalLine,
 } from '../component';
 import { useFetch, useFetchUserInfo } from '../hook';
+import { abilityMapper } from '../util';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     // const location: MelogLocation = useLocation();
@@ -153,6 +154,19 @@ const CharacterPage = memo(function CharacterPage({
                     align={{ horizontal: EN_ALIGN_OPTION.CENTER, vertical: EN_ALIGN_OPTION.CENTER }}
                 >
                     <PropensityChart propensity={userPropensity} />
+                </Card>
+                <Card label="어빌리티">
+                    <div className="flex flex-col">
+                        <div>{userAbility.ability_grade}</div>
+                        {userAbility.ability_info.map((x) => {
+                            return (
+                                <ul>
+                                    <div className={`bg-amber-50`}>{x.ability_grade}</div>
+                                    <div>{x.ability_value}</div>
+                                </ul>
+                            );
+                        })}
+                    </div>
                 </Card>
             </div>
 
