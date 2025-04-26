@@ -20,7 +20,7 @@ pub struct HexaMatrixInfo {
     linked_skill: Vec<HexaSkillInfo>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct HexaMatrix {
     character_hexa_core_equipment: Vec<HexaMatrixInfo>,
 }
@@ -34,10 +34,7 @@ pub async fn get_user_hexa_matrix(
 
     // 응답 결과 확인
     if response.status().is_success() {
-        let user_hexa_matrix: HexaMatrix = response
-            .json()
-            .await
-            .expect("Failed to parse response JSON");
+        let user_hexa_matrix: HexaMatrix = response.json().await.unwrap_or_default();
 
         Ok(Json(user_hexa_matrix))
     } else {
