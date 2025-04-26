@@ -3,7 +3,8 @@
         "jsx": "react-jsx",
         "baseUrl": "./",
         "paths": {
-            "@api/*": ["src/api/*"]
+            "@api/*": ["src/api/*"],
+            "@/*": ["src/*"]
         }
     },
     "include": ["src/**/*.ts", "src/**/*.tsx"]

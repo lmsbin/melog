@@ -1,6 +1,9 @@
 import { memo, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import getOcid from '../api/getOcid';
+import getOcid, { GetOcidRequest, GetOcidResponse } from '../api/getOcid';
+import { FetchParam } from '@api/fetch';
+import { Loading } from '../component';
+import { useFetch } from '../hook';
 
 /**
  * 1. queryString을 파싱
@@ -10,37 +13,39 @@ import getOcid from '../api/getOcid';
  * 현재는 길드 제외하고 캐릭터만 고려하고 있으므로, 항상 바로 정보페이지로 이동
  */
 export const SearchPageWrapper = memo(function SearchPageWrapper() {
-    const { searchedValue, ocid, setOcid } = useSearchPage();
+    const { searchedValue } = useSearchPage();
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        (async function () {
-            if (searchedValue) {
-                const result = await getOcid({
-                    key: searchedValue,
-                    data: {
-                        nickName: searchedValue,
-                    },
-                });
-
-                if (result) {
-                    setOcid(result.ocid);
-                }
-            }
-        })();
-    }, [searchedValue]);
+    const {
+        loading: ocidLoading,
+        error: ocidError,
+        result: getOcidResult,
+    } = useFetch<Parameters<typeof getOcid>[0], Awaited<ReturnType<typeof getOcid>>>(getOcid, {
+        key: `cache$nickname$${searchedValue}`,
+        data: {
+            nickName: searchedValue,
+        },
+    });
 
     useEffect(() => {
         // 현재는 캐릭터만 고려.
         // ocid 존재 => 캐릭터 조회 성공 => 바로 캐릭터 정보 페이지로 이동
-        if (ocid) {
+        if (getOcidResult?.ocid) {
             navigate(`/character/${searchedValue}`, {
                 replace: true,
                 state: { fromSearchPage: true },
             });
         }
-    }, [ocid, navigate, searchedValue]);
+    }, [getOcidResult?.ocid, navigate, searchedValue]);
+
+    if (ocidLoading) {
+        return <Loading />;
+    }
+
+    if (ocidError) {
+        return <div>{ocidError?.message}</div>;
+    }
 
     return <SearchPage />;
 });
@@ -51,13 +56,10 @@ const SearchPage = memo(function SearchPage() {
 
 const useSearchPage = () => {
     const [searchParam] = useSearchParams();
-    const [ocid, setOcid] = useState<string>();
 
     const searchedValue = searchParam.get('q');
 
     return {
         searchedValue,
-        ocid,
-        setOcid,
     };
 };

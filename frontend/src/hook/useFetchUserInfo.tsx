@@ -16,6 +16,7 @@ export const useFetchUserInfo = (ocid: string, nickName: string) => {
     const [fetchResult, setFetchResult] = useState<{ [key in string]: any }>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<null | Error>(null);
+
     console.log('useFetchUserInfo', ocid, nickName);
 
     useEffect(() => {
@@ -40,21 +41,25 @@ export const useFetchUserInfo = (ocid: string, nickName: string) => {
                     { key: 'userItemEquipment', fn: getUserItemEquipment },
                 ];
 
-                const results = await Promise.all(
-                    requests.map(({ key, fn }) =>
-                        fn({
-                            key: `cache$nickname$${nickName}`,
-                            data: { ocid },
-                        }).then((value) => ({ key, value })),
-                    ),
-                );
+                const results = {};
+                // await Promise.allSettled(
+                //     requests.map(({ key, fn }) =>
+                //         fn({
+                //             key: `cache$nickname$${nickName}`,
+                //             data: { ocid },
+                //         }).then((value) => ({ key, value })),
+                //     ),
+                // );
+                for (const request of requests) {
+                    const result = await request.fn({
+                        key: `cache$nickname$${nickName}`,
+                        data: { ocid },
+                    });
 
-                const resultObject = {};
-                for (const result of results) {
-                    resultObject[result.key] = result.value;
+                    results[request.key] = result;
                 }
 
-                setFetchResult(resultObject);
+                setFetchResult(results);
             } catch (err) {
                 setError(err as Error);
             } finally {
@@ -63,5 +68,6 @@ export const useFetchUserInfo = (ocid: string, nickName: string) => {
         })();
     }, [ocid, nickName]);
 
+    console.log('return ', fetchResult, loading, error);
     return { fetchResult, loading, error };
 };

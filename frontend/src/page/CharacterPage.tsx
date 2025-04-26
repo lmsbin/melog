@@ -29,31 +29,35 @@ import {
     Symbol,
     VerticalLine,
 } from '../component';
-import { useFetchUserInfo } from '../hook';
+import { useFetch, useFetchUserInfo } from '../hook';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
-    const [ocid, setOcid] = useState<string>('');
-
-    const location: MelogLocation = useLocation();
+    // const location: MelogLocation = useLocation();
     const { nickName } = useParams();
 
-    useEffect(() => {
-        (async function () {
-            const result = await getOcid({
-                key: `cache$nickname$${nickName}`,
-                data: {
-                    nickName: nickName as string,
-                },
-            });
+    const {
+        loading: ocidLoading,
+        error: ocidError,
+        result: getOcidResult,
+    } = useFetch<Parameters<typeof getOcid>[0], Awaited<ReturnType<typeof getOcid>>>(getOcid, {
+        key: `cache$nickname$${nickName}`,
+        data: {
+            nickName: nickName,
+        },
+    });
 
-            setOcid(result.ocid);
-        })();
-    }, [location]);
+    const {
+        fetchResult,
+        error: userInfoError,
+        loading: userInfoLoading,
+    } = useFetchUserInfo(getOcidResult?.ocid, nickName);
 
-    const { fetchResult, loading, error } = useFetchUserInfo(ocid, nickName);
-
-    if (loading) {
+    if (ocidLoading || userInfoLoading) {
         return <Loading />;
+    }
+
+    if (ocidError || userInfoError) {
+        return <div>{ocidError?.message + ' ' + userInfoError?.message}</div>;
     }
 
     return (
@@ -138,12 +142,6 @@ const CharacterPage = memo(function CharacterPage({
                                 {userInfo?.character_guild_name}
                             </div>
                         </div>
-                        {/* <div className="flex h-3 w-full items-center">
-                            <HorizontalLine />
-                        </div>
-                        <div className="flex justify-start">
-                            <div></div>
-                        </div> */}
                     </div>
                 </Card>
 
