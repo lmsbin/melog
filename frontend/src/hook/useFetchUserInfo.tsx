@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import getUserAbility from '@api/getUserAbility';
 import getUserCharacterLinkSkill from '@api/getUserCharacterLinkSkill';
 import getUserDojang from '@api/getUserDojang';
@@ -13,132 +13,55 @@ import getUserSymbolEquipment from '@api/getUserSymbolEquipment';
 import getUserVMatrix from '@api/getUserVMatrix';
 
 export const useFetchUserInfo = (ocid: string, nickName: string) => {
+    const [fetchResult, setFetchResult] = useState<{ [key in string]: any }>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<null | Error>(null);
+    console.log('useFetchUserInfo', ocid, nickName);
+
     useEffect(() => {
+        if (!ocid || !nickName) return;
+
         (async function () {
-            if (ocid && nickName) {
-                const result: any = [];
+            setLoading(true);
+            setError(null);
+            try {
+                const requests = [
+                    { key: 'userInfo', fn: getUserInfo },
+                    { key: 'userStatInfo', fn: getUserStatInfo },
+                    { key: 'userHyperStatInfo', fn: getUserHyperStatInfo },
+                    { key: 'userPropensity', fn: getUserPropensity },
+                    { key: 'userAbility', fn: getUserAbility },
+                    { key: 'userSymbolEquipment', fn: getUserSymbolEquipment },
+                    { key: 'userSetEffect', fn: getUserSetEffect },
+                    { key: 'userCharacterLinkSkill', fn: getUserCharacterLinkSkill },
+                    { key: 'userVMatrix', fn: getUserVMatrix },
+                    { key: 'userHexaMatrix', fn: getUserHexaMatrix },
+                    { key: 'userDojang', fn: getUserDojang },
+                    { key: 'userItemEquipment', fn: getUserItemEquipment },
+                ];
 
-                result.push(
-                    await getUserInfo({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
+                const results = await Promise.all(
+                    requests.map(({ key, fn }) =>
+                        fn({
+                            key: `cache$nickname$${nickName}`,
+                            data: { ocid },
+                        }).then((value) => ({ key, value })),
+                    ),
                 );
 
-                result.push(
-                    await getUserStatInfo({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
+                const resultObject = {};
+                for (const result of results) {
+                    resultObject[result.key] = result.value;
+                }
 
-                result.push(
-                    await getUserHyperStatInfo({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
-
-                result.push(
-                    await getUserPropensity({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
-
-                result.push(
-                    await getUserAbility({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
-
-                result.push(
-                    await getUserSymbolEquipment({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
-
-                result.push(
-                    await getUserSetEffect({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
-
-                result.push(
-                    await getUserCharacterLinkSkill({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
-
-                result.push(
-                    await getUserVMatrix({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
-
-                result.push(
-                    await getUserHexaMatrix({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
-
-                result.push(
-                    await getUserDojang({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
-
-                result.push(
-                    await getUserItemEquipment({
-                        key: `cache$nickname$${nickName}`,
-                        data: {
-                            ocid,
-                        },
-                    }),
-                );
-
-                // setUserInfo(result[0]);
-                // setUserStatInfo(result[1]);
-                // setUserHyperStatInfo(result[2]);
-                // setUserPropensity(result[3]);
-                // setUserAbility(result[4]);
-                // setUserSymbolEquipment(result[5]);
-                // setUserSetEffect(result[6]);
-                // setUserCharacterLinkSkill(result[7]);
-                // setUserVMatrix(result[8]);
-                // setUserHexaMatrix(result[9]);
-                // setUserDojang(result[10]);
-                // setUserItemEquipment(result[11]);
+                setFetchResult(resultObject);
+            } catch (err) {
+                setError(err as Error);
+            } finally {
+                setLoading(false);
             }
         })();
     }, [ocid, nickName]);
+
+    return { fetchResult, loading, error };
 };
