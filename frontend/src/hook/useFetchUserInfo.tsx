@@ -11,6 +11,7 @@ import getUserSetEffect from '@api/getUserSetEffect';
 import getUserStatInfo from '@api/getUserStatInfo';
 import getUserSymbolEquipment from '@api/getUserSymbolEquipment';
 import getUserVMatrix from '@api/getUserVMatrix';
+import { userStore } from '@/store';
 
 export const useFetchUserInfo = (ocid: string, nickName: string) => {
     const [fetchResult, setFetchResult] = useState<{ [key in string]: any }>([]);
@@ -41,7 +42,7 @@ export const useFetchUserInfo = (ocid: string, nickName: string) => {
                     { key: 'userItemEquipment', fn: getUserItemEquipment },
                 ];
 
-                const results = {};
+                const results: any = {};
                 // await Promise.allSettled(
                 //     requests.map(({ key, fn }) =>
                 //         fn({
@@ -50,6 +51,7 @@ export const useFetchUserInfo = (ocid: string, nickName: string) => {
                 //         }).then((value) => ({ key, value })),
                 //     ),
                 // );
+
                 for (const request of requests) {
                     const result = await request.fn({
                         key: `cache$nickname$${nickName}`,
@@ -58,8 +60,20 @@ export const useFetchUserInfo = (ocid: string, nickName: string) => {
 
                     results[request.key] = result;
                 }
-
-                setFetchResult(results);
+                userStore.setPartial({
+                    userInfo: results.userInfo,
+                    userStatInfo: results.userStatInfo,
+                    userHyperStatInfo: results.userHyperStatInfo,
+                    userPropensity: results.userPropensity,
+                    userAbility: results.userAbility,
+                    userSymbolEquipment: results.userSymbolEquipment,
+                    userSetEffect: results.userSetEffect,
+                    userCharacterLinkSkill: results.userCharacterLinkSkill,
+                    userVMatrix: results.userVMatrix,
+                    userHexaMatrix: results.userHexaMatrix,
+                    userDojang: results.userDojang,
+                    userItemEquipment: results.userItemEquipment,
+                });
             } catch (err) {
                 setError(err as Error);
             } finally {
