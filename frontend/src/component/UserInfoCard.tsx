@@ -4,9 +4,10 @@ import { VerticalLine } from './line';
 import { CharacterImg } from './img/CharacterImg';
 import { EN_ALIGN_OPTION } from '../shared';
 import { Card } from './Card';
+import { useUserInfo } from '@/hook';
 
 export const UserInfoCard = observer(() => {
-    const userInfo = userStore.userInfo;
+    const userInfo = useUserInfo('userInfo');
 
     return (
         <Card

@@ -3,9 +3,10 @@ import { observer } from 'mobx-react-lite';
 import { Card } from './Card';
 import { PropensityChart } from './chart';
 import { userStore } from '@/store';
+import { useUserInfo } from '@/hook';
 
 export const UserPropensityCard = observer(() => {
-    const userPropensity = userStore.userPropensity;
+    const userPropensity = useUserInfo('userPropensity');
 
     return (
         <Card

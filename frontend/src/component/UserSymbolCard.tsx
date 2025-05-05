@@ -1,10 +1,10 @@
 import { observer } from 'mobx-react-lite';
 import { Card } from './Card';
-import { userStore } from '@/store';
 import { Symbol } from './data';
+import { useUserInfo } from '@/hook';
 
 export const UserSymbolCard = observer(() => {
-    const userSymbolicEquipment = userStore.userSymbolEquipment;
+    const userSymbolicEquipment = useUserInfo('userSymbolEquipment');
 
     return (
         <Card width="full" label="심볼">

@@ -43,15 +43,6 @@ export const useFetchUserInfo = (ocid: string, nickName: string) => {
                 ];
 
                 const results: any = {};
-                // await Promise.allSettled(
-                //     requests.map(({ key, fn }) =>
-                //         fn({
-                //             key: `cache$nickname$${nickName}`,
-                //             data: { ocid },
-                //         }).then((value) => ({ key, value })),
-                //     ),
-                // );
-
                 for (const request of requests) {
                     const result = await request.fn({
                         key: `cache$nickname$${nickName}`,
@@ -60,6 +51,7 @@ export const useFetchUserInfo = (ocid: string, nickName: string) => {
 
                     results[request.key] = result;
                 }
+
                 userStore.setPartial({
                     userInfo: results.userInfo,
                     userStatInfo: results.userStatInfo,
