@@ -24,15 +24,7 @@ const NavBar = memo(function NavBar() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const navItems = useMemo(
-        () => [
-            {
-                url: '/',
-                name: '메인',
-            },
-        ],
-        [],
-    );
+    const navItems = [{ url: '/', name: '메인' }];
 
     const onClickNavButton = useCallback(
         (index: number) => {
@@ -42,7 +34,7 @@ const NavBar = memo(function NavBar() {
                 navigate(targetUrl);
             }
         },
-        [navItems, location],
+        [navItems, location.pathname],
     );
 
     return (
@@ -50,7 +42,12 @@ const NavBar = memo(function NavBar() {
             <div className="mx-auto max-w-4xl">
                 <ul className="flex gap-2">
                     {navItems.map((x, index) => (
-                        <NavButton key={x.name} onClick={onClickNavButton} index={index}>
+                        <NavButton
+                            key={x.name}
+                            onClick={onClickNavButton}
+                            index={index}
+                            isOpen={x.url === location.pathname}
+                        >
                             {x.name}
                         </NavButton>
                     ))}

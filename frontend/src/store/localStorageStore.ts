@@ -23,6 +23,14 @@ class LocalStorageStore {
         }
     }
 
+    setMemoryCache(key: string, value: any) {
+        if (typeof value === 'string') {
+            this.store[key] = JSON.parse(value);
+        } else {
+            this.store[key] = value;
+        }
+    }
+
     getData<T>(key: string) {
         // 1. 메모리에서 key에 해당하는 값을 먼저 찾는다
         const data = this.store[key];
@@ -31,7 +39,9 @@ class LocalStorageStore {
         if (!data) {
             // 2-1. 값이 존재하면 메모리의 값을 업데이트하고 해당 값을 반환한다.
             const storageData = localStorage.getItem(key);
-            if (storageData) this.store[key] = JSON.parse(storageData);
+            if (storageData) {
+                this.setMemoryCache(key, storageData);
+            }
             console.log(`[INFO] Access localStorage for ${key}`);
         } else {
             console.log(`[INFO] Memory store used for ${key}`);
@@ -42,6 +52,7 @@ class LocalStorageStore {
 
     setData(key: string, value: Object) {
         localStorage.setItem(key, JSON.stringify(value));
+        this.setMemoryCache(key, value);
     }
 }
 

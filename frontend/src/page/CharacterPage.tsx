@@ -16,25 +16,18 @@ import {
     UserSymbolEquipment,
     UserVMatrix,
 } from '../shared';
-import { useLocation, useParams } from 'react-router-dom';
-import getUserInfo from '../api/getUserInfo';
-import { CharacterImg } from '../component/img/CharacterImg';
+import { useParams } from 'react-router-dom';
 import getOcid from '../api/getOcid';
 import {
     Card,
-    HorizontalLine,
     Loading,
-    PropensityChart,
     SearchBar,
-    Symbol,
     UserAbilityCard,
     UserInfoCard,
     UserPropensityCard,
     UserSymbolCard,
-    VerticalLine,
 } from '../component';
 import { useFetch, useFetchUserInfo } from '../hook';
-import { abilityMapper } from '../util';
 
 export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     // const location: MelogLocation = useLocation();

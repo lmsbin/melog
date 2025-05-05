@@ -229,3 +229,12 @@ export interface ItemEquipment {
 export interface UserItemEquipment {
     item_equipment: ItemEquipment[];
 }
+
+export type SearchHistory = SearchHistoryItem[];
+
+export interface SearchHistoryItem {
+    nickName: string;
+    character_image: string;
+    world_name: string;
+    character_level: number;
+}
