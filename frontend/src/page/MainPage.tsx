@@ -7,7 +7,6 @@ export const MainPage = memo(function MainPage() {
         <>
             {/* 로고 */}
             {/* 서치바 */}
-            <Card />
             <SearchBar />
             {/* 최근검색 */}
         </>
