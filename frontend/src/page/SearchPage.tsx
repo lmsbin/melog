@@ -1,9 +1,8 @@
 import { memo, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import getOcid, { GetOcidRequest, GetOcidResponse } from '../api/getOcid';
-import { FetchParam } from '@api/fetch';
-import { Loading } from '../component';
+import getOcid from '@/api/getOcid';
 import { useFetch } from '../hook';
+import { Loading } from '@/shared';
 
 /**
  * 1. queryString을 파싱

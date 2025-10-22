@@ -1,6 +1,5 @@
+import { SearchBar } from '@/features';
 import { memo } from 'react';
-import { SearchBar } from '../component/SearchBar';
-import { Card } from '../component';
 
 const MainPage = memo(function MainPage() {
     return (

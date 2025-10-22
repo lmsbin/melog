@@ -1,10 +1,6 @@
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 import {
-    EN_ALIGN_OPTION,
-    MelogLocation,
     UserAbility,
-    UserCharacterLinkSkill,
-    UserCharacterSkill,
     UserDojang,
     UserHexaMatrix,
     UserHyperStatInfo,
@@ -18,16 +14,15 @@ import {
 } from '../shared';
 import { useParams } from 'react-router-dom';
 import getOcid from '../api/getOcid';
+import { Card, Loading } from '@/shared';
+import { useFetch, useFetchUserInfo } from '../hook';
 import {
-    Card,
-    Loading,
     SearchBar,
-    UserAbilityCard,
     UserInfoCard,
     UserPropensityCard,
+    UserAbilityCard,
     UserSymbolCard,
-} from '../component';
-import { useFetch, useFetchUserInfo } from '../hook';
+} from '@/features';
 
 const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     // const location: MelogLocation = useLocation();
