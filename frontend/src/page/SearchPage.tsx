@@ -12,7 +12,7 @@ import { useFetch } from '../hook';
  * 4. 응답 결과가 다건이면 SearchPage에 prop을 내려 정보 띄우기
  * 현재는 길드 제외하고 캐릭터만 고려하고 있으므로, 항상 바로 정보페이지로 이동
  */
-export const SearchPageWrapper = memo(function SearchPageWrapper() {
+const SearchPageWrapper = memo(function SearchPageWrapper() {
     const { searchedValue } = useSearchPage();
 
     const navigate = useNavigate();
@@ -63,3 +63,5 @@ const useSearchPage = () => {
         searchedValue,
     };
 };
+
+export default SearchPageWrapper;

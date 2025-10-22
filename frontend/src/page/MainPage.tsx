@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { SearchBar } from '../component/SearchBar';
 import { Card } from '../component';
 
-export const MainPage = memo(function MainPage() {
+const MainPage = memo(function MainPage() {
     return (
         <>
             {/* 로고 */}
@@ -12,3 +12,5 @@ export const MainPage = memo(function MainPage() {
         </>
     );
 });
+
+export default MainPage;

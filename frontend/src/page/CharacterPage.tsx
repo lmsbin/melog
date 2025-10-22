@@ -29,7 +29,7 @@ import {
 } from '../component';
 import { useFetch, useFetchUserInfo } from '../hook';
 
-export const CharacterPageWrapper = memo(function CharacterPageWrapper() {
+const CharacterPageWrapper = memo(function CharacterPageWrapper() {
     // const location: MelogLocation = useLocation();
     const { nickName } = useParams();
 
@@ -122,3 +122,5 @@ const CharacterPage = memo(function CharacterPage({
         </div>
     );
 });
+
+export default CharacterPageWrapper;
