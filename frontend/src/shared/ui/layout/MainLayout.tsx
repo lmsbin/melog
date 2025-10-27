@@ -6,7 +6,7 @@ export const MainLayout = memo(function MainLayout() {
     return (
         <div>
             <header className="flex h-40 items-center justify-center border-b border-gray-100 bg-white">
-                <div className="text-2xl font-light text-gray-700">메이플 로그</div>
+                <div className="text-2xl font-light text-gray-700">Melog</div>
             </header>
             <NavBar />
             <div className="flex w-full justify-around bg-gray-50">
