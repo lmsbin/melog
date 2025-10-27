@@ -1,5 +1,5 @@
 export * from './hook';
-export * from './page';
+export * as pages from './page';
 export * from './api';
 export * from './util';
 export * from './store';

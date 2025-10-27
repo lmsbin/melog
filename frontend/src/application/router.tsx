@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import { MainLayout } from '@/page';
-import { Loading } from '@/shared';
+import { Loading, MainLayout } from '@/shared';
 
 // 페이지 컴포넌트들을 lazy import로 로드
 

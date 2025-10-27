@@ -1,6 +1,6 @@
-import { NavButton } from '@/shared';
 import { memo, useCallback } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { NavButton } from '../base';
 
 export const MainLayout = memo(function MainLayout() {
     return (
