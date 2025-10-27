@@ -102,18 +102,28 @@ const CharacterPage = memo(function CharacterPage({
     userItemEquipment,
 }: CharacterPageProps) {
     return (
-        <div className="flex w-full flex-col items-center gap-6">
-            <SearchBar />
+        <div className="flex w-full flex-col items-center gap-8 pb-12">
+            <div className="w-full max-w-7xl px-4">
+                <SearchBar />
+            </div>
             {/* 캐릭터 */}
-            <div className="flex w-full gap-6">
+            <div className="flex w-full max-w-7xl gap-6 px-4">
                 <UserInfoCard />
                 <UserPropensityCard />
                 <UserAbilityCard />
             </div>
-            <UserSymbolCard />
-            <Card label="스탯"></Card>
-            <Card label="하이퍼스탯"></Card>
-            <Card label="장비"></Card>
+            <div className="w-full max-w-7xl px-4">
+                <UserSymbolCard />
+            </div>
+            <div className="w-full max-w-7xl px-4">
+                <Card label="스탯"></Card>
+            </div>
+            <div className="w-full max-w-7xl px-4">
+                <Card label="하이퍼스탯"></Card>
+            </div>
+            <div className="w-full max-w-7xl px-4">
+                <Card label="장비"></Card>
+            </div>
         </div>
     );
 });

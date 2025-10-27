@@ -36,11 +36,15 @@ export const PropensityChart = memo(function PropensityChart({ propensity }: Pro
         labels: Object.keys(propensity).map((x) => propensityMapper[x as keyof UserPropensity]),
         datasets: [
             {
-                label: 'Skill Levels',
+                label: '성향',
                 data: Object.values(propensity),
-                backgroundColor: 'rgba(255, 99, 132, 1)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
+                backgroundColor: 'rgba(148, 163, 184, 0.2)',
+                borderColor: 'rgba(71, 85, 105, 0.8)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(255, 255, 255, 1)',
+                pointBorderColor: 'rgba(71, 85, 105, 1)',
+                pointBorderWidth: 2,
+                pointRadius: 4,
             },
         ],
     };
@@ -54,12 +58,17 @@ export const PropensityChart = memo(function PropensityChart({ propensity }: Pro
                 max: 100,
                 ticks: {
                     stepSize: 25,
+                    display: false,
+                },
+                grid: {
+                    color: 'rgba(148, 163, 184, 0.2)',
                 },
                 startAngle: 30,
                 pointLabels: {
                     font: {
-                        size: 14,
+                        size: 12,
                     },
+                    color: '#64748b',
                 },
             },
         },

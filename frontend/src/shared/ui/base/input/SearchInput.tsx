@@ -6,7 +6,7 @@ export type SearchInputProps = Pick<InputProps, 'onChange' | 'onKeyDown'>;
 export const SearchInput = memo(function SearchInput({ onChange, onKeyDown }: SearchInputProps) {
     return (
         <BaseInput
-            className="flex-grow bg-transparent px-3 py-2 outline-none"
+            className="flex-grow bg-transparent text-gray-700 placeholder-gray-400 outline-none"
             onChange={onChange}
             onKeyDown={onKeyDown}
         />

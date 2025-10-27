@@ -49,7 +49,7 @@ export const BaseInput = memo(
             <input
                 ref={ref}
                 type={type}
-                className={`p-1.5 ${className}`}
+                className={className}
                 disabled={disabled}
                 onClick={onClick}
                 onChange={onChange}
