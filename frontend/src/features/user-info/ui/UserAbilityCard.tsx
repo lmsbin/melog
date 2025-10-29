@@ -1,36 +1,37 @@
 import { userStore } from '@/store';
 import { observer } from 'mobx-react-lite';
-import { Card } from '@/shared';
+import { Card, badgeVariants, cn } from '@/shared';
 
 export const UserAbilityCard = observer(() => {
     const userAbility = userStore.userAbility;
 
-    const getGradeColor = (grade: string) => {
+    const getAbilityVariant = (grade: string): keyof typeof badgeVariants.ability => {
         switch (grade) {
             case '레전드리':
-                return 'bg-purple-50 text-purple-700 border-purple-200';
+                return 'legendary';
             case '유니크':
-                return 'bg-yellow-50 text-yellow-700 border-yellow-200';
+                return 'unique';
             case '에픽':
-                return 'bg-blue-50 text-blue-700 border-blue-200';
+                return 'epic';
             default:
-                return 'bg-gray-50 text-gray-700 border-gray-200';
+                return 'rare';
         }
     };
 
     return (
         <Card label="어빌리티" width="fit">
             <div className="flex w-full flex-col gap-2">
-                {userAbility.ability_info.map((x, index) => (
-                    <div key={index} className="flex flex-col gap-1">
-                        <div
-                            className={`rounded-lg border px-2.5 py-1 ${getGradeColor(x.ability_grade)} text-sm font-semibold`}
-                        >
-                            {x.ability_grade}
+                {userAbility.ability_info.map((x, index) => {
+                    const variant = getAbilityVariant(x.ability_grade);
+                    return (
+                        <div key={index} className="flex flex-col gap-1">
+                            <div className={cn(badgeVariants.base, badgeVariants.ability[variant])}>
+                                {x.ability_grade}
+                            </div>
+                            <div className="px-2.5 text-sm text-gray-700">{x.ability_value}</div>
                         </div>
-                        <div className="px-2.5 text-sm text-gray-700">{x.ability_value}</div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </Card>
     );

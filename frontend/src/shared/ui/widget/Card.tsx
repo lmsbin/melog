@@ -1,5 +1,6 @@
 import { memo } from 'react';
-import { EN_ALIGN_OPTION } from '@/shared';
+import { EN_ALIGN_OPTION, tw } from '@/shared';
+import { cardVariants, cn } from '../variants';
 
 export interface CardProps {
     children?: React.ReactNode;
@@ -10,23 +11,41 @@ export interface CardProps {
     width?: 'full' | 'fit' | string;
     height?: 'full' | 'fit' | string;
     label?: string;
+    size?: keyof typeof cardVariants.size;
+    color?: keyof typeof cardVariants.color;
 }
 
 export const Card = memo(function Card({ children, align, ...props }: CardProps) {
-    const horizontalAlign = align?.horizontal ? `justify-${align.horizontal}` : 'justify-start';
+    const horizontalAlign = align?.horizontal
+        ? tw.getJustifyClass(align.horizontal)
+        : 'justify-start';
 
-    const verticalAlign = align?.vertical ? `items-${align.vertical}` : 'items-start';
+    const verticalAlign = align?.vertical ? tw.getItemsClass(align.vertical) : 'items-start';
 
     const width = props.width ?? 'full';
     const height = props.height ?? 'full';
+    const size = props.size ?? 'default';
+    const color = props.color ?? 'default';
+
+    // Variant 기반 클래스 조합
+    const containerClasses = cn(
+        'flex',
+        tw.getWidthClass(width),
+        tw.getHeightClass(height),
+        tw.getMaxHeightClass(height),
+        cardVariants.base.container,
+        cardVariants.color[color],
+        cardVariants.size[size],
+        cardVariants.base.hover,
+        horizontalAlign,
+        verticalAlign,
+    );
 
     return (
-        <div
-            className={`flex w-${width} min-w-fit flex-wrap rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition-all duration-300 hover:border-gray-200 hover:shadow-md ${horizontalAlign} ${verticalAlign} h-${height} max-h-${height} gap-2`}
-        >
+        <div className={containerClasses}>
             {props.label && (
-                <div className="mb-1 flex w-full !items-start !justify-start self-start">
-                    <span className="text-base font-semibold text-gray-800">{props.label}</span>
+                <div className={cardVariants.base.label}>
+                    <span className={cardVariants.base.labelText}>{props.label}</span>
                 </div>
             )}
             {children}

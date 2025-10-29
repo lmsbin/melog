@@ -5,5 +5,5 @@ export * from './constant';
 export * from './extend';
 export * from './class';
 export * from './layout';
-
+export * from './utils';
 export * from './ui';

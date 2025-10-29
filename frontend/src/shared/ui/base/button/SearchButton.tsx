@@ -1,12 +1,18 @@
 import { memo } from 'react';
 import { ButtonProps, HostButton } from '../../host';
+import { buttonVariants, cn } from '@/shared';
 
 export type SearchButtonProps = Pick<ButtonProps, 'onClick'>;
 
 export const SearchButton = memo(function SearchButton({ onClick }: SearchButtonProps) {
     return (
         <HostButton
-            className="ml-2 rounded-lg bg-gray-900 px-5 py-2 font-medium text-white transition-colors duration-200 hover:bg-gray-800"
+            className={cn(
+                'ml-2',
+                buttonVariants.base.default,
+                buttonVariants.size.md,
+                buttonVariants.color.primary,
+            )}
             onClick={onClick}
         >
             검색

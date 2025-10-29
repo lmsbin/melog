@@ -1,5 +1,5 @@
 import { isValidElement, memo } from 'react';
-import { EMPTY_CELL } from '@/shared';
+import { EMPTY_CELL, tw } from '@/shared';
 
 export interface GridProps {
     data?: Record<string, any>;
@@ -37,11 +37,11 @@ export const Grid = memo(function Grid({ data, layout, style }: GridProps) {
     let className = ['w-auto', 'max-w-max', 'table-auto', '!border-separate'];
 
     if (style?.space_x) {
-        className.push(`border-spacing-x-${style.space_x}`);
+        className.push(tw.getBorderSpacingXClass(style.space_x));
     }
 
     if (style?.space_y) {
-        className.push(`border-spacing-y-${style.space_y}`);
+        className.push(tw.getBorderSpacingYClass(style.space_y));
     }
 
     return (
