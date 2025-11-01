@@ -16,7 +16,7 @@ export const NavButton = memo(function NavButton({
 }: NavButtonProps) {
     const onClick = useCallback(() => {
         props.onClick?.(index);
-    }, [index]);
+    }, [index, props.onClick]);
 
     const className = cn(
         buttonVariants.base.default,

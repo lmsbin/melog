@@ -20,7 +20,7 @@ export const MainLayout = memo(function MainLayout() {
     );
 });
 
-const NavBar = memo(function NavBar() {
+function NavBar() {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ const NavBar = memo(function NavBar() {
                 navigate(targetUrl);
             }
         },
-        [navItems, location.pathname],
+        [navItems, location.pathname, navigate],
     );
 
     return (
@@ -55,4 +55,4 @@ const NavBar = memo(function NavBar() {
             </div>
         </nav>
     );
-});
+}
