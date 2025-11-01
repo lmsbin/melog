@@ -1,28 +1,32 @@
-use crate::api::character::{
-    character::get_ocid, user_ability::get_user_ability,
-    user_android_equipment::get_user_android_equipment,
-    user_cashitem_equipment::get_user_cash_item_equipment,
-    user_characeter_skill::get_user_characeter_link_skill,
-    user_characeter_skill::get_user_characeter_skill, user_default_info::get_user_default_info,
-    user_dojang::get_user_dojang, user_hexa_matrix::get_user_hexa_matrix,
-    user_hexa_matrix_stat::get_user_hexa_stat_info, user_hyper_stat_info::get_user_hyper_stat_info,
-    user_item_equipment::get_user_item_equipment, user_propensity::get_user_propensity,
-    user_set_effect::get_user_set_effect, user_stat_info::get_user_stat_info,
-    user_symbol_equipment::get_user_symbol_equipment, user_v_matrix::get_user_v_matrix,
-};
-use crate::api::guild::{guild::get_guild_ocid, guild_default_info::get_guild_default_info};
-use crate::api::notice::{
-    get_cash_shop_notice::get_cash_shop_notice, get_event_notice::get_event_notice,
-    get_notice::get_notice, get_update_notice::get_update_notice,
-};
-use crate::api::ranking::{
-    get_achievement_ranking::get_achievement_ranking, get_dojang_ranking::get_dojang_ranking,
-    get_guild_ranking::get_guild_ranking, get_overall_ranking::get_over_all_ranking,
-    get_theseed_ranking::get_theseed_ranking, get_union_ranking::get_union_ranking,
-};
-use crate::api::union::{
-    get_union::get_user_union_info, get_union_artifact::get_user_union_artifact_info,
-    get_union_champion::get_user_union_champion_info, get_union_raider::get_user_union_raider_info,
+use crate::api::{
+    character::{
+        character::get_ocid, user_ability::get_user_ability,
+        user_android_equipment::get_user_android_equipment,
+        user_cashitem_equipment::get_user_cash_item_equipment,
+        user_characeter_skill::get_user_characeter_link_skill,
+        user_characeter_skill::get_user_characeter_skill, user_default_info::get_user_default_info,
+        user_dojang::get_user_dojang, user_hexa_matrix::get_user_hexa_matrix,
+        user_hexa_matrix_stat::get_user_hexa_stat_info,
+        user_hyper_stat_info::get_user_hyper_stat_info,
+        user_item_equipment::get_user_item_equipment, user_propensity::get_user_propensity,
+        user_set_effect::get_user_set_effect, user_stat_info::get_user_stat_info,
+        user_symbol_equipment::get_user_symbol_equipment, user_v_matrix::get_user_v_matrix,
+    },
+    guild::{guild::get_guild_ocid, guild_default_info::get_guild_default_info},
+    notice::{
+        get_cash_shop_notice::get_cash_shop_notice, get_event_notice::get_event_notice,
+        get_notice::get_notice, get_update_notice::get_update_notice,
+    },
+    ranking::{
+        get_achievement_ranking::get_achievement_ranking, get_dojang_ranking::get_dojang_ranking,
+        get_guild_ranking::get_guild_ranking, get_overall_ranking::get_over_all_ranking,
+        get_theseed_ranking::get_theseed_ranking, get_union_ranking::get_union_ranking,
+    },
+    union::{
+        get_union::get_user_union_info, get_union_artifact::get_user_union_artifact_info,
+        get_union_champion::get_user_union_champion_info,
+        get_union_raider::get_user_union_raider_info,
+    },
 };
 use axum::{Json, Router, http::StatusCode, response::IntoResponse, routing::get, routing::post};
 use serde::Serialize;
