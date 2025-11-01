@@ -27,6 +27,9 @@ export const Card = memo(function Card({ children, align, ...props }: CardProps)
     const size = props.size ?? 'default';
     const color = props.color ?? 'default';
 
+    // width="full"일 때 min-w-0 추가하여 flex 아이템이 줄어들 수 있도록 함 (variants의 min-w-fit을 오버라이드)
+    const minWidthClass = width === 'full' ? '!min-w-0' : '';
+
     // Variant 기반 클래스 조합
     const containerClasses = cn(
         'flex',
@@ -39,6 +42,7 @@ export const Card = memo(function Card({ children, align, ...props }: CardProps)
         cardVariants.base.hover,
         horizontalAlign,
         verticalAlign,
+        minWidthClass,
     );
 
     return (

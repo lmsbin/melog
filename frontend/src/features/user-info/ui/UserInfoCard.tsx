@@ -7,12 +7,12 @@ export const UserInfoCard = observer(() => {
 
     return (
         <Card
-            width="fit"
+            width="full"
             height="fit"
             align={{ horizontal: EN_ALIGN_OPTION.CENTER }}
             label="기본정보"
         >
-            <div className="flex w-full flex-col items-center justify-center gap-2">
+            <div className="flex w-full min-w-0 flex-col items-center justify-center gap-2">
                 <div className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-lg">
                     <CharacterImg src={userInfo.character_image as string} scale={200} />
                 </div>

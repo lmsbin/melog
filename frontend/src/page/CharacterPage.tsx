@@ -102,15 +102,21 @@ const CharacterPage = memo(function CharacterPage({
     userItemEquipment,
 }: CharacterPageProps) {
     return (
-        <div className="flex w-full flex-col items-center gap-8 pb-12">
+        <div className="flex w-full min-w-[1024px] flex-col items-center gap-8 pb-12">
             <div className="w-full max-w-7xl px-4">
                 <SearchBar />
             </div>
             {/* 캐릭터 */}
             <div className="flex w-full max-w-7xl gap-6 px-4">
-                <UserInfoCard />
-                <UserPropensityCard />
-                <UserAbilityCard />
+                <div className="flex flex-1">
+                    <UserInfoCard />
+                </div>
+                <div className="flex flex-1">
+                    <UserPropensityCard />
+                </div>
+                <div className="flex flex-1">
+                    <UserAbilityCard />
+                </div>
             </div>
             <div className="w-full max-w-7xl px-4">
                 <UserSymbolCard />

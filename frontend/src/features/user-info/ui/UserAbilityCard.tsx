@@ -19,8 +19,8 @@ export const UserAbilityCard = observer(() => {
     };
 
     return (
-        <Card label="어빌리티" width="fit">
-            <div className="flex w-full flex-col gap-2">
+        <Card label="어빌리티" width="full">
+            <div className="flex w-full min-w-0 flex-col gap-2">
                 {userAbility.ability_info.map((x, index) => {
                     const variant = getAbilityVariant(x.ability_grade);
                     return (

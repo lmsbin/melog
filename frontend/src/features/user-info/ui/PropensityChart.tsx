@@ -80,7 +80,7 @@ export const PropensityChart = memo(function PropensityChart({ propensity }: Pro
     };
 
     return (
-        <div className="h-60 w-80">
+        <div className="h-60 min-w-0 w-full">
             <Radar data={data} options={options} />
         </div>
     );

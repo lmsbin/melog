@@ -8,7 +8,7 @@ export const UserPropensityCard = observer(() => {
 
     return (
         <Card
-            width="fit"
+            width="full"
             height="fit"
             label="성향"
             align={{ horizontal: EN_ALIGN_OPTION.CENTER, vertical: EN_ALIGN_OPTION.CENTER }}
