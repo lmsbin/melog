@@ -67,60 +67,73 @@ pub fn get_routes() -> Router {
 }
 
 pub fn user_routes() -> Router {
-    Router::new()
-        .route("/getOcid", post(get_ocid))
-        .route("/getUserInfo", post(get_user_default_info))
-        .route("/getUserStatInfo", post(get_user_stat_info))
-        .route("/getUserHyperStatInfo", post(get_user_hyper_stat_info))
-        .route("/getUserPropensity", post(get_user_propensity))
-        .route("/getUserAbility", post(get_user_ability))
-        .route("/getUserSymbolEquipment", post(get_user_symbol_equipment))
-        .route("/getUserSetEffect", post(get_user_set_effect))
-        .route("/getUserCharacterSkill", post(get_user_characeter_skill))
-        .route(
+    route_group(vec![
+        ("/getOcid", post(get_ocid)),
+        ("/getUserInfo", post(get_user_default_info)),
+        ("/getUserStatInfo", post(get_user_stat_info)),
+        ("/getUserHyperStatInfo", post(get_user_hyper_stat_info)),
+        ("/getUserPropensity", post(get_user_propensity)),
+        ("/getUserAbility", post(get_user_ability)),
+        ("/getUserSymbolEquipment", post(get_user_symbol_equipment)),
+        ("/getUserSetEffect", post(get_user_set_effect)),
+        ("/getUserCharacterSkill", post(get_user_characeter_skill)),
+        (
             "/getUserCharacterLinkSkill",
             post(get_user_characeter_link_skill),
-        )
-        .route("/getUserVMatrix", post(get_user_v_matrix))
-        .route("/getUserHexaMatrix", post(get_user_hexa_matrix))
-        .route("/getUserDojang", post(get_user_dojang))
-        .route("/getUserItemEquipment", post(get_user_item_equipment))
-        .route("/getUserAndroidEquipment", post(get_user_android_equipment))
-        .route(
+        ),
+        ("/getUserVMatrix", post(get_user_v_matrix)),
+        ("/getUserHexaMatrix", post(get_user_hexa_matrix)),
+        ("/getUserDojang", post(get_user_dojang)),
+        ("/getUserItemEquipment", post(get_user_item_equipment)),
+        ("/getUserAndroidEquipment", post(get_user_android_equipment)),
+        (
             "/getUserCashItemEquipment",
             post(get_user_cash_item_equipment),
-        )
-        .route("/getUserHexStatInfo", post(get_user_hexa_stat_info))
+        ),
+        ("/getUserHexStatInfo", post(get_user_hexa_stat_info)),
+    ])
 }
 
 pub fn guild_route() -> Router {
-    Router::new()
-        .route("/getGuildOcid", post(get_guild_ocid))
-        .route("/getGuildInfo", post(get_guild_default_info))
+    route_group(vec![
+        ("/getGuildOcid", post(get_guild_ocid)),
+        ("/getGuildInfo", post(get_guild_default_info)),
+    ])
 }
 
 pub fn notice_route() -> Router {
-    Router::new()
-        .route("/getNotice", get(get_notice))
-        .route("/getUpdateNotice", get(get_update_notice))
-        .route("/getEvnetNotice", get(get_event_notice))
-        .route("/getCashShopNotice", get(get_cash_shop_notice))
+    route_group(vec![
+        ("/getNotice", get(get_notice)),
+        ("/getUpdateNotice", get(get_update_notice)),
+        ("/getEventNotice", get(get_event_notice)), // 오타 수정
+        ("/getCashShopNotice", get(get_cash_shop_notice)),
+    ])
 }
 
 pub fn union_route() -> Router {
-    Router::new()
-        .route("/getUnion", post(get_user_union_info))
-        .route("/getUnionRaider", post(get_user_union_raider_info))
-        .route("/getUnionArtifact", post(get_user_union_artifact_info))
-        .route("/getUnionChampion", post(get_user_union_champion_info))
+    route_group(vec![
+        ("/getUnion", post(get_user_union_info)),
+        ("/getUnionRaider", post(get_user_union_raider_info)),
+        ("/getUnionArtifact", post(get_user_union_artifact_info)),
+        ("/getUnionChampion", post(get_user_union_champion_info)),
+    ])
 }
 
 pub fn ranking_route() -> Router {
-    Router::new()
-        .route("/getOverAllRanking", post(get_over_all_ranking))
-        .route("/getUnionRanking", post(get_union_ranking))
-        .route("/getGuildRanking", post(get_guild_ranking))
-        .route("/getDojangRanking", post(get_dojang_ranking))
-        .route("/getTheseedRanking", post(get_theseed_ranking))
-        .route("/getAchievementRanking", post(get_achievement_ranking))
+    route_group(vec![
+        ("/getOverAllRanking", post(get_over_all_ranking)),
+        ("/getUnionRanking", post(get_union_ranking)),
+        ("/getGuildRanking", post(get_guild_ranking)),
+        ("/getDojangRanking", post(get_dojang_ranking)),
+        ("/getTheseedRanking", post(get_theseed_ranking)),
+        ("/getAchievementRanking", post(get_achievement_ranking)),
+    ])
+}
+
+fn route_group(routes: Vec<(&'static str, axum::routing::MethodRouter)>) -> Router {
+    routes
+        .into_iter()
+        .fold(Router::new(), |router, (path, method)| {
+            router.route(path, method)
+        })
 }
