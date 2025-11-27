@@ -12,10 +12,12 @@ import { useRouter } from 'next/navigation';
 import { useSearchHistory } from '../hooks/useSearchHistory';
 
 export function SearchHistoryCard() {
-	const { searchHistory, removeSearchHistory } = useSearchHistory();
+	const { searchHistory, isMounted, removeSearchHistory } =
+		useSearchHistory();
 	const router = useRouter();
 
-	if (searchHistory.length === 0) {
+	// 마운트되지 않았거나 검색 기록이 없으면 렌더링하지 않음
+	if (!isMounted || searchHistory.length === 0) {
 		return null;
 	}
 
