@@ -6,9 +6,11 @@
  * HTTP 응답 상태를 확인하여 실패 시 ApiError를 throw하며, 네트워크 에러 등 기타 에러도 ApiError로 변환합니다.
  * GET 메서드가 아닌 경우에만 요청 body를 JSON으로 직렬화하여 전송합니다.
  * 모든 API 함수는 이 apiClient를 사용하여 일관된 에러 처리와 설정을 유지합니다.
+ * API 서버의 rate limiting을 준수하기 위해 각 요청 사이에 최소 500ms의 지연을 보장합니다.
  */
 
 import { BASE_URL, HttpMethod } from '@/shared/constants';
+import { waitForRequestInterval } from './request-scheduler';
 
 export interface ApiRequestOptions {
 	method?: HttpMethod;
@@ -28,6 +30,9 @@ export async function apiClient<T = unknown>(
 	options: ApiRequestOptions = {}
 ): Promise<T> {
 	const { method = HttpMethod.POST, body, headers = {} } = options;
+
+	// API 서버의 rate limiting을 준수하기 위해 요청 간 최소 500ms 지연 보장
+	await waitForRequestInterval();
 
 	try {
 		const url = `${BASE_URL}${endpoint}`;
