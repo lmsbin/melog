@@ -45,14 +45,29 @@ export async function apiClient<T = unknown>(
 			fetchOptions.body = JSON.stringify(body);
 		}
 
+		// 개발 환경에서 요청 정보 로깅
+		if (process.env.NODE_ENV === 'development') {
+			console.log('[API Request]', {
+				url,
+				method,
+				headers: fetchOptions.headers,
+				body: fetchOptions.body,
+			});
+		}
+
 		const response = await fetch(url, fetchOptions);
 
+		// Response body는 한 번만 읽을 수 있으므로, 에러 처리와 성공 처리를 분리
 		if (!response.ok) {
-			let errorData: unknown;
+			// 에러 응답의 경우 text로 먼저 읽고, JSON 파싱 시도
+			const errorText = await response.text();
+			let errorData: unknown = errorText;
+
 			try {
-				errorData = await response.json();
+				errorData = JSON.parse(errorText);
 			} catch {
-				errorData = await response.text();
+				// JSON 파싱 실패 시 원본 텍스트 사용
+				errorData = errorText;
 			}
 
 			throw new ApiError(
@@ -62,6 +77,7 @@ export async function apiClient<T = unknown>(
 			);
 		}
 
+		// 성공 응답의 경우 JSON 파싱
 		const data = await response.json();
 		return data as T;
 	} catch (error) {

@@ -1,0 +1,94 @@
+/**
+ * 검색 페이지 컴포넌트
+ *
+ * URL 쿼리 파라미터에서 검색어를 받아 OCID를 조회하고,
+ * 조회 성공 시 캐릭터 상세 페이지로 자동 이동합니다.
+ * 로딩 중이거나 에러 발생 시 적절한 UI를 표시합니다.
+ */
+
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useOcid } from '@/features/search/hooks/useOcid';
+import { useSearchHistory } from '@/features/search/hooks/useSearchHistory';
+import { Loading } from '@/shared/components/widget';
+import { SearchBar, SearchHistoryCard } from '@/features/search/components';
+
+export default function SearchPage() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const searchedValue = searchParams.get('q');
+	const { addSearchHistory } = useSearchHistory();
+
+	// OCID 조회
+	const {
+		data: ocidData,
+		isLoading,
+		isError,
+		error,
+	} = useOcid(searchedValue);
+
+	// OCID 조회 성공 시 캐릭터 페이지로 이동
+	useEffect(() => {
+		if (ocidData?.ocid && searchedValue) {
+			// 검색 기록에 추가
+			addSearchHistory({
+				nickName: searchedValue,
+				searchedAt: Date.now(),
+			});
+
+			// 캐릭터 페이지로 이동
+			router.replace(`/character/${encodeURIComponent(searchedValue)}`);
+		}
+	}, [ocidData?.ocid, searchedValue, router, addSearchHistory]);
+
+	// 로딩 중
+	if (isLoading) {
+		return (
+			<div className='flex min-h-screen flex-col items-center justify-center p-24'>
+				<SearchBar />
+				<Loading />
+			</div>
+		);
+	}
+
+	// 에러 발생
+	if (isError) {
+		return (
+			<div className='flex min-h-screen flex-col items-center justify-center p-24'>
+				<SearchBar />
+				<div className='mt-8 text-center'>
+					<p className='text-red-500 text-lg font-semibold'>
+						검색 중 오류가 발생했습니다
+					</p>
+					<p className='text-gray-600 mt-2'>
+						{error instanceof Error
+							? error.message
+							: '알 수 없는 오류'}
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	// 검색어가 없을 때
+	if (!searchedValue) {
+		return (
+			<div className='flex min-h-screen flex-col items-center justify-center p-24'>
+				<SearchBar />
+				<SearchHistoryCard />
+			</div>
+		);
+	}
+
+	// OCID 조회 중 (아직 이동하지 않은 경우)
+	return (
+		<div className='flex min-h-screen flex-col items-center justify-center p-24'>
+			<SearchBar />
+			<div className='mt-8 text-center'>
+				<p className='text-gray-600'>검색 결과를 불러오는 중...</p>
+			</div>
+		</div>
+	);
+}
