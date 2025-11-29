@@ -10,8 +10,8 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useOcid } from '@/features/search/hooks/useOcid';
 import { useSearchHistory } from '@/features/search/hooks/useSearchHistory';
+import { useSearchPageViewModel } from '@/page/search/view-model/viewModel';
 import { Loading } from '@/shared/components/widget';
 import { SearchBar, SearchHistoryCard } from '@/features/search/components';
 
@@ -21,13 +21,10 @@ export default function SearchPage() {
 	const searchedValue = searchParams.get('q');
 	const { addSearchHistory } = useSearchHistory();
 
-	// OCID 조회
-	const {
-		data: ocidData,
-		isLoading,
-		isError,
-		error,
-	} = useOcid(searchedValue);
+	// 페이지 ViewModel을 통해 OCID 조회 로직을 캡슐화
+	const { ocidQuery } = useSearchPageViewModel({ searchedValue });
+
+	const { data: ocidData, isLoading, isError, error } = ocidQuery;
 
 	// OCID 조회 성공 시 캐릭터 페이지로 이동
 	useEffect(() => {

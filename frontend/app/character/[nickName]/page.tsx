@@ -9,20 +9,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useOcid } from '@/features/search/hooks/useOcid';
-import {
-	useUserInfo,
-	useUserStatInfo,
-	useUserHyperStatInfo,
-	useUserPropensity,
-	useUserAbility,
-	useUserSymbolEquipment,
-	useUserSetEffect,
-	useUserVMatrix,
-	useUserHexaMatrix,
-	useUserDojang,
-	useUserItemEquipment,
-} from '@/features/user-info/hooks';
+import { useCharacterPageViewModel } from '@/page/character/view-model/viewModel';
 import {
 	UserInfoCard,
 	UserPropensityCard,
@@ -37,51 +24,17 @@ export default function CharacterPage() {
 	const params = useParams();
 	const nickName = params.nickName as string;
 
-	// OCID 조회
+	// 페이지 ViewModel을 통해 OCID 및 유저 정보 조회 로직을 캡슐화
 	const {
-		data: ocidData,
-		isLoading: ocidLoading,
-		isError: ocidError,
-	} = useOcid(nickName);
-
-	const ocid = ocidData?.ocid || null;
-
-	// 유저 정보 조회 (병렬로 실행)
-	const { data: userInfo, isLoading: userInfoLoading } = useUserInfo(ocid);
-	const { data: userStatInfo, isLoading: userStatInfoLoading } =
-		useUserStatInfo(ocid);
-	const { data: userHyperStatInfo, isLoading: userHyperStatInfoLoading } =
-		useUserHyperStatInfo(ocid);
-	const { data: userPropensity, isLoading: userPropensityLoading } =
-		useUserPropensity(ocid);
-	const { data: userAbility, isLoading: userAbilityLoading } =
-		useUserAbility(ocid);
-	const { data: userSymbolEquipment, isLoading: userSymbolEquipmentLoading } =
-		useUserSymbolEquipment(ocid);
-	const { data: userSetEffect, isLoading: userSetEffectLoading } =
-		useUserSetEffect(ocid);
-	const { data: userVMatrix, isLoading: userVMatrixLoading } =
-		useUserVMatrix(ocid);
-	const { data: userHexaMatrix, isLoading: userHexaMatrixLoading } =
-		useUserHexaMatrix(ocid);
-	const { data: userDojang, isLoading: userDojangLoading } =
-		useUserDojang(ocid);
-	const { data: userItemEquipment, isLoading: userItemEquipmentLoading } =
-		useUserItemEquipment(ocid);
-
-	const isLoading =
-		ocidLoading ||
-		userInfoLoading ||
-		userStatInfoLoading ||
-		userHyperStatInfoLoading ||
-		userPropensityLoading ||
-		userAbilityLoading ||
-		userSymbolEquipmentLoading ||
-		userSetEffectLoading ||
-		userVMatrixLoading ||
-		userHexaMatrixLoading ||
-		userDojangLoading ||
-		userItemEquipmentLoading;
+		ocid,
+		ocidError,
+		isLoading,
+		queries: {
+			userStatInfo,
+			userHyperStatInfo,
+			userItemEquipment,
+		},
+	} = useCharacterPageViewModel({ nickName });
 
 	if (ocidError) {
 		return (
@@ -133,9 +86,9 @@ export default function CharacterPage() {
 			{/* 스탯 */}
 			<div className='w-full max-w-7xl px-4'>
 				<Card label='스탯'>
-					{userStatInfo && (
+					{userStatInfo?.data && (
 						<div className='space-y-2'>
-							{userStatInfo.final_stat.slice(0, 10).map((stat, index) => (
+							{userStatInfo.data.final_stat.slice(0, 10).map((stat, index) => (
 								<div key={index} className='flex justify-between'>
 									<span className='text-sm text-gray-600'>{stat.stat_name}</span>
 									<span className='text-sm font-medium text-gray-900'>
@@ -151,14 +104,14 @@ export default function CharacterPage() {
 			{/* 하이퍼스탯 */}
 			<div className='w-full max-w-7xl px-4'>
 				<Card label='하이퍼스탯'>
-					{userHyperStatInfo && (
+					{userHyperStatInfo?.data && (
 						<div className='space-y-4'>
 							<div>
 								<h4 className='mb-2 text-sm font-semibold text-gray-700'>
-									프리셋 1 (남은 포인트: {userHyperStatInfo.hyper_stat_preset_1_remain_point})
+									프리셋 1 (남은 포인트: {userHyperStatInfo.data.hyper_stat_preset_1_remain_point})
 								</h4>
 								<div className='space-y-1'>
-									{userHyperStatInfo.hyper_stat_preset_1.slice(0, 5).map((stat, index) => (
+									{userHyperStatInfo.data.hyper_stat_preset_1.slice(0, 5).map((stat, index) => (
 										<div key={index} className='flex justify-between text-sm'>
 											<span className='text-gray-600'>{stat.stat_type}</span>
 											<span className='font-medium text-gray-900'>
@@ -176,9 +129,9 @@ export default function CharacterPage() {
 			{/* 장비 */}
 			<div className='w-full max-w-7xl px-4'>
 				<Card label='장비'>
-					{userItemEquipment && (
+					{userItemEquipment?.data && (
 						<div className='space-y-2'>
-							{userItemEquipment.item_equipment.slice(0, 10).map((item, index) => (
+							{userItemEquipment.data.item_equipment.slice(0, 10).map((item, index) => (
 								<div key={index} className='flex items-center gap-3 border-b border-gray-100 pb-2'>
 									{item.item_icon && (
 										<img
