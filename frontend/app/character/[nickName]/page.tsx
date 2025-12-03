@@ -43,32 +43,32 @@ export default function CharacterPage() {
 		return (
 			<div className='flex min-h-screen flex-col items-center justify-center p-24'>
 				<SearchBar />
-				<div className='mt-8 text-center'>
-					<p className='text-red-500 text-lg font-semibold'>
+				<div className='mt-8 text-center bg-white/95 backdrop-blur-sm rounded-xl p-8 shadow-xl border border-white/20'>
+					<p className='text-red-500 text-xl font-bold mb-2'>
 						캐릭터를 찾을 수 없습니다
 					</p>
-					<p className='text-gray-600 mt-2'>{nickName}</p>
+					<p className='text-gray-600 mt-2 font-medium'>{nickName}</p>
 				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className='flex w-full min-w-[1024px] flex-col items-center gap-8 pb-12'>
+		<div className='flex w-full min-w-[1024px] flex-col items-center gap-8 pb-12 pt-8'>
 			<div className='w-full max-w-7xl px-4'>
 				<SearchBar />
 			</div>
 
 			{/* 기본 정보 영역 */}
-			<div className='flex w-full max-w-7xl gap-6 px-4'>
-				<div className='flex flex-1'>
+			<div className='flex w-full max-w-7xl gap-4 px-4'>
+				<div className='flex flex-1 w-full'>
 					{isPageLoading ? (
 						<UserInfoCard.Skeleton />
 					) : (
 						<UserInfoCard userInfo={userInfo.data ?? null} />
 					)}
 				</div>
-				<div className='flex flex-1'>
+				<div className='flex flex-1 w-full'>
 					{isPageLoading ? (
 						<UserPropensityCard.Skeleton />
 					) : (
@@ -77,7 +77,7 @@ export default function CharacterPage() {
 						/>
 					)}
 				</div>
-				<div className='flex flex-1'>
+				<div className='flex flex-1 w-full'>
 					{isPageLoading ? (
 						<UserAbilityCard.Skeleton />
 					) : (
@@ -113,18 +113,18 @@ export default function CharacterPage() {
 							))}
 						</div>
 					) : (
-						<div className='space-y-2'>
+						<div className='space-y-2.5'>
 							{userStatInfo.data.final_stat
 								.slice(0, 10)
 								.map((stat, index) => (
 									<div
 										key={index}
-										className='flex justify-between'
+										className='flex items-center justify-between rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 transition-all duration-200 hover:shadow-sm'
 									>
-										<span className='text-sm text-gray-600'>
+										<span className='text-sm font-medium text-gray-700'>
 											{stat.stat_name}
 										</span>
-										<span className='text-sm font-medium text-gray-900'>
+										<span className='text-sm font-bold text-gray-900'>
 											{stat.stat_value}
 										</span>
 									</div>
@@ -167,18 +167,18 @@ export default function CharacterPage() {
 									}
 									)
 								</h4>
-								<div className='space-y-1'>
+								<div className='space-y-2'>
 									{userHyperStatInfo.data.hyper_stat_preset_1
 										.slice(0, 5)
 										.map((stat, index) => (
 											<div
 												key={index}
-												className='flex justify-between text-sm'
+												className='flex items-center justify-between rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 p-3 text-sm transition-all duration-200 hover:shadow-sm'
 											>
-												<span className='text-gray-600'>
+												<span className='font-medium text-gray-700'>
 													{stat.stat_type}
 												</span>
-												<span className='font-medium text-gray-900'>
+												<span className='font-bold text-blue-600'>
 													Lv.{stat.stat_level} (+
 													{stat.stat_increase})
 												</span>
@@ -210,23 +210,25 @@ export default function CharacterPage() {
 							))}
 						</div>
 					) : (
-						<div className='space-y-2'>
+						<div className='space-y-2.5'>
 							{userItemEquipment.data.item_equipment
 								.slice(0, 10)
 								.map((item, index) => (
 									<div
 										key={index}
-										className='flex items-center gap-3 border-b border-gray-100 pb-2'
+										className='flex items-center gap-3 rounded-lg border border-gray-200 bg-gradient-to-r from-white to-gray-50 p-3 transition-all duration-200 hover:shadow-md hover:border-blue-300'
 									>
 										{item.item_icon && (
-											<img
-												src={item.item_icon}
-												alt={item.item_name}
-												className='h-8 w-8'
-											/>
+											<div className='flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-sm ring-1 ring-gray-200'>
+												<img
+													src={item.item_icon}
+													alt={item.item_name}
+													className='h-8 w-8'
+												/>
+											</div>
 										)}
 										<div className='flex-1'>
-											<div className='text-sm font-medium text-gray-900'>
+											<div className='text-sm font-semibold text-gray-900'>
 												{item.item_name}
 											</div>
 											<div className='text-xs text-gray-500'>

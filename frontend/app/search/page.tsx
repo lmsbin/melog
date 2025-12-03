@@ -44,6 +44,14 @@ export default function SearchPage() {
 	if (!searchedValue) {
 		return (
 			<div className='flex min-h-screen flex-col items-center justify-center p-24'>
+				<div className='text-center mb-12'>
+					<h1 className='text-6xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent drop-shadow-lg'>
+						메이플스토리
+					</h1>
+					<p className='text-white/90 text-lg font-medium'>
+						캐릭터 정보 조회
+					</p>
+				</div>
 				<SearchBar />
 				<SearchHistoryCard />
 			</div>
@@ -55,11 +63,11 @@ export default function SearchPage() {
 		return (
 			<div className='flex min-h-screen flex-col items-center justify-center p-24'>
 				<SearchBar />
-				<div className='mt-8 text-center'>
-					<p className='text-red-500 text-lg font-semibold'>
+				<div className='mt-8 text-center bg-white/95 backdrop-blur-sm rounded-xl p-8 shadow-xl border border-white/20'>
+					<p className='text-red-500 text-xl font-bold mb-2'>
 						검색 중 오류가 발생했습니다
 					</p>
-					<p className='text-gray-600 mt-2'>
+					<p className='text-gray-600 mt-2 font-medium'>
 						{error instanceof Error
 							? error.message
 							: '알 수 없는 오류'}

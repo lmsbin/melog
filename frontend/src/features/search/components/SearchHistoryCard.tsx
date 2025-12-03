@@ -31,22 +31,25 @@ export function SearchHistoryCard() {
 	};
 
 	return (
-		<div className='mt-4 p-4 bg-white rounded-lg border border-gray-200 shadow-sm'>
-			<h3 className='text-sm font-semibold text-gray-700 mb-2'>
+		<div className='mt-6 p-5 bg-white/95 rounded-xl border border-white/20 shadow-lg'>
+			<h3 className='text-base font-bold text-gray-800 mb-3 flex items-center gap-2'>
+				<span className='text-lg'>🔍</span>
 				최근 검색
 			</h3>
 			<div className='space-y-2'>
 				{searchHistory.map((item) => (
 					<div
 						key={item.nickName}
-						className='flex items-center justify-between p-2 rounded hover:bg-gray-50 cursor-pointer transition-colors'
+						className='flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-gray-50 to-white hover:from-blue-50 hover:to-purple-50 cursor-pointer transition-all duration-200 hover:shadow-md border border-transparent hover:border-blue-200'
 						onClick={() => handleClick(item.nickName)}
 					>
-						<span className='text-gray-800'>{item.nickName}</span>
+						<span className='text-gray-800 font-medium'>
+							{item.nickName}
+						</span>
 						<button
 							type='button'
 							onClick={(e) => handleRemove(e, item.nickName)}
-							className='text-gray-400 hover:text-red-500 transition-colors'
+							className='text-gray-400 hover:text-red-500 transition-colors text-xl font-bold leading-none w-6 h-6 flex items-center justify-center rounded hover:bg-red-50'
 						>
 							×
 						</button>

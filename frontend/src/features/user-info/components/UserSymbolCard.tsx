@@ -24,29 +24,45 @@ const UserSymbolCardBase: FC<UserSymbolCardProps> = ({
 }: UserSymbolCardProps) => {
 	return (
 		<Card label='심볼'>
-			<div className='flex flex-wrap justify-center gap-3'>
-				{symbolEquipment?.symbol.map((symbol, index) => (
-					<div
-						key={index}
-						className='flex flex-col items-center rounded-lg border border-gray-200 p-3'
-					>
-						{symbol.symbol_icon && (
-							<img
-								src={symbol.symbol_icon}
-								alt={symbol.symbol_name}
-								className='h-12 w-12'
-							/>
-						)}
-						<div className='mt-2 text-center'>
-							<div className='text-sm font-medium text-gray-900'>
-								{symbol.symbol_name}
+			<div className='flex flex-wrap justify-center gap-4'>
+				{symbolEquipment?.symbol.map((symbol, index) => {
+					const isMaxLevel = symbol.symbol_level >= 20;
+					return (
+						<div
+							key={index}
+							className='group flex flex-col items-center rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-4 shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-lg hover:border-blue-300'
+						>
+							<div className='relative'>
+								{symbol.symbol_icon && (
+									<img
+										src={symbol.symbol_icon}
+										alt={symbol.symbol_name}
+										className='h-14 w-14 drop-shadow-md transition-transform duration-300 group-hover:scale-110'
+									/>
+								)}
+								{isMaxLevel && (
+									<div className='absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center'>
+										<span className='text-[10px] font-bold text-white'>★</span>
+									</div>
+								)}
 							</div>
-							<div className='text-xs text-gray-500'>
-								Lv.{symbol.symbol_level}
+							<div className='mt-3 text-center'>
+								<div className='text-xs font-semibold text-gray-800 line-clamp-2 max-w-[80px]'>
+									{symbol.symbol_name}
+								</div>
+								<div
+									className={`mt-1 text-xs font-bold ${
+										isMaxLevel
+											? 'text-orange-500'
+											: 'text-gray-500'
+									}`}
+								>
+									Lv.{symbol.symbol_level}
+								</div>
 							</div>
 						</div>
-					</div>
-				))}
+					);
+				})}
 			</div>
 		</Card>
 	);

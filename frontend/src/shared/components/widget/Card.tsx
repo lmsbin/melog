@@ -16,10 +16,12 @@ export interface CardProps {
 export function Card({ label, children, className = '' }: CardProps) {
 	return (
 		<div
-			className={`rounded-lg border border-gray-200 bg-white p-4 shadow-sm ${className}`}
+			className={`w-full rounded-xl border border-white/20 bg-white/95 p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-white ${className}`}
 		>
 			{label && (
-				<h3 className='mb-4 text-lg font-semibold text-gray-800'>{label}</h3>
+				<h3 className='mb-4 text-xl font-bold text-gray-800 border-b border-gray-200 pb-2'>
+					{label}
+				</h3>
 			)}
 			{children}
 		</div>

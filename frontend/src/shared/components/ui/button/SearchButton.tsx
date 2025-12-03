@@ -21,7 +21,7 @@ export function SearchButton({
 	return (
 		<button
 			type='button'
-			className={`ml-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors ${className}`}
+			className={`ml-3 px-6 py-2.5 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 ${className}`}
 			onClick={onClick}
 			{...props}
 		>

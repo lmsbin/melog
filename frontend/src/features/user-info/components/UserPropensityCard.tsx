@@ -2,7 +2,7 @@
  * 유저 성향 카드 컴포넌트
  *
  * 캐릭터의 성향 정보를 표시하는 카드 컴포넌트입니다.
- * 카리스마, 감성, 통찰력, 의지, 손재주, 매력 레벨을 표시합니다.
+ * 카리스마, 감성, 통찰력, 의지, 손재주, 매력 레벨을 레이더 차트로 표시합니다.
  */
 
 'use client';
@@ -10,6 +10,26 @@
 import type { FC } from 'react';
 import type { UserPropensity } from '../types/propensity';
 import { Card } from '@/shared/components/widget';
+import {
+	Chart as ChartJS,
+	RadialLinearScale,
+	PointElement,
+	LineElement,
+	Filler,
+	Tooltip,
+	Legend,
+} from 'chart.js';
+import { Radar } from 'react-chartjs-2';
+
+// Chart.js 컴포넌트 등록
+ChartJS.register(
+	RadialLinearScale,
+	PointElement,
+	LineElement,
+	Filler,
+	Tooltip,
+	Legend
+);
 
 export interface UserPropensityCardProps {
 	propensity: UserPropensity | null;
@@ -22,28 +42,98 @@ export type UserPropensityCardComponent = FC<UserPropensityCardProps> & {
 const UserPropensityCardBase: FC<UserPropensityCardProps> = ({
 	propensity,
 }: UserPropensityCardProps) => {
-	const propensityList = [
-		{ label: '카리스마', value: propensity?.charisma_level ?? 0 },
-		{ label: '감성', value: propensity?.sensibility_level ?? 0 },
-		{ label: '통찰력', value: propensity?.insight_level ?? 0 },
-		{ label: '의지', value: propensity?.willingness_level ?? 0 },
-		{ label: '손재주', value: propensity?.handicraft_level ?? 0 },
-		{ label: '매력', value: propensity?.charm_level ?? 0 },
+	const labels = ['카리스마', '감성', '통찰력', '의지', '손재주', '매력'];
+	const values = [
+		propensity?.charisma_level ?? 0,
+		propensity?.sensibility_level ?? 0,
+		propensity?.insight_level ?? 0,
+		propensity?.willingness_level ?? 0,
+		propensity?.handicraft_level ?? 0,
+		propensity?.charm_level ?? 0,
 	];
+
+	const chartData = {
+		labels,
+		datasets: [
+			{
+				label: '성향',
+				data: values,
+				backgroundColor: 'rgba(99, 102, 241, 0.2)',
+				borderColor: 'rgba(99, 102, 241, 1)',
+				borderWidth: 2,
+				pointBackgroundColor: 'rgba(99, 102, 241, 1)',
+				pointBorderColor: '#fff',
+				pointHoverBackgroundColor: '#fff',
+				pointHoverBorderColor: 'rgba(99, 102, 241, 1)',
+				pointRadius: 5,
+				pointHoverRadius: 7,
+			},
+		],
+	};
+
+	const chartOptions = {
+		responsive: true,
+		maintainAspectRatio: true,
+		aspectRatio: 1,
+		layout: {
+			padding: 0,
+		},
+		scales: {
+			r: {
+				beginAtZero: true,
+				max: 100,
+				ticks: {
+					stepSize: 20,
+					display: true,
+					font: {
+						size: 11,
+					},
+					color: '#6b7280',
+				},
+				grid: {
+					color: 'rgba(0, 0, 0, 0.1)',
+					lineWidth: 1,
+				},
+				pointLabels: {
+					font: {
+						size: 13,
+						weight: 'bold' as const,
+					},
+					color: '#374151',
+				},
+			},
+		},
+		plugins: {
+			legend: {
+				display: false,
+			},
+			tooltip: {
+				callbacks: {
+					label: function (context: any) {
+						return `${context.label}: ${context.parsed.r}`;
+					},
+				},
+				backgroundColor: 'rgba(0, 0, 0, 0.8)',
+				padding: 12,
+				titleFont: {
+					size: 14,
+					weight: 'bold' as const,
+				},
+				bodyFont: {
+					size: 13,
+				},
+			},
+		},
+	};
 
 	return (
 		<Card label='성향'>
-			<div className='grid grid-cols-2 gap-3'>
-				{propensityList.map((item) => (
-					<div key={item.label} className='flex justify-between'>
-						<span className='text-sm text-gray-600'>
-							{item.label}
-						</span>
-						<span className='text-sm font-medium text-gray-900'>
-							{item.value}
-						</span>
+			<div className='flex w-full items-center justify-center py-4'>
+				<div className='flex w-full max-w-xs items-center justify-center'>
+					<div className='w-full'>
+						<Radar data={chartData} options={chartOptions} />
 					</div>
-				))}
+				</div>
 			</div>
 		</Card>
 	);
@@ -52,13 +142,8 @@ const UserPropensityCardBase: FC<UserPropensityCardProps> = ({
 const UserPropensityCardSkeleton: FC = () => {
 	return (
 		<Card label='성향'>
-			<div className='grid grid-cols-2 gap-3 animate-pulse'>
-				{Array.from({ length: 6 }).map((_, index) => (
-					<div key={index} className='flex justify-between'>
-						<div className='h-4 w-16 rounded bg-gray-100' />
-						<div className='h-4 w-8 rounded bg-gray-100' />
-					</div>
-				))}
+			<div className='flex items-center justify-center py-4'>
+				<div className='h-64 w-64 rounded-full bg-gray-100 animate-pulse' />
 			</div>
 		</Card>
 	);

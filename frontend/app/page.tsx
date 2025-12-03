@@ -16,10 +16,12 @@ export default function HomePage() {
 
 	return (
 		<main className='flex min-h-screen flex-col items-center justify-center p-24'>
-			<div className='text-center mb-8'>
-				<h1 className='text-4xl font-bold mb-4'>Welcome</h1>
-				<p className='text-gray-600'>
-					Next.js + TanStack Query 프로젝트
+			<div className='text-center mb-12'>
+				<h1 className='text-6xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent drop-shadow-lg'>
+					메이플스토리
+				</h1>
+				<p className='text-white/90 text-lg font-medium'>
+					캐릭터 정보 조회
 				</p>
 			</div>
 			<SearchBar />
