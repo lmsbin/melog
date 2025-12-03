@@ -40,12 +40,12 @@ export default function SearchPage() {
 		}
 	}, [ocidData?.ocid, searchedValue, router, addSearchHistory]);
 
-	// 로딩 중
-	if (isLoading) {
+	// 검색어가 없을 때
+	if (!searchedValue) {
 		return (
 			<div className='flex min-h-screen flex-col items-center justify-center p-24'>
 				<SearchBar />
-				<Loading />
+				<SearchHistoryCard />
 			</div>
 		);
 	}
@@ -69,23 +69,12 @@ export default function SearchPage() {
 		);
 	}
 
-	// 검색어가 없을 때
-	if (!searchedValue) {
-		return (
-			<div className='flex min-h-screen flex-col items-center justify-center p-24'>
-				<SearchBar />
-				<SearchHistoryCard />
-			</div>
-		);
+	// 로딩 중이거나 OCID 조회 중일 때는 아무 UI도 출력하지 않음
+	// (OCID 조회 완료되면 useEffect에서 바로 캐릭터 페이지로 이동)
+	if (isLoading || !ocidData?.ocid) {
+		return null;
 	}
 
-	// OCID 조회 중 (아직 이동하지 않은 경우)
-	return (
-		<div className='flex min-h-screen flex-col items-center justify-center p-24'>
-			<SearchBar />
-			<div className='mt-8 text-center'>
-				<p className='text-gray-600'>검색 결과를 불러오는 중...</p>
-			</div>
-		</div>
-	);
+	// OCID 조회 완료되었지만 아직 이동하지 않은 경우 (거의 발생하지 않음)
+	return null;
 }
