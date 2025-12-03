@@ -7,41 +7,25 @@
 
 'use client';
 
+import type { FC } from 'react';
+import type { UserInfo } from '../types/user';
 import { Card } from '@/shared/components/widget';
-import { useUserInfo } from '../hooks/useUserInfo';
 
 export interface UserInfoCardProps {
-	ocid: string | null;
+	userInfo: UserInfo | null;
 }
 
-export function UserInfoCard({ ocid }: UserInfoCardProps) {
-	const { data: userInfo, isLoading, isError } = useUserInfo(ocid);
+export type UserInfoCardComponent = FC<UserInfoCardProps> & {
+	
+	Skeleton: FC;
+};
 
-	if (isLoading) {
-		return (
-			<Card label='기본정보'>
-				<div className='py-4 text-center text-sm text-gray-500'>
-					불러오는 중...
-				</div>
-			</Card>
-		);
-	}
-
-	if (isError || !userInfo) {
-		return (
-			<Card label='기본정보'>
-				<div className='py-4 text-center text-sm text-red-500'>
-					정보를 불러올 수 없습니다.
-				</div>
-			</Card>
-		);
-	}
-
+const UserInfoCardBase: FC<UserInfoCardProps> = ({ userInfo }) => {
 	return (
 		<Card label='기본정보'>
 			<div className='flex w-full flex-col items-center gap-2'>
 				<div className='flex h-32 w-32 items-center justify-center overflow-hidden rounded-lg bg-gray-50'>
-					{userInfo.character_image && (
+					{userInfo?.character_image && (
 						<img
 							src={userInfo.character_image}
 							alt={userInfo.character_name}
@@ -51,21 +35,46 @@ export function UserInfoCard({ ocid }: UserInfoCardProps) {
 				</div>
 				<div className='flex items-baseline justify-center gap-2'>
 					<div className='text-xl font-semibold text-gray-900'>
-						{userInfo.character_name}
+						{userInfo?.character_name ?? '캐릭터 이름'}
 					</div>
 					<div className='text-sm font-medium text-gray-400'>
-						{userInfo.world_name}
+						{userInfo?.world_name ?? '월드'}
 					</div>
 				</div>
 				<div className='flex items-center justify-center gap-3 text-sm text-gray-600'>
-					<span>{userInfo.character_class}</span>
+					<span>{userInfo?.character_class ?? '직업'}</span>
 					<span>|</span>
-					<span className='font-medium'>Lv.{userInfo.character_level}</span>
+					<span className='font-medium'>
+						Lv.{userInfo?.character_level ?? '--'}
+					</span>
 					<span>|</span>
-					<span className='text-gray-500'>{userInfo.character_guild_name}</span>
+					<span className='text-gray-500'>
+						{userInfo?.character_guild_name ?? '길드'}
+					</span>
 				</div>
 			</div>
 		</Card>
 	);
-}
+};
 
+const UserInfoCardSkeleton: FC = () => {
+	return (
+		<Card label='기본정보'>
+			<div className='flex w-full flex-col items-center gap-2 animate-pulse'>
+				<div className='flex h-32 w-32 items-center justify-center overflow-hidden rounded-lg bg-gray-100' />
+				<div className='flex items-baseline justify-center gap-2'>
+					<div className='h-6 w-24 rounded bg-gray-100' />
+					<div className='h-4 w-12 rounded bg-gray-100' />
+				</div>
+				<div className='flex items-center justify-center gap-3 text-sm'>
+					<div className='h-4 w-16 rounded bg-gray-100' />
+					<div className='h-4 w-10 rounded bg-gray-100' />
+					<div className='h-4 w-20 rounded bg-gray-100' />
+				</div>
+			</div>
+		</Card>
+	);
+};
+
+export const UserInfoCard = UserInfoCardBase as UserInfoCardComponent;
+UserInfoCard.Skeleton = UserInfoCardSkeleton;

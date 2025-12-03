@@ -12,7 +12,6 @@ import { SearchBar, SearchHistoryCard } from '@/features/search/components';
 import { useHomePageViewModel } from '@/page/home/view-model/viewModel';
 
 export default function HomePage() {
-	// 현재는 별도 데이터 fetch가 없지만, 추후 확장을 고려해 ViewModel을 호출합니다.
 	useHomePageViewModel();
 
 	return (

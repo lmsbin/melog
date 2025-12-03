@@ -7,44 +7,29 @@
 
 'use client';
 
+import type { FC } from 'react';
+import type { UserAbility } from '../types/ability';
 import { Card } from '@/shared/components/widget';
-import { useUserAbility } from '../hooks/useUserAbility';
 
 export interface UserAbilityCardProps {
-	ocid: string | null;
+	ability: UserAbility | null;
 }
 
-export function UserAbilityCard({ ocid }: UserAbilityCardProps) {
-	const { data: ability, isLoading, isError } = useUserAbility(ocid);
+export type UserAbilityCardComponent = FC<UserAbilityCardProps> & {
+	Skeleton: FC;
+};
 
-	if (isLoading) {
-		return (
-			<Card label='어빌리티'>
-				<div className='py-4 text-center text-sm text-gray-500'>
-					불러오는 중...
-				</div>
-			</Card>
-		);
-	}
-
-	if (isError || !ability) {
-		return (
-			<Card label='어빌리티'>
-				<div className='py-4 text-center text-sm text-red-500'>
-					정보를 불러올 수 없습니다.
-				</div>
-			</Card>
-		);
-	}
-
+const UserAbilityCardBase: FC<UserAbilityCardProps> = ({
+	ability,
+}: UserAbilityCardProps) => {
 	return (
 		<Card label='어빌리티'>
 			<div className='space-y-2'>
 				<div className='text-sm font-medium text-gray-900'>
-					등급: {ability.ability_grade}
+					등급: {ability?.ability_grade ?? '-'}
 				</div>
 				<div className='space-y-1'>
-					{ability.ability_info.slice(0, 3).map((item, index) => (
+					{ability?.ability_info.slice(0, 3).map((item, index) => (
 						<div key={index} className='text-sm text-gray-600'>
 							{item.ability_grade} - {item.ability_value}
 						</div>
@@ -53,5 +38,25 @@ export function UserAbilityCard({ ocid }: UserAbilityCardProps) {
 			</div>
 		</Card>
 	);
-}
+};
 
+const UserAbilityCardSkeleton: FC = () => {
+	return (
+		<Card label='어빌리티'>
+			<div className='space-y-2 animate-pulse'>
+				<div className='h-4 w-24 rounded bg-gray-100' />
+				<div className='space-y-1'>
+					{Array.from({ length: 3 }).map((_, index) => (
+						<div
+							key={index}
+							className='h-4 w-40 rounded bg-gray-100'
+						/>
+					))}
+				</div>
+			</div>
+		</Card>
+	);
+};
+
+export const UserAbilityCard = UserAbilityCardBase as UserAbilityCardComponent;
+UserAbilityCard.Skeleton = UserAbilityCardSkeleton;

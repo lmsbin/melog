@@ -7,41 +7,25 @@
 
 'use client';
 
+import type { FC } from 'react';
+import type { UserSymbolEquipment } from '../types/symbol';
 import { Card } from '@/shared/components/widget';
-import { useUserSymbolEquipment } from '../hooks/useUserSymbolEquipment';
 
 export interface UserSymbolCardProps {
-	ocid: string | null;
+	symbolEquipment: UserSymbolEquipment | null;
 }
 
-export function UserSymbolCard({ ocid }: UserSymbolCardProps) {
-	const { data: symbolEquipment, isLoading, isError } =
-		useUserSymbolEquipment(ocid);
+export type UserSymbolCardComponent = FC<UserSymbolCardProps> & {
+	Skeleton: FC;
+};
 
-	if (isLoading) {
-		return (
-			<Card label='심볼'>
-				<div className='py-4 text-center text-sm text-gray-500'>
-					불러오는 중...
-				</div>
-			</Card>
-		);
-	}
-
-	if (isError || !symbolEquipment) {
-		return (
-			<Card label='심볼'>
-				<div className='py-4 text-center text-sm text-red-500'>
-					정보를 불러올 수 없습니다.
-				</div>
-			</Card>
-		);
-	}
-
+const UserSymbolCardBase: FC<UserSymbolCardProps> = ({
+	symbolEquipment,
+}: UserSymbolCardProps) => {
 	return (
 		<Card label='심볼'>
 			<div className='flex flex-wrap justify-center gap-3'>
-				{symbolEquipment.symbol.map((symbol, index) => (
+				{symbolEquipment?.symbol.map((symbol, index) => (
 					<div
 						key={index}
 						className='flex flex-col items-center rounded-lg border border-gray-200 p-3'
@@ -66,5 +50,28 @@ export function UserSymbolCard({ ocid }: UserSymbolCardProps) {
 			</div>
 		</Card>
 	);
-}
+};
 
+const UserSymbolCardSkeleton: FC = () => {
+	return (
+		<Card label='심볼'>
+			<div className='flex flex-wrap justify-center gap-3 animate-pulse'>
+				{Array.from({ length: 6 }).map((_, index) => (
+					<div
+						key={index}
+						className='flex flex-col items-center rounded-lg border border-gray-200 p-3'
+					>
+						<div className='h-12 w-12 rounded bg-gray-100' />
+						<div className='mt-2 space-y-1 text-center'>
+							<div className='h-4 w-16 rounded bg-gray-100' />
+							<div className='h-3 w-10 rounded bg-gray-100' />
+						</div>
+					</div>
+				))}
+			</div>
+		</Card>
+	);
+};
+
+export const UserSymbolCard = UserSymbolCardBase as UserSymbolCardComponent;
+UserSymbolCard.Skeleton = UserSymbolCardSkeleton;
