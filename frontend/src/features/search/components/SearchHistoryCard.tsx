@@ -16,8 +16,7 @@ export function SearchHistoryCard() {
 		useSearchHistory();
 	const router = useRouter();
 
-	// 마운트되지 않았거나 검색 기록이 없으면 렌더링하지 않음
-	if (!isMounted || searchHistory.length === 0) {
+	if (!isMounted) {
 		return null;
 	}
 
@@ -36,26 +35,32 @@ export function SearchHistoryCard() {
 				<span className='text-lg'>🔍</span>
 				최근 검색
 			</h3>
-			<div className='space-y-2'>
-				{searchHistory.map((item) => (
-					<div
-						key={item.nickName}
-						className='flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-gray-50 to-white hover:from-blue-50 hover:to-purple-50 cursor-pointer transition-all duration-200 hover:shadow-md border border-transparent hover:border-blue-200'
-						onClick={() => handleClick(item.nickName)}
-					>
-						<span className='text-gray-800 font-medium'>
-							{item.nickName}
-						</span>
-						<button
-							type='button'
-							onClick={(e) => handleRemove(e, item.nickName)}
-							className='text-gray-400 hover:text-red-500 transition-colors text-xl font-bold leading-none w-6 h-6 flex items-center justify-center rounded hover:bg-red-50'
+			{searchHistory.length === 0 ? (
+				<p className='text-sm font-semibold text-gray-700 text-center'>
+					최근 검색기록이 없습니다.
+				</p>
+			) : (
+				<div className='space-y-2'>
+					{searchHistory.map((item) => (
+						<div
+							key={item.nickName}
+							className='flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-gray-50 to-white hover:from-blue-50 hover:to-purple-50 cursor-pointer transition-all duration-200 hover:shadow-md border border-transparent hover:border-blue-200'
+							onClick={() => handleClick(item.nickName)}
 						>
-							×
-						</button>
-					</div>
-				))}
-			</div>
+							<span className='text-gray-800 font-medium'>
+								{item.nickName}
+							</span>
+							<button
+								type='button'
+								onClick={(e) => handleRemove(e, item.nickName)}
+								className='text-gray-400 hover:text-red-500 transition-colors text-xl font-bold leading-none w-6 h-6 flex items-center justify-center rounded hover:bg-red-50'
+							>
+								×
+							</button>
+						</div>
+					))}
+				</div>
+			)}
 		</div>
 	);
 }

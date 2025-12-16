@@ -15,17 +15,24 @@ export default function HomePage() {
 	useHomePageViewModel();
 
 	return (
-		<main className='flex min-h-screen flex-col items-center justify-center p-24'>
-			<div className='text-center mb-12'>
-				<h1 className='text-6xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent drop-shadow-lg'>
-					메이플스토리
-				</h1>
-				<p className='text-white/90 text-lg font-medium'>
-					캐릭터 정보 조회
-				</p>
-			</div>
-			<SearchBar />
-			<SearchHistoryCard />
+		<main className='min-h-screen flex items-center justify-center px-4 py-12'>
+			<section className='w-full max-w-3xl'>
+				{/* 히어로 영역: 서비스 타이틀 및 설명 */}
+				<header className='text-center mb-10'>
+					<p className='mb-2 text-xs font-semibold tracking-[0.35em] text-white/60 uppercase'>
+						MAPLESTORY CHARACTER FINDER
+					</p>
+					<h1 className='text-4xl md:text-5xl lg:text-6xl font-extrabold mb-3 bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent drop-shadow-[0_18px_45px_rgba(15,23,42,0.65)]'>
+						MELOG
+					</h1>
+				</header>
+
+				{/* 검색 카드: 검색창 + 최근 검색 기록 */}
+				<section className='backdrop-blur-2xl bg-white/10 border border-white/20 rounded-3xl shadow-[0_22px_65px_rgba(15,23,42,0.75)] p-5 md:p-8 space-y-6'>
+					<SearchBar />
+					<SearchHistoryCard />
+				</section>
+			</section>
 		</main>
 	);
 }
