@@ -8,7 +8,7 @@
 
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useCharacterPageViewModel } from '@/page/character/view-model/viewModel';
 import {
@@ -19,17 +19,11 @@ import {
 } from '@/features/user-info/components';
 import { SearchBar } from '@/features/search/components';
 import { Card } from '@/shared/components/widget';
-import { LoadingOverlay } from '@/shared/components/ui';
+import { ui } from '@/shared/ui-controller';
 import type {
 	ItemEquipment,
 	ItemOption,
 } from '@/features/user-info/types/item-equipment';
-
-type ItemTooltipState = {
-	item: ItemEquipment;
-	x: number;
-	y: number;
-};
 
 function getGradeTheme(grade?: string) {
 	// 요청 색상 매핑:
@@ -198,57 +192,19 @@ export default function CharacterPage() {
 		},
 	} = useCharacterPageViewModel({ nickName });
 
-	const [itemTooltip, setItemTooltip] = useState<ItemTooltipState | null>(
-		null
-	);
-	const tooltipRef = useRef<HTMLDivElement | null>(null);
-	const [tooltipSize, setTooltipSize] = useState<{ w: number; h: number }>({
-		w: 360,
-		h: 280,
-	});
-
-	// 툴팁의 실제 렌더링 크기를 측정해서, 화면 밖으로 짤리지 않도록 위치 계산에 사용
 	useEffect(() => {
-		if (!itemTooltip) return;
-		const raf = requestAnimationFrame(() => {
-			const el = tooltipRef.current;
-			if (!el) return;
-			const rect = el.getBoundingClientRect();
-			// 0/NaN 방지
-			if (rect.width > 0 && rect.height > 0) {
-				setTooltipSize({ w: rect.width, h: rect.height });
-			}
-		});
-		return () => cancelAnimationFrame(raf);
-		// itemTooltip 자체는 mousemove로 계속 바뀌니, item 참조만으로 트리거(크기 변경은 아이템/등급/옵션 변화에만 발생)
-	}, [itemTooltip?.item]);
-
-	const tooltipPosition = useMemo(() => {
-		if (!itemTooltip) return null;
-		// 커서 기준으로 약간 띄워서 표시 (가려지지 않게)
-		const offsetX = 16;
-		const offsetY = 16;
-
-		const viewportW =
-			typeof window !== 'undefined' ? window.innerWidth : 1024;
-		const viewportH =
-			typeof window !== 'undefined' ? window.innerHeight : 768;
-
-		const tooltipW = tooltipSize.w || 360;
-		const tooltipH = tooltipSize.h || 280;
-
-		let left = itemTooltip.x + offsetX;
-		let top = itemTooltip.y + offsetY;
-
-		if (left + tooltipW > viewportW - 8) {
-			left = Math.max(8, itemTooltip.x - tooltipW - offsetX);
-		}
-		if (top + tooltipH > viewportH - 8) {
-			top = Math.max(8, itemTooltip.y - tooltipH - offsetY);
-		}
-
-		return { left, top };
-	}, [itemTooltip, tooltipSize]);
+		// 전역 로딩 오버레이: 페이지 fetching 상태를 공통 UI로 표시
+		ui.loading.set(
+			'character-page',
+			isPageFetching,
+			'캐릭터 정보를 불러오는 중...'
+		);
+		return () => {
+			// 라우트 변경/언마운트 시 안전하게 해제
+			ui.loading.set('character-page', false);
+			ui.tooltip.hide();
+		};
+	}, [isPageFetching]);
 
 	if (ocidError) {
 		return (
@@ -266,11 +222,6 @@ export default function CharacterPage() {
 
 	return (
 		<div className='flex w-full min-w-[1024px] flex-col items-center gap-8 pb-12 pt-8'>
-			{/* 전체 로딩 오버레이 + 스피너: "로딩 중"임을 확실히 인지시키기 */}
-			{isPageFetching ? (
-				<LoadingOverlay message='캐릭터 정보를 불러오는 중...' />
-			) : null}
-
 			<div className='w-full max-w-7xl px-4'>
 				<SearchBar />
 			</div>
@@ -335,7 +286,7 @@ export default function CharacterPage() {
 								.map((stat, index) => (
 									<div
 										key={index}
-										className='flex items-center justify-between rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 transition-all duration-200 hover:shadow-sm'
+										className='flex items-center justify-between rounded-lg bg-linear-to-r from-gray-50 to-white p-3 transition-all duration-200 hover:shadow-sm'
 									>
 										<span className='text-sm font-medium text-gray-700'>
 											{stat.stat_name}
@@ -389,7 +340,7 @@ export default function CharacterPage() {
 										.map((stat, index) => (
 											<div
 												key={index}
-												className='flex items-center justify-between rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 p-3 text-sm transition-all duration-200 hover:shadow-sm'
+												className='flex items-center justify-between rounded-lg bg-linear-to-r from-blue-50 to-purple-50 p-3 text-sm transition-all duration-200 hover:shadow-sm'
 											>
 												<span className='font-medium text-gray-700'>
 													{stat.stat_type}
@@ -433,44 +384,280 @@ export default function CharacterPage() {
 									.map((item, index) => (
 										<div
 											key={index}
-											className='flex items-center gap-3 rounded-lg border border-gray-200 bg-gradient-to-r from-white to-gray-50 p-3 transition-all duration-200 hover:shadow-md hover:border-blue-300'
+											className='flex items-center gap-3 rounded-lg border border-gray-200 bg-linear-to-r from-white to-gray-50 p-3 transition-all duration-200 hover:shadow-md hover:border-blue-300'
 											onMouseEnter={(e) => {
-												setItemTooltip({
-													item,
+												// 전역 툴팁 표시
+												ui.tooltip.show({
 													x: e.clientX,
 													y: e.clientY,
-												});
+													content: (
+														<div className='w-[360px] rounded-xl border border-white/20 bg-gray-900/70 p-3 text-white shadow-2xl backdrop-blur-md'>
+															<div className='flex items-start gap-3'>
+																{item.item_icon ? (
+																	<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white/10 ring-1 ring-white/15'>
+																		<img
+																			src={
+																				item.item_icon
+																			}
+																			alt={
+																				item.item_name
+																			}
+																			className='h-10 w-10'
+																		/>
+																	</div>
+																) : null}
 
-												// 디버그: 툴팁에 표시되는 상세정보를 JSON으로 출력
-												// (mousemove가 아니라 enter에서만 찍어서 콘솔 스팸 방지)
-												console.log(
-													'[Item Tooltip Debug]\n' +
-														JSON.stringify(
-															buildItemTooltipDebugJson(
-																item
-															),
-															null,
-															2
-														)
-												);
+																<div className='min-w-0 flex-1'>
+																	<div className='truncate text-sm font-extrabold'>
+																		{
+																			item.item_name
+																		}
+																	</div>
+																	<div className='mt-1 flex flex-wrap items-center gap-2 text-[11px] font-semibold text-white/80'>
+																		{item.potential_option_grade
+																			? (() => {
+																					const theme =
+																						getGradeTheme(
+																							item.potential_option_grade
+																						);
+																					return (
+																						<span
+																							className={`rounded-full px-2 py-0.5 font-extrabold ring-1 ${theme.accentBg} ${theme.accentText} ${theme.accentRing}`}
+																						>
+																							{
+																								theme.label
+																							}{' '}
+																							아이템
+																						</span>
+																					);
+																			  })()
+																			: null}
+																		<span className='rounded-full bg-white/10 px-2 py-0.5 ring-1 ring-white/10'>
+																			{
+																				item.item_equipment_part
+																			}
+																		</span>
+																		{item.starforce ? (
+																			<span className='rounded-full bg-yellow-400/15 px-2 py-0.5 font-extrabold text-yellow-200 ring-1 ring-yellow-200/20'>
+																				★{' '}
+																				{
+																					item.starforce
+																				}
+																			</span>
+																		) : null}
+																	</div>
+																</div>
+															</div>
+
+															{/* 옵션(총합) */}
+															{buildOptionLines(
+																item.item_total_option
+															).length > 0 ? (
+																<div className='mt-3'>
+																	<div className='mb-1 text-xs font-extrabold text-white/90'>
+																		옵션(총합)
+																	</div>
+																	<div className='grid grid-cols-2 gap-x-3 gap-y-1 text-[12px]'>
+																		{buildOptionLines(
+																			item.item_total_option
+																		).map(
+																			(
+																				line
+																			) => (
+																				<div
+																					key={
+																						line.label
+																					}
+																					className='flex items-center justify-between gap-2'
+																				>
+																					<span className='text-white/70'>
+																						{
+																							line.label
+																						}
+																					</span>
+																					<span className='font-bold text-white'>
+																						{
+																							line.value
+																						}
+																					</span>
+																				</div>
+																			)
+																		)}
+																	</div>
+																</div>
+															) : null}
+
+															{/* 잠재/에디셔널 */}
+															<div className='mt-3 grid grid-cols-1 gap-2'>
+																{item.potential_option_grade
+																	? (() => {
+																			const theme =
+																				getGradeTheme(
+																					item.potential_option_grade
+																				);
+																			return (
+																				<div className='rounded-lg bg-white/5 p-2 ring-1 ring-white/10'>
+																					<div className='flex items-center gap-2'>
+																						<span
+																							className={`flex h-5 w-5 items-center justify-center rounded-md text-[11px] font-black ring-1 ${theme.accentBg} ${theme.accentText} ${theme.accentRing}`}
+																						>
+																							{
+																								theme.letter
+																							}
+																						</span>
+																						<div
+																							className={`text-xs font-extrabold ${theme.accentText}`}
+																						>
+																							잠재옵션
+																							(
+																							{
+																								theme.label
+																							}
+
+																							)
+																						</div>
+																						<div
+																							className={`h-px flex-1 bg-linear-to-r ${theme.divider} to-transparent`}
+																						/>
+																					</div>
+																					<ul className='mt-1 space-y-0.5 text-[12px] text-white/85'>
+																						{[
+																							item.potential_option_1,
+																							item.potential_option_2,
+																							item.potential_option_3,
+																						]
+																							.filter(
+																								Boolean
+																							)
+																							.map(
+																								(
+																									v,
+																									i
+																								) => (
+																									<li
+																										key={
+																											i
+																										}
+																										className='truncate'
+																									>
+																										-{' '}
+																										{
+																											v
+																										}
+																									</li>
+																								)
+																							)}
+																					</ul>
+																				</div>
+																			);
+																	  })()
+																	: null}
+
+																{item.additional_potential_option_grade
+																	? (() => {
+																			const theme =
+																				getGradeTheme(
+																					item.additional_potential_option_grade
+																				);
+																			return (
+																				<div className='rounded-lg bg-white/5 p-2 ring-1 ring-white/10'>
+																					<div className='flex items-center gap-2'>
+																						<span
+																							className={`flex h-5 w-5 items-center justify-center rounded-md text-[11px] font-black ring-1 ${theme.accentBg} ${theme.accentText} ${theme.accentRing}`}
+																						>
+																							{
+																								theme.letter
+																							}
+																						</span>
+																						<div
+																							className={`text-xs font-extrabold ${theme.accentText}`}
+																						>
+																							에디셔널
+																							잠재옵션
+																							(
+																							{
+																								theme.label
+																							}
+
+																							)
+																						</div>
+																						<div
+																							className={`h-px flex-1 bg-linear-to-r ${theme.divider} to-transparent`}
+																						/>
+																					</div>
+																					<ul className='mt-1 space-y-0.5 text-[12px] text-white/85'>
+																						{[
+																							item.additional_potential_option_1,
+																							item.additional_potential_option_2,
+																							item.additional_potential_option_3,
+																						]
+																							.filter(
+																								Boolean
+																							)
+																							.map(
+																								(
+																									v,
+																									i
+																								) => (
+																									<li
+																										key={
+																											i
+																										}
+																										className='truncate'
+																									>
+																										-{' '}
+																										{
+																											v
+																										}
+																									</li>
+																								)
+																							)}
+																					</ul>
+																				</div>
+																			);
+																	  })()
+																	: null}
+															</div>
+
+															{/* 소울 */}
+															{item.soul_name ||
+															item.soul_option ? (
+																<div className='mt-3 rounded-lg bg-white/5 p-2 ring-1 ring-white/10'>
+																	<div className='text-xs font-extrabold text-white/90'>
+																		소울
+																	</div>
+																	<div className='mt-1 text-[12px] text-white/85'>
+																		{item.soul_name ? (
+																			<div className='truncate'>
+																				-{' '}
+																				{
+																					item.soul_name
+																				}
+																			</div>
+																		) : null}
+																		{item.soul_option ? (
+																			<div className='truncate'>
+																				-{' '}
+																				{
+																					item.soul_option
+																				}
+																			</div>
+																		) : null}
+																	</div>
+																</div>
+															) : null}
+														</div>
+													),
+												});
 											}}
 											onMouseMove={(e) => {
-												setItemTooltip((prev) =>
-													prev
-														? {
-																...prev,
-																x: e.clientX,
-																y: e.clientY,
-														  }
-														: {
-																item,
-																x: e.clientX,
-																y: e.clientY,
-														  }
+												ui.tooltip.move(
+													e.clientX,
+													e.clientY
 												);
 											}}
 											onMouseLeave={() =>
-												setItemTooltip(null)
+												ui.tooltip.hide()
 											}
 										>
 											{item.item_icon && (
@@ -493,265 +680,6 @@ export default function CharacterPage() {
 										</div>
 									))}
 							</div>
-
-							{/* 마우스 위치 기준 툴팁 */}
-							{itemTooltip && tooltipPosition ? (
-								<div
-									ref={tooltipRef}
-									className='pointer-events-none fixed z-50 w-[360px] max-w-[calc(100vw-16px)] max-h-[calc(100vh-16px)] overflow-y-auto rounded-xl border border-white/20 bg-gray-900/70 p-3 text-white shadow-2xl backdrop-blur-md'
-									style={{
-										left: tooltipPosition.left,
-										top: tooltipPosition.top,
-									}}
-									aria-hidden='true'
-								>
-									<div className='flex items-start gap-3'>
-										{itemTooltip.item.item_icon ? (
-											<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white/10 ring-1 ring-white/15'>
-												<img
-													src={
-														itemTooltip.item
-															.item_icon
-													}
-													alt={
-														itemTooltip.item
-															.item_name
-													}
-													className='h-10 w-10'
-												/>
-											</div>
-										) : null}
-
-										<div className='min-w-0 flex-1'>
-											<div className='truncate text-sm font-extrabold'>
-												{itemTooltip.item.item_name}
-											</div>
-											<div className='mt-1 flex flex-wrap items-center gap-2 text-[11px] font-semibold text-white/80'>
-												{itemTooltip.item
-													.potential_option_grade ? (
-													<span
-														className={`rounded-full px-2 py-0.5 font-extrabold ring-1 ${
-															getGradeTheme(
-																itemTooltip.item
-																	.potential_option_grade
-															).accentBg
-														} ${
-															getGradeTheme(
-																itemTooltip.item
-																	.potential_option_grade
-															).accentText
-														} ${
-															getGradeTheme(
-																itemTooltip.item
-																	.potential_option_grade
-															).accentRing
-														}`}
-													>
-														{
-															getGradeTheme(
-																itemTooltip.item
-																	.potential_option_grade
-															).label
-														}{' '}
-														아이템
-													</span>
-												) : null}
-												<span className='rounded-full bg-white/10 px-2 py-0.5 ring-1 ring-white/10'>
-													{
-														itemTooltip.item
-															.item_equipment_part
-													}
-												</span>
-												{itemTooltip.item.starforce ? (
-													<span className='rounded-full bg-yellow-400/15 px-2 py-0.5 font-extrabold text-yellow-200 ring-1 ring-yellow-200/20'>
-														★{' '}
-														{
-															itemTooltip.item
-																.starforce
-														}
-													</span>
-												) : null}
-											</div>
-										</div>
-									</div>
-
-									{/* 옵션(총합) */}
-									{buildOptionLines(
-										itemTooltip.item.item_total_option
-									).length > 0 ? (
-										<div className='mt-3'>
-											<div className='mb-1 text-xs font-extrabold text-white/90'>
-												옵션(총합)
-											</div>
-											<div className='grid grid-cols-2 gap-x-3 gap-y-1 text-[12px]'>
-												{buildOptionLines(
-													itemTooltip.item
-														.item_total_option
-												).map((line) => (
-													<div
-														key={line.label}
-														className='flex items-center justify-between gap-2'
-													>
-														<span className='text-white/70'>
-															{line.label}
-														</span>
-														<span className='font-bold text-white'>
-															{line.value}
-														</span>
-													</div>
-												))}
-											</div>
-										</div>
-									) : null}
-
-									{/* 잠재/에디셔널 */}
-									<div className='mt-3 grid grid-cols-1 gap-2'>
-										{itemTooltip.item
-											.potential_option_grade ? (
-											<div className='rounded-lg bg-white/5 p-2 ring-1 ring-white/10'>
-												{(() => {
-													const theme = getGradeTheme(
-														itemTooltip.item
-															.potential_option_grade
-													);
-													return (
-														<>
-															<div className='flex items-center gap-2'>
-																<span
-																	className={`flex h-5 w-5 items-center justify-center rounded-md text-[11px] font-black ring-1 ${theme.accentBg} ${theme.accentText} ${theme.accentRing}`}
-																>
-																	{
-																		theme.letter
-																	}
-																</span>
-																<div
-																	className={`text-xs font-extrabold ${theme.accentText}`}
-																>
-																	잠재옵션 (
-																	{
-																		theme.label
-																	}
-																	)
-																</div>
-																<div
-																	className={`h-px flex-1 bg-gradient-to-r ${theme.divider} to-transparent`}
-																/>
-															</div>
-														</>
-													);
-												})()}
-												<ul className='mt-1 space-y-0.5 text-[12px] text-white/85'>
-													{[
-														itemTooltip.item
-															.potential_option_1,
-														itemTooltip.item
-															.potential_option_2,
-														itemTooltip.item
-															.potential_option_3,
-													]
-														.filter(Boolean)
-														.map((v, i) => (
-															<li
-																key={i}
-																className='truncate'
-															>
-																- {v}
-															</li>
-														))}
-												</ul>
-											</div>
-										) : null}
-
-										{itemTooltip.item
-											.additional_potential_option_grade ? (
-											<div className='rounded-lg bg-white/5 p-2 ring-1 ring-white/10'>
-												{(() => {
-													const theme = getGradeTheme(
-														itemTooltip.item
-															.additional_potential_option_grade
-													);
-													return (
-														<>
-															<div className='flex items-center gap-2'>
-																<span
-																	className={`flex h-5 w-5 items-center justify-center rounded-md text-[11px] font-black ring-1 ${theme.accentBg} ${theme.accentText} ${theme.accentRing}`}
-																>
-																	{
-																		theme.letter
-																	}
-																</span>
-																<div
-																	className={`text-xs font-extrabold ${theme.accentText}`}
-																>
-																	에디셔널
-																	잠재옵션 (
-																	{
-																		theme.label
-																	}
-																	)
-																</div>
-																<div
-																	className={`h-px flex-1 bg-gradient-to-r ${theme.divider} to-transparent`}
-																/>
-															</div>
-														</>
-													);
-												})()}
-												<ul className='mt-1 space-y-0.5 text-[12px] text-white/85'>
-													{[
-														itemTooltip.item
-															.additional_potential_option_1,
-														itemTooltip.item
-															.additional_potential_option_2,
-														itemTooltip.item
-															.additional_potential_option_3,
-													]
-														.filter(Boolean)
-														.map((v, i) => (
-															<li
-																key={i}
-																className='truncate'
-															>
-																- {v}
-															</li>
-														))}
-												</ul>
-											</div>
-										) : null}
-									</div>
-
-									{/* 소울 */}
-									{itemTooltip.item.soul_name ||
-									itemTooltip.item.soul_option ? (
-										<div className='mt-3 rounded-lg bg-white/5 p-2 ring-1 ring-white/10'>
-											<div className='text-xs font-extrabold text-white/90'>
-												소울
-											</div>
-											<div className='mt-1 text-[12px] text-white/85'>
-												{itemTooltip.item.soul_name ? (
-													<div className='truncate'>
-														-{' '}
-														{
-															itemTooltip.item
-																.soul_name
-														}
-													</div>
-												) : null}
-												{itemTooltip.item
-													.soul_option ? (
-													<div className='truncate'>
-														-{' '}
-														{
-															itemTooltip.item
-																.soul_option
-														}
-													</div>
-												) : null}
-											</div>
-										</div>
-									) : null}
-								</div>
-							) : null}
 						</>
 					)}
 				</Card>
