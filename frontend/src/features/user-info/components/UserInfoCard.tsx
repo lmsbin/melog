@@ -28,7 +28,7 @@ const UserInfoCardBase: FC<UserInfoCardProps> = ({ userInfo }) => {
 						<img
 							src={userInfo.character_image}
 							alt={userInfo.character_name}
-							className='h-full w-full scale-150 object-contain drop-shadow-lg'
+							className='h-full w-full scale-200 object-contain drop-shadow-lg'
 						/>
 					)}
 				</div>
