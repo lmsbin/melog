@@ -71,12 +71,36 @@ export function useCharacterPageViewModel({
 		userDojangQuery.isLoading ||
 		userItemEquipmentQuery.isLoading;
 
+	/**
+	 * 페이지 단위 "fetch 진행 중" 상태 집계
+	 *
+	 * - isLoading: 최초 로딩(데이터가 아직 없을 때)에 집중
+	 * - isFetching: 캐시가 있더라도 재조회/백그라운드 fetch를 포함
+	 *
+	 * 전체 로딩바 같은 UI는 사용자가 "지금 뭔가 불러오는 중"임을
+	 * 확실히 인지할 수 있게 isFetching을 기준으로 보여주는 편이 유리합니다.
+	 */
+	const isFetching =
+		ocidLoading ||
+		userInfoQuery.isFetching ||
+		userStatInfoQuery.isFetching ||
+		userHyperStatInfoQuery.isFetching ||
+		userPropensityQuery.isFetching ||
+		userAbilityQuery.isFetching ||
+		userSymbolEquipmentQuery.isFetching ||
+		userSetEffectQuery.isFetching ||
+		userVMatrixQuery.isFetching ||
+		userHexaMatrixQuery.isFetching ||
+		userDojangQuery.isFetching ||
+		userItemEquipmentQuery.isFetching;
+
 	return {
 		nickName,
 		ocid,
 		ocidError,
 		ocidErrorDetail,
 		isLoading,
+		isFetching,
 		queries: {
 			userInfo: userInfoQuery,
 			userStatInfo: userStatInfoQuery,

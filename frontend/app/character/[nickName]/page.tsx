@@ -28,6 +28,7 @@ export default function CharacterPage() {
 		ocid,
 		ocidError,
 		isLoading: isPageLoading,
+		isFetching: isPageFetching,
 		queries: {
 			userInfo,
 			userPropensity,
@@ -55,6 +56,22 @@ export default function CharacterPage() {
 
 	return (
 		<div className='flex w-full min-w-[1024px] flex-col items-center gap-8 pb-12 pt-8'>
+			{/* 전체 로딩 오버레이 + 스피너: "로딩 중"임을 확실히 인지시키기 */}
+			{isPageFetching ? (
+				<div
+					className='fixed inset-0 z-50 flex items-center justify-center bg-gray-900/20 backdrop-blur-[1px]'
+					aria-label='로딩 중'
+					role='status'
+				>
+					<div className='flex flex-col items-center gap-3 rounded-2xl bg-white/80 px-6 py-5 shadow-xl ring-1 ring-white/30'>
+						<div className='h-10 w-10 animate-spin rounded-full border-[4px] border-gray-300 border-t-blue-500' />
+						<p className='text-sm font-semibold text-gray-700'>
+							캐릭터 정보를 불러오는 중...
+						</p>
+					</div>
+				</div>
+			) : null}
+
 			<div className='w-full max-w-7xl px-4'>
 				<SearchBar />
 			</div>
