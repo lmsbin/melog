@@ -10,6 +10,7 @@
 import type { FC } from 'react';
 import type { UserAbility } from '../types/ability';
 import { Card } from '@/shared/components/widget';
+import { getItemGradeTheme } from '@/shared/utils/item-grade-theme';
 
 export interface UserAbilityCardProps {
 	ability: UserAbility | null;
@@ -17,26 +18,6 @@ export interface UserAbilityCardProps {
 
 export type UserAbilityCardComponent = FC<UserAbilityCardProps> & {
 	Skeleton: FC;
-};
-
-const getGradeColor = (grade: string) => {
-	const gradeMap: Record<string, string> = {
-		레전드리: 'from-yellow-400 to-orange-500',
-		유니크: 'from-purple-400 to-pink-500',
-		에픽: 'from-blue-400 to-indigo-500',
-		레어: 'from-green-400 to-teal-500',
-	};
-	return gradeMap[grade] || 'from-gray-300 to-gray-400';
-};
-
-const getGradeBadgeColor = (grade: string) => {
-	const gradeMap: Record<string, string> = {
-		레전드리: 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white',
-		유니크: 'bg-gradient-to-r from-purple-400 to-pink-500 text-white',
-		에픽: 'bg-gradient-to-r from-blue-400 to-indigo-500 text-white',
-		레어: 'bg-gradient-to-r from-green-400 to-teal-500 text-white',
-	};
-	return gradeMap[grade] || 'bg-gray-200 text-gray-700';
 };
 
 const UserAbilityCardBase: FC<UserAbilityCardProps> = ({
@@ -50,28 +31,32 @@ const UserAbilityCardBase: FC<UserAbilityCardProps> = ({
 						<span className='text-sm font-medium text-gray-600'>
 							등급:
 						</span>
+						{(() => {
+							const theme = getItemGradeTheme(ability.ability_grade);
+							return (
 						<span
-							className={`rounded-full px-3 py-1 text-xs font-bold ${getGradeBadgeColor(
-								ability.ability_grade
-							)}`}
+							className={`rounded-full px-3 py-1 text-xs font-extrabold ring-1 ${theme.accentBg} ${theme.accentText} ${theme.accentRing}`}
 						>
 							{ability.ability_grade}
 						</span>
+							);
+						})()}
 					</div>
 				)}
 				<div className='space-y-2.5'>
 					{ability?.ability_info.slice(0, 3).map((item, index) => (
+						(() => {
+							const theme = getItemGradeTheme(item.ability_grade);
+							return (
 						<div
 							key={index}
 							className='rounded-lg border border-gray-200 bg-gradient-to-r from-gray-50 to-white p-3 transition-all duration-200 hover:shadow-md'
 						>
-							<div className='flex items-center gap-2 mb-1'>
+							<div className='mb-1 flex items-center gap-2'>
 								<div
-									className={`h-2 w-2 rounded-full bg-gradient-to-r ${getGradeColor(
-										item.ability_grade
-									)}`}
+									className={`h-2 w-2 rounded-full ${theme.solidBg}`}
 								/>
-								<span className='text-xs font-semibold text-gray-500'>
+								<span className={`text-xs font-semibold ${theme.accentText}`}>
 									{item.ability_grade}
 								</span>
 							</div>
@@ -79,6 +64,8 @@ const UserAbilityCardBase: FC<UserAbilityCardProps> = ({
 								{item.ability_value}
 							</div>
 						</div>
+							);
+						})()
 					))}
 				</div>
 			</div>

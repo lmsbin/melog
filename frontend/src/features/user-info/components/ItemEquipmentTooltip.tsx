@@ -6,66 +6,7 @@
  */
 
 import type { ItemEquipmentTooltipViewModel } from '../types/item-equipment';
-
-type GradeTheme = {
-	label: string;
-	letter: string;
-	accentText: string;
-	accentBg: string;
-	accentRing: string;
-	divider: string;
-};
-
-function getGradeTheme(grade?: string): GradeTheme {
-	// 요청 색상 매핑:
-	// 레전드리 = 초록, 유니크 = 주황, 에픽 = 보라, 레어 = 하늘색
-	const g = (grade ?? '').trim();
-	const map: Record<string, GradeTheme> = {
-		레전드리: {
-			label: '레전드리',
-			letter: 'L',
-			accentText: 'text-green-300',
-			accentBg: 'bg-green-400/15',
-			accentRing: 'ring-green-300/35',
-			divider: 'from-green-400/50',
-		},
-		유니크: {
-			label: '유니크',
-			letter: 'U',
-			accentText: 'text-orange-300',
-			accentBg: 'bg-orange-400/15',
-			accentRing: 'ring-orange-300/35',
-			divider: 'from-orange-400/50',
-		},
-		에픽: {
-			label: '에픽',
-			letter: 'E',
-			accentText: 'text-purple-300',
-			accentBg: 'bg-purple-400/15',
-			accentRing: 'ring-purple-300/35',
-			divider: 'from-purple-400/50',
-		},
-		레어: {
-			label: '레어',
-			letter: 'R',
-			accentText: 'text-sky-300',
-			accentBg: 'bg-sky-400/15',
-			accentRing: 'ring-sky-300/35',
-			divider: 'from-sky-400/50',
-		},
-	};
-
-	return (
-		map[g] ?? {
-			label: g || '등급',
-			letter: '?',
-			accentText: 'text-white/80',
-			accentBg: 'bg-white/10',
-			accentRing: 'ring-white/15',
-			divider: 'from-white/20',
-		}
-	);
-}
+import { getItemGradeTheme } from '@/shared/utils/item-grade-theme';
 
 export function ItemEquipmentTooltip({
 	vm,
@@ -73,10 +14,10 @@ export function ItemEquipmentTooltip({
 	vm: ItemEquipmentTooltipViewModel;
 }) {
 	const potentialTheme = vm.potentialOptionGrade
-		? getGradeTheme(vm.potentialOptionGrade)
+		? getItemGradeTheme(vm.potentialOptionGrade)
 		: null;
 	const additionalTheme = vm.additionalPotentialOptionGrade
-		? getGradeTheme(vm.additionalPotentialOptionGrade)
+		? getItemGradeTheme(vm.additionalPotentialOptionGrade)
 		: null;
 
 	return (
