@@ -70,7 +70,7 @@ export type ItemEquipmentTooltipOptionLine = {
 	label: string;
 	/** 합산 결과(+, - 포함 X: 예 "250", "6%") */
 	totalText: string;
-	/** 분해 결과(예 "(100 +44 +36 +70)") */
+
 	breakdownText: string | null;
 };
 

@@ -100,9 +100,10 @@ function buildOptionBreakdown(item: ItemEquipment, key: OptionFieldKey) {
 	const etc = parseNumber(item.item_etc_option?.[key]) ?? 0;
 	const starforce = parseNumber(item.item_starforce_option?.[key]) ?? 0;
 	const exceptional = parseNumber(item.item_exceptional_option?.[key]) ?? 0;
-	// 기본은 항상 포함(0이어도), 나머지는 0이 아니면 포함
-	const rest = [add, etc, starforce, exceptional].filter((v) => v !== 0);
-	return { base, rest };
+	// breakdown 표기 요구사항:
+	// (기본 + 주문서 + 스타포스 + 추가옵션) 순서로 표기
+	// exceptional(익셉셔널 강화)은 표기 요구에 없어서 제외
+	return { base, etc, starforce, add, exceptional };
 }
 
 function buildTotalOptionLinesWithBreakdown(
@@ -114,16 +115,17 @@ function buildTotalOptionLinesWithBreakdown(
 		if (total === null) return null;
 		if (!isMeaningfulValue(total)) return null;
 
-		const { base, rest } = buildOptionBreakdown(item, f.key);
+		const { base, etc, starforce, add } = buildOptionBreakdown(item, f.key);
 		const totalText = formatTotal(total, f.suffix);
 
-		const breakdownText =
-			rest.length > 0
-				? `(${[
-						`${formatNumber(base)}${f.suffix ?? ''}`,
-						...rest.map((v) => formatSignedCompact(v, f.suffix)),
-				  ].join(' ')})`
-				: null;
+		// 괄호 안은 "(기본 + 주문서 + 스타포스 + 추가옵션)" 순서
+		// - 맨 앞(기본)은 +를 붙이지 않음
+		// - 나머지는 0이 아니면 포함(+/- 포함)
+		const first = `${formatTotal(base, f.suffix)}`;
+		const rest = [starforce, etc, add]
+			.filter((v) => v !== 0)
+			.map((v) => formatSignedCompact(v, f.suffix));
+		const breakdownText = `(${[first, ...rest].join(' ')})`;
 
 		return { label: f.label, totalText, breakdownText };
 	}).filter(Boolean) as ItemEquipmentTooltipViewModel['optionLines'];
