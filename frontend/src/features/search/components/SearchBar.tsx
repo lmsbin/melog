@@ -14,7 +14,7 @@ export function SearchBar() {
 	const { searchValue, onChange, onClick, onKeyDown } = useSearch();
 
 	return (
-		<div className='flex min-w-[400px] items-center rounded-2xl border border-white/30 bg-white/95 px-5 py-4 shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]'>
+		<div className='flex w-full mx-auto items-center rounded-2xl border border-white/30 bg-white/95 px-5 py-4 shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]'>
 			<SearchInput
 				value={searchValue}
 				onChange={onChange}

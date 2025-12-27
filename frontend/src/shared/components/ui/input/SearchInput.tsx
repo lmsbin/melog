@@ -27,7 +27,7 @@ export function SearchInput({
 	return (
 		<input
 			type='text'
-			className={`flex-grow bg-transparent text-gray-800 placeholder-gray-400 outline-none text-base font-medium ${className}`}
+			className={`flex-grow min-w-0 bg-transparent text-gray-800 placeholder-gray-400 outline-none text-base font-medium ${className}`}
 			onChange={onChange}
 			onKeyDown={onKeyDown}
 			placeholder={placeholder}
