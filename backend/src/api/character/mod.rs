@@ -11,6 +11,7 @@ pub mod user_hexa_matrix_stat;
 pub mod user_hyper_stat_info;
 pub mod user_item_equipment;
 pub mod user_propensity;
+pub mod user_ring_exchange_skill_equipment;
 pub mod user_set_effect;
 pub mod user_stat_info;
 pub mod user_symbol_equipment;

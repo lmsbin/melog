@@ -9,6 +9,7 @@ use crate::api::{
         user_hexa_matrix_stat::get_user_hexa_stat_info,
         user_hyper_stat_info::get_user_hyper_stat_info,
         user_item_equipment::get_user_item_equipment, user_propensity::get_user_propensity,
+        user_ring_exchange_skill_equipment::get_user_ring_exchange_skill_equipment,
         user_set_effect::get_user_set_effect, user_stat_info::get_user_stat_info,
         user_symbol_equipment::get_user_symbol_equipment, user_v_matrix::get_user_v_matrix,
     },
@@ -91,6 +92,10 @@ pub fn user_routes() -> Router {
             post(get_user_cash_item_equipment),
         ),
         ("/getUserHexStatInfo", post(get_user_hexa_stat_info)),
+        (
+            "/getUserRingExchangeSkillEquipment",
+            post(get_user_ring_exchange_skill_equipment),
+        ),
     ])
 }
 

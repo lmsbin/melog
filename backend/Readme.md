@@ -573,6 +573,32 @@ curl -X GET "https://{{ip}}:{{port}}/getUserItemEquipment" -H "uuid : {value}"
 }
 ```
 
+### 2.14 GET `/getUserRingExchangeSkillEquipment`
+
+새로운 리소스를 생성합니다.
+
+- **Method**: GET
+- **헤더**:
+  - `uuid`: 요청 고유 식별자 (예: {value})
+
+**예시 요청**:
+
+```bash
+curl -X GET "https://{{ip}}:{{port}}/getUserRingExchangeSkillEquipment" -H "uuid : {value}"
+```
+
+**응답**:
+
+```json
+{
+  "character_class": "string",
+  "special_ring_exchange_name": "string",
+  "special_ring_exchange_level": 0,
+  "special_ring_exchange_icon": "string",
+  "special_ring_exchange_description": "string"
+}
+```
+
 ---
 
 ## 공통 오류
