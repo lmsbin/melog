@@ -8,7 +8,7 @@
 
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useCharacterPageViewModel } from '@/page/character/view-model/viewModel';
 import {
@@ -30,6 +30,67 @@ type ItemTooltipState = {
 	x: number;
 	y: number;
 };
+
+function getGradeTheme(grade?: string) {
+	// 요청 색상 매핑:
+	// 레전드(리) = 초록, 유니크 = 주황, 에픽 = 보라, 레어 = 하늘색
+	const g = (grade ?? '').trim();
+	const map: Record<
+		string,
+		{
+			label: string;
+			letter: string;
+			accentText: string;
+			accentBg: string;
+			accentRing: string;
+			divider: string;
+		}
+	> = {
+		레전드리: {
+			label: '레전드리',
+			letter: 'L',
+			accentText: 'text-green-300',
+			accentBg: 'bg-green-400/15',
+			accentRing: 'ring-green-300/35',
+			divider: 'from-green-400/50',
+		},
+		유니크: {
+			label: '유니크',
+			letter: 'U',
+			accentText: 'text-orange-300',
+			accentBg: 'bg-orange-400/15',
+			accentRing: 'ring-orange-300/35',
+			divider: 'from-orange-400/50',
+		},
+		에픽: {
+			label: '에픽',
+			letter: 'E',
+			accentText: 'text-purple-300',
+			accentBg: 'bg-purple-400/15',
+			accentRing: 'ring-purple-300/35',
+			divider: 'from-purple-400/50',
+		},
+		레어: {
+			label: '레어',
+			letter: 'R',
+			accentText: 'text-sky-300',
+			accentBg: 'bg-sky-400/15',
+			accentRing: 'ring-sky-300/35',
+			divider: 'from-sky-400/50',
+		},
+	};
+
+	return (
+		map[g] ?? {
+			label: g || '등급',
+			letter: '?',
+			accentText: 'text-white/80',
+			accentBg: 'bg-white/10',
+			accentRing: 'ring-white/15',
+			divider: 'from-white/20',
+		}
+	);
+}
 
 function isMeaningfulValue(value: unknown) {
 	if (value === null || value === undefined) return false;
@@ -79,6 +140,43 @@ function buildOptionLines(option?: ItemOption) {
 		}));
 }
 
+function buildItemTooltipDebugJson(item: ItemEquipment) {
+	return {
+		item_name: item.item_name,
+		item_equipment_part: item.item_equipment_part,
+		item_equipment_slot: item.item_equipment_slot,
+		starforce: item.starforce ?? null,
+		options_total: buildOptionLines(item.item_total_option),
+		potential: item.potential_option_grade
+			? {
+					grade: item.potential_option_grade,
+					lines: [
+						item.potential_option_1,
+						item.potential_option_2,
+						item.potential_option_3,
+					].filter(Boolean),
+			  }
+			: null,
+		additional_potential: item.additional_potential_option_grade
+			? {
+					grade: item.additional_potential_option_grade,
+					lines: [
+						item.additional_potential_option_1,
+						item.additional_potential_option_2,
+						item.additional_potential_option_3,
+					].filter(Boolean),
+			  }
+			: null,
+		soul:
+			item.soul_name || item.soul_option
+				? {
+						name: item.soul_name ?? null,
+						option: item.soul_option ?? null,
+				  }
+				: null,
+	};
+}
+
 export default function CharacterPage() {
 	const params = useParams();
 	const nickName = params.nickName as string;
@@ -103,6 +201,27 @@ export default function CharacterPage() {
 	const [itemTooltip, setItemTooltip] = useState<ItemTooltipState | null>(
 		null
 	);
+	const tooltipRef = useRef<HTMLDivElement | null>(null);
+	const [tooltipSize, setTooltipSize] = useState<{ w: number; h: number }>({
+		w: 360,
+		h: 280,
+	});
+
+	// 툴팁의 실제 렌더링 크기를 측정해서, 화면 밖으로 짤리지 않도록 위치 계산에 사용
+	useEffect(() => {
+		if (!itemTooltip) return;
+		const raf = requestAnimationFrame(() => {
+			const el = tooltipRef.current;
+			if (!el) return;
+			const rect = el.getBoundingClientRect();
+			// 0/NaN 방지
+			if (rect.width > 0 && rect.height > 0) {
+				setTooltipSize({ w: rect.width, h: rect.height });
+			}
+		});
+		return () => cancelAnimationFrame(raf);
+		// itemTooltip 자체는 mousemove로 계속 바뀌니, item 참조만으로 트리거(크기 변경은 아이템/등급/옵션 변화에만 발생)
+	}, [itemTooltip?.item]);
 
 	const tooltipPosition = useMemo(() => {
 		if (!itemTooltip) return null;
@@ -110,14 +229,13 @@ export default function CharacterPage() {
 		const offsetX = 16;
 		const offsetY = 16;
 
-		// 대략적인 툴팁 크기(클램프용). 실제 UI는 max-width/height로 제한.
-		const tooltipW = 360;
-		const tooltipH = 280;
-
 		const viewportW =
 			typeof window !== 'undefined' ? window.innerWidth : 1024;
 		const viewportH =
 			typeof window !== 'undefined' ? window.innerHeight : 768;
+
+		const tooltipW = tooltipSize.w || 360;
+		const tooltipH = tooltipSize.h || 280;
 
 		let left = itemTooltip.x + offsetX;
 		let top = itemTooltip.y + offsetY;
@@ -130,7 +248,7 @@ export default function CharacterPage() {
 		}
 
 		return { left, top };
-	}, [itemTooltip]);
+	}, [itemTooltip, tooltipSize]);
 
 	if (ocidError) {
 		return (
@@ -322,6 +440,19 @@ export default function CharacterPage() {
 													x: e.clientX,
 													y: e.clientY,
 												});
+
+												// 디버그: 툴팁에 표시되는 상세정보를 JSON으로 출력
+												// (mousemove가 아니라 enter에서만 찍어서 콘솔 스팸 방지)
+												console.log(
+													'[Item Tooltip Debug]\n' +
+														JSON.stringify(
+															buildItemTooltipDebugJson(
+																item
+															),
+															null,
+															2
+														)
+												);
 											}}
 											onMouseMove={(e) => {
 												setItemTooltip((prev) =>
@@ -366,7 +497,8 @@ export default function CharacterPage() {
 							{/* 마우스 위치 기준 툴팁 */}
 							{itemTooltip && tooltipPosition ? (
 								<div
-									className='pointer-events-none fixed z-50 w-[360px] max-w-[calc(100vw-16px)] rounded-xl border border-white/20 bg-gray-900/70 p-3 text-white shadow-2xl backdrop-blur-md'
+									ref={tooltipRef}
+									className='pointer-events-none fixed z-50 w-[360px] max-w-[calc(100vw-16px)] max-h-[calc(100vh-16px)] overflow-y-auto rounded-xl border border-white/20 bg-gray-900/70 p-3 text-white shadow-2xl backdrop-blur-md'
 									style={{
 										left: tooltipPosition.left,
 										top: tooltipPosition.top,
@@ -395,17 +527,39 @@ export default function CharacterPage() {
 												{itemTooltip.item.item_name}
 											</div>
 											<div className='mt-1 flex flex-wrap items-center gap-2 text-[11px] font-semibold text-white/80'>
+												{itemTooltip.item
+													.potential_option_grade ? (
+													<span
+														className={`rounded-full px-2 py-0.5 font-extrabold ring-1 ${
+															getGradeTheme(
+																itemTooltip.item
+																	.potential_option_grade
+															).accentBg
+														} ${
+															getGradeTheme(
+																itemTooltip.item
+																	.potential_option_grade
+															).accentText
+														} ${
+															getGradeTheme(
+																itemTooltip.item
+																	.potential_option_grade
+															).accentRing
+														}`}
+													>
+														{
+															getGradeTheme(
+																itemTooltip.item
+																	.potential_option_grade
+															).label
+														}{' '}
+														아이템
+													</span>
+												) : null}
 												<span className='rounded-full bg-white/10 px-2 py-0.5 ring-1 ring-white/10'>
 													{
 														itemTooltip.item
 															.item_equipment_part
-													}
-												</span>
-												<span className='rounded-full bg-white/10 px-2 py-0.5 ring-1 ring-white/10'>
-													슬롯:{' '}
-													{
-														itemTooltip.item
-															.item_equipment_slot
 													}
 												</span>
 												{itemTooltip.item.starforce ? (
@@ -455,14 +609,37 @@ export default function CharacterPage() {
 										{itemTooltip.item
 											.potential_option_grade ? (
 											<div className='rounded-lg bg-white/5 p-2 ring-1 ring-white/10'>
-												<div className='text-xs font-extrabold text-white/90'>
-													잠재 (
-													{
+												{(() => {
+													const theme = getGradeTheme(
 														itemTooltip.item
 															.potential_option_grade
-													}
-													)
-												</div>
+													);
+													return (
+														<>
+															<div className='flex items-center gap-2'>
+																<span
+																	className={`flex h-5 w-5 items-center justify-center rounded-md text-[11px] font-black ring-1 ${theme.accentBg} ${theme.accentText} ${theme.accentRing}`}
+																>
+																	{
+																		theme.letter
+																	}
+																</span>
+																<div
+																	className={`text-xs font-extrabold ${theme.accentText}`}
+																>
+																	잠재옵션 (
+																	{
+																		theme.label
+																	}
+																	)
+																</div>
+																<div
+																	className={`h-px flex-1 bg-gradient-to-r ${theme.divider} to-transparent`}
+																/>
+															</div>
+														</>
+													);
+												})()}
 												<ul className='mt-1 space-y-0.5 text-[12px] text-white/85'>
 													{[
 														itemTooltip.item
@@ -488,14 +665,38 @@ export default function CharacterPage() {
 										{itemTooltip.item
 											.additional_potential_option_grade ? (
 											<div className='rounded-lg bg-white/5 p-2 ring-1 ring-white/10'>
-												<div className='text-xs font-extrabold text-white/90'>
-													에디셔널 (
-													{
+												{(() => {
+													const theme = getGradeTheme(
 														itemTooltip.item
 															.additional_potential_option_grade
-													}
-													)
-												</div>
+													);
+													return (
+														<>
+															<div className='flex items-center gap-2'>
+																<span
+																	className={`flex h-5 w-5 items-center justify-center rounded-md text-[11px] font-black ring-1 ${theme.accentBg} ${theme.accentText} ${theme.accentRing}`}
+																>
+																	{
+																		theme.letter
+																	}
+																</span>
+																<div
+																	className={`text-xs font-extrabold ${theme.accentText}`}
+																>
+																	에디셔널
+																	잠재옵션 (
+																	{
+																		theme.label
+																	}
+																	)
+																</div>
+																<div
+																	className={`h-px flex-1 bg-gradient-to-r ${theme.divider} to-transparent`}
+																/>
+															</div>
+														</>
+													);
+												})()}
 												<ul className='mt-1 space-y-0.5 text-[12px] text-white/85'>
 													{[
 														itemTooltip.item
