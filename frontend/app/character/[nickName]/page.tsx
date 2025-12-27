@@ -32,6 +32,7 @@ export default function CharacterPage() {
 		ocidError,
 		isLoading: isPageLoading,
 		isFetching: isPageFetching,
+		models: { itemEquipmentWithTooltip },
 		queries: {
 			userInfo,
 			userPropensity,
@@ -230,9 +231,9 @@ export default function CharacterPage() {
 					) : (
 						<>
 							<div className='grid grid-cols-1 gap-2.5 sm:grid-cols-2'>
-								{userItemEquipment.data.item_equipment
+								{itemEquipmentWithTooltip
 									.slice(0, 10)
-									.map((item, index) => (
+									.map(({ item, tooltip }, index) => (
 										<div
 											key={index}
 											className='flex items-center gap-3 rounded-lg border border-gray-200 bg-linear-to-r from-white to-gray-50 p-3 transition-all duration-200 hover:shadow-md hover:border-blue-300'
@@ -243,7 +244,7 @@ export default function CharacterPage() {
 													y: e.clientY,
 													content: (
 														<ItemEquipmentTooltip
-															item={item}
+															vm={tooltip}
 														/>
 													),
 												});

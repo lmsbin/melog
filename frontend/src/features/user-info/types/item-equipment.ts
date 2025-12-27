@@ -61,3 +61,29 @@ export interface UserItemEquipment {
 	item_equipment: ItemEquipment[];
 }
 
+/**
+ * 장비 툴팁 표시용 ViewModel
+ * - 원본 ItemEquipment(서버 응답)을 기반으로 "표시 문자열"만 미리 만들어둔 형태
+ * - 툴팁 컴포넌트는 이 데이터를 그대로 출력만 합니다.
+ */
+export type ItemEquipmentTooltipOptionLine = {
+	label: string;
+	/** 합산 결과(+, - 포함 X: 예 "250", "6%") */
+	totalText: string;
+	/** 분해 결과(예 "(100 +44 +36 +70)") */
+	breakdownText: string | null;
+};
+
+export type ItemEquipmentTooltipViewModel = {
+	itemName: string;
+	itemIcon: string | null;
+	itemEquipmentPart: string;
+	starforce: string | null;
+	potentialOptionGrade: string | null;
+	additionalPotentialOptionGrade: string | null;
+	optionLines: ItemEquipmentTooltipOptionLine[];
+	potentialLines: string[];
+	additionalPotentialLines: string[];
+	soulName: string | null;
+	soulOption: string | null;
+};
