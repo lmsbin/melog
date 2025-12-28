@@ -22,6 +22,31 @@ import { SearchBar } from '@/features/search/components';
 import { Card } from '@/shared/components/widget';
 import { ui } from '@/shared/ui-controller';
 
+/**
+ * 스탯 표시용 포맷터
+ *
+ * - 최소/최대 스탯공격력: 천 단위 구분(콤마)
+ * - 그 외: 값 뒤에 % 붙이기(이미 %가 있으면 유지)
+ */
+function formatStatValue(statName: string, statValue: string) {
+	const name = statName?.trim() ?? '';
+	const value = statValue?.trim() ?? '';
+
+	// "최소/최대 스탯공격력"은 정수로 내려오므로 천단위 구분만 적용
+	if (name === '최소 스탯공격력' || name === '최대 스탯공격력') {
+		const numeric = Number(value.replace(/,/g, ''));
+		if (!Number.isFinite(numeric)) return value;
+		return new Intl.NumberFormat('ko-KR', {
+			maximumFractionDigits: 0,
+		}).format(numeric);
+	}
+
+	// 나머지는 %가 없으면 뒤에 붙여서 표기
+	if (!value) return value;
+	if (/%\s*$/.test(value)) return value;
+	return `${value}%`;
+}
+
 export default function CharacterPage() {
 	const params = useParams();
 	const nickName = params.nickName as string;
@@ -144,7 +169,10 @@ export default function CharacterPage() {
 											{stat.stat_name}
 										</span>
 										<span className='text-sm font-bold text-gray-900'>
-											{stat.stat_value}
+											{formatStatValue(
+												stat.stat_name,
+												stat.stat_value
+											)}
 										</span>
 									</div>
 								))}
