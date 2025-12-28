@@ -58,7 +58,7 @@ export default function CharacterPage() {
 		ocidError,
 		isLoading: isPageLoading,
 		isFetching: isPageFetching,
-		models: { itemEquipmentWithTooltip },
+		models: { itemEquipmentWithTooltip, symbolRows },
 		queries: {
 			userInfo,
 			userPropensity,
@@ -136,9 +136,7 @@ export default function CharacterPage() {
 				{isPageLoading ? (
 					<UserSymbolCard.Skeleton />
 				) : (
-					<UserSymbolCard
-						symbolEquipment={userSymbolEquipment.data ?? null}
-					/>
+					<UserSymbolCard symbolRows={symbolRows} />
 				)}
 			</div>
 

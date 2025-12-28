@@ -26,6 +26,7 @@ import {
 	useUserSymbolEquipment,
 	useUserVMatrix,
 } from '@/features/user-info/hooks';
+import type { Symbol } from '@/features/user-info/types/symbol';
 import type {
 	ItemEquipment,
 	ItemEquipmentTooltipViewModel,
@@ -158,6 +159,44 @@ function buildItemEquipmentTooltipViewModel(
 	};
 }
 
+function chunkArray<T>(items: T[], chunkSize: number): T[][] {
+	if (chunkSize <= 0) return [items];
+	const result: T[][] = [];
+	for (let i = 0; i < items.length; i += chunkSize) {
+		result.push(items.slice(i, i + chunkSize));
+	}
+	return result;
+}
+
+/**
+ * 심볼이 "아케인/어센틱" 중 어디에 속하는지 문자열 기반으로 판별합니다.
+ *
+ * - API 타입에 명시적인 구분 필드가 없어서 symbol_name / symbol_force / symbol_description을 파싱합니다.
+ * - 새로운 심볼이 추가되더라도 "어센틱" 키워드 또는 지역명 기반으로 최대한 안전하게 분류합니다.
+ */
+function getSymbolCategory(symbol: Symbol): 'arcane' | 'authentic' {
+	const haystack = `${symbol.symbol_name ?? ''} ${
+		symbol.symbol_force ?? ''
+	} ${symbol.symbol_description ?? ''}`;
+
+	// 1) 키워드가 직접 들어오는 케이스(가장 우선)
+	if (/어센틱|authentic/i.test(haystack)) return 'authentic';
+
+	// 2) 어센틱 지역명 기반(키워드가 없을 때)
+	const authenticRegions = [
+		'세르니움',
+		'아르크스',
+		'오디움',
+		'도원경',
+		'아르테리아',
+		'카르시온',
+	];
+	if (authenticRegions.some((r) => haystack.includes(r))) return 'authentic';
+
+	// 3) 기본값은 아케인
+	return 'arcane';
+}
+
 export function useCharacterPageViewModel({
 	nickName,
 }: UseCharacterPageViewModelParams) {
@@ -192,6 +231,30 @@ export function useCharacterPageViewModel({
 			tooltip: buildItemEquipmentTooltipViewModel(item),
 		}));
 	}, [userItemEquipmentQuery.data]);
+
+	/**
+	 * 심볼 ViewModel
+	 *
+	 * 1) 데이터 fetch 후(=query.data 기준) 문자열 파싱으로 아케인/어센틱 분리
+	 * 2) 각 그룹을 6개 단위로 2차원 배열(로우)로 변환
+	 * 3) 그룹별 로우를 합쳐 단일 2차원 배열(symbolRows)로 제공
+	 * 4) View에서는 로우 단위로 순회하며 한 줄에 6개씩 고정 렌더링
+	 */
+	const symbolRows = useMemo(() => {
+		const symbols = userSymbolEquipmentQuery.data?.symbol ?? [];
+		const arcane: Symbol[] = [];
+		const authentic: Symbol[] = [];
+
+		for (const s of symbols) {
+			const category = getSymbolCategory(s);
+			if (category === 'authentic') authentic.push(s);
+			else arcane.push(s);
+		}
+
+		// 아케인 6개 로우들 + 어센틱 6개 로우들을 "하나의 2차원 배열"로 합칩니다.
+		// (요구사항: row 이름으로 구분하지 않고, 카드에서는 row만 순회)
+		return [...chunkArray(arcane, 6), ...chunkArray(authentic, 6)];
+	}, [userSymbolEquipmentQuery.data]);
 
 	// 페이지 단위 로딩 상태 집계
 	const isLoading =
@@ -240,6 +303,7 @@ export function useCharacterPageViewModel({
 		isFetching,
 		models: {
 			itemEquipmentWithTooltip,
+			symbolRows,
 		},
 		queries: {
 			userInfo: userInfoQuery,
