@@ -8,6 +8,83 @@
 import type { ItemEquipmentTooltipViewModel } from '../types/item-equipment';
 import { getItemGradeTheme } from '@/shared/utils/item-grade-theme';
 
+function clampInt(value: number, min: number, max: number) {
+	return Math.min(max, Math.max(min, value));
+}
+
+function parseStarforce(value: string | null): number | null {
+	if (!value) return null;
+	const n = Number.parseInt(value, 10);
+	return Number.isFinite(n) ? n : null;
+}
+
+function StarIcon({ filled }: { filled: boolean }) {
+	// SVG: 별(스타) 아이콘. Tailwind의 text 색상을 fill로 사용합니다.
+	// - 채운 별은 drop-shadow로 "은은한 번짐(글로우)" 효과를 줍니다.
+	return (
+		<svg
+			width='12'
+			height='12'
+			viewBox='0 0 24 24'
+			aria-hidden='true'
+			className={
+				filled
+					? 'text-yellow-300 drop-shadow-[0_0_6px_rgba(253,224,71,0.55)]'
+					: 'text-white/25'
+			}
+			fill='currentColor'
+		>
+			<path d='M12 2.6l2.88 6.01 6.63.96-4.8 4.68 1.13 6.61L12 17.82 6.16 20.86l1.13-6.61-4.8-4.68 6.63-.96L12 2.6z' />
+		</svg>
+	);
+}
+
+function StarforceStars({
+	starforce,
+	maxStars = 30,
+	breakAfter = 15,
+}: {
+	starforce: string | null;
+	maxStars?: number;
+	breakAfter?: number;
+}) {
+	const n = parseStarforce(starforce);
+	if (n === null) return null;
+
+	const safeMax = Math.max(1, Math.floor(maxStars));
+	const filledCount = clampInt(n, 0, safeMax);
+
+	const buildRow = (start: number, end: number) =>
+		Array.from({ length: end - start }, (_, idx) => {
+			const globalIndex = start + idx;
+			const needsGroupGap = idx !== 0 && idx % 5 === 0;
+			return (
+				<span key={globalIndex} className={needsGroupGap ? 'ml-1' : ''}>
+					<StarIcon filled={globalIndex < filledCount} />
+				</span>
+			);
+		});
+
+	const rows =
+		breakAfter > 0 && safeMax > breakAfter
+			? [buildRow(0, breakAfter), buildRow(breakAfter, safeMax)]
+			: [buildRow(0, safeMax)];
+
+	return (
+		<div
+			className='mb-2 flex flex-col items-center gap-0.5'
+			aria-label={`스타포스 ${filledCount}/${safeMax}`}
+			role='img'
+		>
+			{rows.map((row, idx) => (
+				<div key={idx} className='flex items-center gap-0.5'>
+					{row}
+				</div>
+			))}
+		</div>
+	);
+}
+
 export function ItemEquipmentTooltip({
 	vm,
 }: {
@@ -22,6 +99,8 @@ export function ItemEquipmentTooltip({
 
 	return (
 		<div className='w-[360px] rounded-xl border border-white/20 bg-gray-900/70 p-3 text-white shadow-2xl backdrop-blur-md'>
+			<StarforceStars starforce={vm.starforce} />
+
 			<div className='flex items-start gap-3'>
 				{vm.itemIcon ? (
 					<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white/10 ring-1 ring-white/15'>
@@ -48,11 +127,6 @@ export function ItemEquipmentTooltip({
 						<span className='rounded-full bg-white/10 px-2 py-0.5 ring-1 ring-white/10'>
 							{vm.itemEquipmentPart}
 						</span>
-						{vm.starforce ? (
-							<span className='rounded-full bg-yellow-400/15 px-2 py-0.5 font-extrabold text-yellow-200 ring-1 ring-yellow-200/20'>
-								★ {vm.starforce}
-							</span>
-						) : null}
 					</div>
 				</div>
 			</div>
