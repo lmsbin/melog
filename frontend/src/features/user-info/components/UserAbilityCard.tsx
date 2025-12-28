@@ -32,41 +32,45 @@ const UserAbilityCardBase: FC<UserAbilityCardProps> = ({
 							등급:
 						</span>
 						{(() => {
-							const theme = getItemGradeTheme(ability.ability_grade);
+							const theme = getItemGradeTheme(
+								ability.ability_grade
+							);
 							return (
-						<span
-							className={`rounded-full px-3 py-1 text-xs font-extrabold ring-1 ${theme.accentBg} ${theme.accentText} ${theme.accentRing}`}
-						>
-							{ability.ability_grade}
-						</span>
+								<span
+									className={`rounded-full px-3 py-1 text-xs font-extrabold ring-1 ${theme.accentBg} ${theme.accentText} ${theme.accentRing}`}
+								>
+									{ability.ability_grade}
+								</span>
 							);
 						})()}
 					</div>
 				)}
 				<div className='space-y-2.5'>
-					{ability?.ability_info.slice(0, 3).map((item, index) => (
+					{ability?.ability_info.slice(0, 3).map((item, index) =>
 						(() => {
 							const theme = getItemGradeTheme(item.ability_grade);
 							return (
-						<div
-							key={index}
-							className='rounded-lg border border-gray-200 bg-gradient-to-r from-gray-50 to-white p-3 transition-all duration-200 hover:shadow-md'
-						>
-							<div className='mb-1 flex items-center gap-2'>
 								<div
-									className={`h-2 w-2 rounded-full ${theme.solidBg}`}
-								/>
-								<span className={`text-xs font-semibold ${theme.accentText}`}>
-									{item.ability_grade}
-								</span>
-							</div>
-							<div className='text-sm font-medium text-gray-800'>
-								{item.ability_value}
-							</div>
-						</div>
+									key={index}
+									className='rounded-lg border border-gray-200 bg-gradient-to-r from-gray-50 to-white p-3 transition-all duration-200 hover:shadow-md'
+								>
+									<div className='mb-1 flex items-center gap-2'>
+										<div
+											className={`h-2 w-2 rounded-full ${theme.solidBg}`}
+										/>
+										<span
+											className={`text-xs font-semibold ${theme.accentText}`}
+										>
+											{item.ability_grade}
+										</span>
+									</div>
+									<div className='text-sm font-medium text-gray-800'>
+										{item.ability_value}
+									</div>
+								</div>
 							);
 						})()
-					))}
+					)}
 				</div>
 			</div>
 		</Card>

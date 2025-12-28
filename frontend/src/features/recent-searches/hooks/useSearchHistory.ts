@@ -8,7 +8,7 @@
 
 'use client';
 
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { SearchHistory, SearchHistoryItem } from '../types';
 
 const STORAGE_KEY = 'searchHistory';

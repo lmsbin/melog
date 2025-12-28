@@ -4,4 +4,3 @@
 
 export * from './useOcid';
 export * from './useSearch';
-export * from './useSearchHistory';

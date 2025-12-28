@@ -8,7 +8,8 @@
 
 'use client';
 
-import { SearchBar, SearchHistoryCard } from '@/features/search/components';
+import { SearchBar } from '@/features/search/components';
+import { SearchHistoryCard } from '@/features/recent-searches';
 import { useHomePageViewModel } from '@/page/home/view-model/viewModel';
 
 export default function HomePage() {

@@ -9,9 +9,10 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSearchHistory } from '@/features/search/hooks/useSearchHistory';
+import { useSearchHistory } from '@/features/recent-searches';
 import { useSearchPageViewModel } from '@/page/search/view-model/viewModel';
-import { SearchBar, SearchHistoryCard } from '@/features/search/components';
+import { SearchBar } from '@/features/search/components';
+import { SearchHistoryCard } from '@/features/recent-searches';
 
 export default function SearchPageClient() {
 	const router = useRouter();
@@ -43,7 +44,7 @@ export default function SearchPageClient() {
 		return (
 			<div className='flex min-h-screen flex-col items-center justify-center p-24'>
 				<div className='text-center mb-12'>
-					<h1 className='text-6xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent drop-shadow-lg'>
+					<h1 className='text-6xl font-bold mb-4 bg-linear-to-r from-white to-blue-100 bg-clip-text text-transparent drop-shadow-lg'>
 						메이플스토리
 					</h1>
 					<p className='text-white/90 text-lg font-medium'>

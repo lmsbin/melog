@@ -44,7 +44,7 @@ export function SearchHistoryCard() {
 					{searchHistory.map((item) => (
 						<div
 							key={item.nickName}
-							className='flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-gray-50 to-white hover:from-blue-50 hover:to-purple-50 cursor-pointer transition-all duration-200 hover:shadow-md border border-transparent hover:border-blue-200'
+							className='flex items-center justify-between p-3 rounded-lg bg-linear-to-r from-gray-50 to-white hover:from-blue-50 hover:to-purple-50 cursor-pointer transition-all duration-200 hover:shadow-md border border-transparent hover:border-blue-200'
 							onClick={() => handleClick(item.nickName)}
 						>
 							<span className='text-gray-800 font-medium'>
