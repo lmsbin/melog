@@ -15,6 +15,7 @@ import {
 	UserInfoCard,
 	UserPropensityCard,
 	UserAbilityCard,
+	UserHyperStatCard,
 	UserSymbolCard,
 	ItemEquipmentTooltip,
 } from '@/features/user-info/components';
@@ -183,59 +184,13 @@ export default function CharacterPage() {
 
 			{/* 하이퍼스탯 */}
 			<div className='w-full max-w-7xl px-4'>
-				<Card label='하이퍼스탯'>
-					{isPageLoading || !userHyperStatInfo?.data ? (
-						<div className='space-y-4 animate-pulse'>
-							<div>
-								<div className='mb-2 h-4 w-64 rounded bg-gray-100' />
-								<div className='space-y-1'>
-									{Array.from({ length: 5 }).map(
-										(_, index) => (
-											<div
-												key={index}
-												className='flex justify-between text-sm'
-											>
-												<div className='h-4 w-24 rounded bg-gray-100' />
-												<div className='h-4 w-32 rounded bg-gray-100' />
-											</div>
-										)
-									)}
-								</div>
-							</div>
-						</div>
-					) : (
-						<div className='space-y-4'>
-							<div>
-								<h4 className='mb-2 text-sm font-semibold text-gray-700'>
-									프리셋 1 (남은 포인트:{' '}
-									{
-										userHyperStatInfo.data
-											.hyper_stat_preset_1_remain_point
-									}
-									)
-								</h4>
-								<div className='space-y-2'>
-									{userHyperStatInfo.data.hyper_stat_preset_1
-										.slice(0, 5)
-										.map((stat, index) => (
-											<div
-												key={index}
-												className='flex items-center justify-between rounded-lg bg-linear-to-r from-blue-50 to-purple-50 p-3 text-sm transition-all duration-200 hover:shadow-sm'
-											>
-												<span className='font-medium text-gray-700'>
-													{stat.stat_type}
-												</span>
-												<span className='font-bold text-blue-600'>
-													Lv.{stat.stat_level} (+
-													{stat.stat_increase})
-												</span>
-											</div>
-										))}
-								</div>
-							</div>
-						</div>
-					)}
-				</Card>
+				{isPageLoading ? (
+					<UserHyperStatCard.Skeleton />
+				) : (
+					<UserHyperStatCard
+						hyperStatInfo={userHyperStatInfo.data ?? null}
+					/>
+				)}
 			</div>
 
 			{/* 장비 */}

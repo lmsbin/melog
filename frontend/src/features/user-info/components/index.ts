@@ -5,5 +5,6 @@
 export * from './UserInfoCard';
 export * from './UserPropensityCard';
 export * from './UserAbilityCard';
+export * from './UserHyperStatCard';
 export * from './UserSymbolCard';
 export * from './ItemEquipmentTooltip';
