@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { QueryProvider } from './_providers/query-provider';
 import { UIHost } from '@/shared/ui-controller';
+import { AppHeader } from '@/shared/components/layout';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export default function RootLayout({
 		<html lang='ko'>
 			<body>
 				<QueryProvider>
+					<AppHeader />
 					{children}
 					{/* 전역 UI(로딩 오버레이/툴팁 등)는 여기서 한 번만 마운트 */}
 					<UIHost />

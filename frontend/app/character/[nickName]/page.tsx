@@ -11,42 +11,9 @@
 import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useCharacterPageViewModel } from '@/page/character/view-model/viewModel';
-import {
-	UserInfoCard,
-	UserPropensityCard,
-	UserAbilityCard,
-	UserHyperStatCard,
-	UserSymbolCard,
-	ItemEquipmentTooltip,
-} from '@/features/user-info/components';
+import { CharacterDetail } from '@/features/user-info/character-detail/components';
 import { SearchBar } from '@/features/search/components';
-import { Card } from '@/shared/components/widget';
 import { ui } from '@/shared/ui-controller';
-
-/**
- * 스탯 표시용 포맷터
- *
- * - 최소/최대 스탯공격력: 천 단위 구분(콤마)
- * - 그 외: 값 뒤에 % 붙이기(이미 %가 있으면 유지)
- */
-function formatStatValue(statName: string, statValue: string) {
-	const name = statName?.trim() ?? '';
-	const value = statValue?.trim() ?? '';
-
-	// "최소/최대 스탯공격력"은 정수로 내려오므로 천단위 구분만 적용
-	if (name === '최소 스탯공격력' || name === '최대 스탯공격력') {
-		const numeric = Number(value.replace(/,/g, ''));
-		if (!Number.isFinite(numeric)) return value;
-		return new Intl.NumberFormat('ko-KR', {
-			maximumFractionDigits: 0,
-		}).format(numeric);
-	}
-
-	// 나머지는 %가 없으면 뒤에 붙여서 표기
-	if (!value) return value;
-	if (/%\s*$/.test(value)) return value;
-	return `${value}%`;
-}
 
 export default function CharacterPage() {
 	const params = useParams();
@@ -54,14 +21,12 @@ export default function CharacterPage() {
 
 	// 페이지 ViewModel을 통해 OCID 및 유저 정보 조회 로직을 캡슐화
 	const {
-		ocid,
 		ocidError,
 		isLoading: isPageLoading,
 		isFetching: isPageFetching,
-		models: { itemEquipmentWithTooltip, symbolRows },
+		models: { itemEquipmentWithTooltip },
 		queries: {
 			userInfo,
-			userPropensity,
 			userAbility,
 			userSymbolEquipment,
 			userStatInfo,
@@ -87,7 +52,9 @@ export default function CharacterPage() {
 	if (ocidError) {
 		return (
 			<div className='flex min-h-screen flex-col items-center justify-center p-24'>
-				<SearchBar />
+				<div className='w-full max-w-3xl'>
+					<SearchBar />
+				</div>
 				<div className='mt-8 text-center bg-white/95 backdrop-blur-sm rounded-xl p-8 shadow-xl border border-white/20'>
 					<p className='text-red-500 text-xl font-bold mb-2'>
 						캐릭터를 찾을 수 없습니다
@@ -99,171 +66,16 @@ export default function CharacterPage() {
 	}
 
 	return (
-		<div className='flex w-full min-w-[1024px] flex-col items-center gap-8 pb-12 pt-8'>
-			<div className='w-full max-w-7xl px-4'>
-				<SearchBar />
-			</div>
-
-			{/* 기본 정보 영역 */}
-			<div className='flex w-full max-w-7xl gap-4 px-4'>
-				<div className='flex flex-1 w-full'>
-					{isPageLoading ? (
-						<UserInfoCard.Skeleton />
-					) : (
-						<UserInfoCard userInfo={userInfo.data ?? null} />
-					)}
-				</div>
-				<div className='flex flex-1 w-full'>
-					{isPageLoading ? (
-						<UserPropensityCard.Skeleton />
-					) : (
-						<UserPropensityCard
-							propensity={userPropensity.data ?? null}
-						/>
-					)}
-				</div>
-				<div className='flex flex-1 w-full'>
-					{isPageLoading ? (
-						<UserAbilityCard.Skeleton />
-					) : (
-						<UserAbilityCard ability={userAbility.data ?? null} />
-					)}
-				</div>
-			</div>
-
-			{/* 심볼 */}
-			<div className='w-full max-w-7xl px-4'>
-				{isPageLoading ? (
-					<UserSymbolCard.Skeleton />
-				) : (
-					<UserSymbolCard symbolRows={symbolRows} />
-				)}
-			</div>
-
-			{/* 스탯 */}
-			<div className='w-full max-w-7xl px-4'>
-				<Card label='스탯'>
-					{isPageLoading || !userStatInfo?.data ? (
-						<div className='space-y-2 animate-pulse'>
-							{Array.from({ length: 10 }).map((_, index) => (
-								<div
-									key={index}
-									className='flex justify-between'
-								>
-									<div className='h-4 w-24 rounded bg-gray-100' />
-									<div className='h-4 w-16 rounded bg-gray-100' />
-								</div>
-							))}
-						</div>
-					) : (
-						<div className='space-y-2.5'>
-							{userStatInfo.data.final_stat
-								.slice(0, 10)
-								.map((stat, index) => (
-									<div
-										key={index}
-										className='flex items-center justify-between rounded-lg bg-linear-to-r from-gray-50 to-white p-3 transition-all duration-200 hover:shadow-sm'
-									>
-										<span className='text-sm font-medium text-gray-700'>
-											{stat.stat_name}
-										</span>
-										<span className='text-sm font-bold text-gray-900'>
-											{formatStatValue(
-												stat.stat_name,
-												stat.stat_value
-											)}
-										</span>
-									</div>
-								))}
-						</div>
-					)}
-				</Card>
-			</div>
-
-			{/* 하이퍼스탯 */}
-			<div className='w-full max-w-7xl px-4'>
-				{isPageLoading ? (
-					<UserHyperStatCard.Skeleton />
-				) : (
-					<UserHyperStatCard
-						hyperStatInfo={userHyperStatInfo.data ?? null}
-					/>
-				)}
-			</div>
-
-			{/* 장비 */}
-			<div className='w-full max-w-7xl px-4'>
-				<Card label='장비'>
-					{isPageLoading || !userItemEquipment?.data ? (
-						<div className='grid grid-cols-1 gap-2.5 sm:grid-cols-2 animate-pulse'>
-							{Array.from({ length: 10 }).map((_, index) => (
-								<div
-									key={index}
-									className='flex items-center gap-3 rounded-lg border border-gray-100 bg-white/60 p-3'
-								>
-									<div className='h-10 w-10 rounded bg-gray-100' />
-									<div className='flex-1 space-y-1'>
-										<div className='h-4 w-40 rounded bg-gray-100' />
-										<div className='h-3 w-24 rounded bg-gray-100' />
-									</div>
-								</div>
-							))}
-						</div>
-					) : (
-						<>
-							<div className='grid grid-cols-1 gap-2.5 sm:grid-cols-2'>
-								{itemEquipmentWithTooltip
-									.slice(0, 10)
-									.map(({ item, tooltip }, index) => (
-										<div
-											key={index}
-											className='flex items-center gap-3 rounded-lg border border-gray-200 bg-linear-to-r from-white to-gray-50 p-3 transition-all duration-200 hover:shadow-md hover:border-blue-300'
-											onMouseEnter={(e) => {
-												// 전역 툴팁 표시
-												ui.tooltip.show({
-													x: e.clientX,
-													y: e.clientY,
-													content: (
-														<ItemEquipmentTooltip
-															vm={tooltip}
-														/>
-													),
-												});
-											}}
-											onMouseMove={(e) => {
-												ui.tooltip.move(
-													e.clientX,
-													e.clientY
-												);
-											}}
-											onMouseLeave={() =>
-												ui.tooltip.hide()
-											}
-										>
-											{item.item_icon && (
-												<div className='flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-sm ring-1 ring-gray-200'>
-													<img
-														src={item.item_icon}
-														alt={item.item_name}
-														className='h-8 w-8'
-													/>
-												</div>
-											)}
-											<div className='flex-1'>
-												<div className='text-sm font-semibold text-gray-900'>
-													{item.item_name}
-												</div>
-												<div className='text-xs text-gray-500'>
-													{item.item_equipment_part}
-												</div>
-											</div>
-										</div>
-									))}
-							</div>
-						</>
-					)}
-				</Card>
-			</div>
-		</div>
+		<CharacterDetail
+			nickName={nickName}
+			isLoading={isPageLoading}
+			userInfo={userInfo.data ?? null}
+			userStatInfo={userStatInfo.data ?? null}
+			userAbility={userAbility.data ?? null}
+			userHyperStatInfo={userHyperStatInfo.data ?? null}
+			userItemEquipment={userItemEquipment.data ?? null}
+			userSymbolEquipment={userSymbolEquipment.data ?? null}
+			itemEquipmentWithTooltip={itemEquipmentWithTooltip}
+		/>
 	);
 }
