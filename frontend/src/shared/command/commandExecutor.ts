@@ -50,25 +50,17 @@ class CommandExecutor {
 	}
 
 	execute<TPayload = unknown, TResult = unknown>(
-		command: Command<TPayload>
-	): TResult | Promise<TResult>;
-	execute<TPayload = unknown, TResult = unknown>(
 		name: CommandName,
 		payload?: TPayload
-	): TResult | Promise<TResult>;
-	execute<TPayload = unknown, TResult = unknown>(
-		arg1: Command<TPayload> | CommandName,
-		arg2?: TPayload
-	) {
-		const name = typeof arg1 === 'string' ? arg1 : arg1.name;
-		const payload = typeof arg1 === 'string' ? arg2 : arg1.payload;
-
+	): TResult | Promise<TResult> {
 		const handler = this.handlers.get(name);
 		if (!handler) {
 			throw new Error(
 				`[CommandExecutor] 등록되지 않은 커맨드입니다: "${name}"`
 			);
 		}
+
+		console.log('[[DEBUG]] CommandExecutor.execute', name, payload);
 
 		return handler(payload) as TResult | Promise<TResult>;
 	}

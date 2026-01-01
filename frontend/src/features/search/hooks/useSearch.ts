@@ -16,16 +16,18 @@ import {
 	useCallback,
 	useState,
 } from 'react';
+import commandExecutor from '@/shared/command/commandExecutor';
+import { SEARCH_CHARACTER_COMMAND } from '../command';
 
 export function useSearch() {
 	const router = useRouter();
 	const [searchValue, setSearchValue] = useState('');
 
 	const searchAction = useCallback(() => {
-		if (!searchValue.trim()) return;
-
-		const searchURL = `/search?q=${encodeURIComponent(searchValue.trim())}`;
-		router.push(searchURL);
+		commandExecutor.execute(SEARCH_CHARACTER_COMMAND, {
+			query: searchValue,
+			navigate: (url: string) => router.push(url),
+		});
 	}, [searchValue, router]);
 
 	const onKeyDown = useCallback(

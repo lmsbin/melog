@@ -10,6 +10,8 @@
 
 import { useRouter } from 'next/navigation';
 import { useSearchHistory } from '../hooks/useSearchHistory';
+import commandExecutor from '@/shared/command/commandExecutor';
+import { SEARCH_CHARACTER_COMMAND } from '@/features/search/command';
 
 export function SearchHistoryCard() {
 	const { searchHistory, isMounted, removeSearchHistory } =
@@ -21,7 +23,10 @@ export function SearchHistoryCard() {
 	}
 
 	const handleClick = (nickName: string) => {
-		router.push(`/search?q=${encodeURIComponent(nickName)}`);
+		commandExecutor.execute(SEARCH_CHARACTER_COMMAND, {
+			query: nickName,
+			navigate: (url: string) => router.push(url),
+		});
 	};
 
 	const handleRemove = (e: React.MouseEvent, nickName: string) => {

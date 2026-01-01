@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import commandExecutor from '@/shared/command/commandExecutor';
+import '@/features/search/command';
 
 /**
  * 전역 초기화 컴포넌트

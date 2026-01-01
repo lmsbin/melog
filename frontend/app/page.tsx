@@ -8,7 +8,7 @@
 
 'use client';
 
-import { SearchBar } from '@/features/search/components';
+import { SearchBar } from '@/features';
 import { SearchHistoryCard } from '@/features/recent-searches';
 import { useHomePageViewModel } from '@/page/home/view-model/viewModel';
 

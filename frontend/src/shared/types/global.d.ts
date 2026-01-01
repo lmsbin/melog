@@ -8,7 +8,7 @@ declare global {
 	 * - 사용 예: `globalThis.$CommandExecutor.execute('some-command', payload)`
 	 */
 	// eslint-disable-next-line no-var
-	var $CommandExecutor: CommandExecutor | undefined;
+	var $CommandExecutor: CommandExecutor;
 }
 
 export {};
