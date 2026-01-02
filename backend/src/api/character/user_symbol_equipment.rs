@@ -12,6 +12,7 @@ use std::sync::Arc;
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SymbolInfo {
     symbol_name: String,
+    symbol_other_effect_description: String,
     symbol_icon: String,
     symbol_force: String,
     symbol_level: i8,
