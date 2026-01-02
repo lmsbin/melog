@@ -16,12 +16,6 @@ pub struct VMatrixInfo {
     v_core_name: String,
     v_core_level: i8,
     #[serde_as(deserialize_as = "DefaultOnNull")]
-    v_core_skill_1: String,
-    #[serde_as(deserialize_as = "DefaultOnNull")]
-    v_core_skill_2: String,
-    #[serde_as(deserialize_as = "DefaultOnNull")]
-    v_core_skill_3: String,
-    #[serde_as(deserialize_as = "DefaultOnNull")]
     v_core_type: String,
 }
 
