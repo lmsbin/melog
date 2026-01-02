@@ -12,7 +12,6 @@ use std::sync::Arc;
 #[derive(Deserialize, Serialize, Debug)]
 pub struct VMatrixInfo {
     slot_id: String,
-    slot_level: i8,
     #[serde_as(deserialize_as = "DefaultOnNull")]
     v_core_name: String,
     v_core_level: i8,
