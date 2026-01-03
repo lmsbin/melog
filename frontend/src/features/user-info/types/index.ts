@@ -13,3 +13,4 @@ export * from './v-matrix';
 export * from './hexa-matrix';
 export * from './dojang';
 export * from './item-equipment';
+export * from './chracter-detail';
