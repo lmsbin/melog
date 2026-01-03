@@ -8,7 +8,7 @@
 import { useMemo, useState } from 'react';
 import type { UserHyperStatInfo } from '@/features/user-info/types/hyper-stat';
 import type { UserStatInfo } from '@/features/user-info/types/stat';
-import { formatStatValue, pickStatValue } from '@/features';
+import { pickStatValue } from '@/features';
 
 export function StatsPanel({
 	isLoading,
@@ -38,7 +38,7 @@ export function StatsPanel({
 			const v = pickStatValue(userStatInfo, m.key);
 			return {
 				label: m.label,
-				value: v ? formatStatValue(m.key, v) : '—',
+				value: v ? v : '—',
 			};
 		});
 	}, [userStatInfo]);
@@ -59,7 +59,7 @@ export function StatsPanel({
 			const v = pickStatValue(userStatInfo, m.key);
 			return {
 				label: m.label,
-				value: v ? formatStatValue(m.key, v) : '—',
+				value: v ? v : '—',
 				highlight: 'highlight' in m ? Boolean(m.highlight) : false,
 			};
 		});
@@ -85,7 +85,7 @@ export function StatsPanel({
 					: null);
 			return {
 				label: m.label,
-				value: v ? formatStatValue(m.key, v) : '—',
+				value: v ? v : '—',
 				highlight: 'highlight' in m ? Boolean(m.highlight) : false,
 			};
 		});

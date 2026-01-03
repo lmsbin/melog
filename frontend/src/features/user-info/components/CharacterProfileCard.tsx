@@ -6,7 +6,7 @@
 
 import type { UserInfo } from '@/features/user-info/types/user';
 import type { UserStatInfo } from '@/features/user-info/types/stat';
-import { formatStatValue, pickStatValue } from '@/features';
+import { pickStatValue } from '@/features';
 
 export function CharacterProfileCard({
 	isLoading,
@@ -92,12 +92,7 @@ export function CharacterProfileCard({
 									최대 스탯공격력
 								</div>
 								<div className='text-lg font-bold text-blue-600'>
-									{isLoading || !maxAtk
-										? '—'
-										: formatStatValue(
-												'최대 스탯공격력',
-												maxAtk
-										  )}
+									{isLoading || !maxAtk ? '—' : maxAtk}
 								</div>
 							</div>
 							<div className='w-px h-10 bg-gray-200' />
@@ -108,7 +103,7 @@ export function CharacterProfileCard({
 								<div className='text-lg font-bold text-gray-900'>
 									{isLoading || !expRate
 										? '—'
-										: `${expRate}%`}
+										: String(expRate)}
 								</div>
 							</div>
 						</div>

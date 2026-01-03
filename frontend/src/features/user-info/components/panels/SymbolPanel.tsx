@@ -122,11 +122,7 @@ export function SymbolPanel({
 							아케인포스
 						</span>
 						<span className='text-lg font-bold text-blue-600'>
-							{isLoading
-								? '—'
-								: new Intl.NumberFormat('ko-KR').format(
-										arcaneForce
-								  )}
+							{isLoading ? '—' : arcaneForce}
 						</span>
 					</div>
 				</div>
@@ -187,11 +183,7 @@ export function SymbolPanel({
 							어센틱포스
 						</span>
 						<span className='text-lg font-bold text-purple-600'>
-							{isLoading
-								? '—'
-								: new Intl.NumberFormat('ko-KR').format(
-										authenticForce
-								  )}
+							{isLoading ? '—' : authenticForce}
 						</span>
 					</div>
 				</div>
