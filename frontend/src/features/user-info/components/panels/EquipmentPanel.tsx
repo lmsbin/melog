@@ -7,10 +7,12 @@
 
 import { useMemo } from 'react';
 import { ItemEquipmentTooltip } from '@/features/user-info/components';
-import { gradeToClasses } from '@/features/user-info/character-detail/utils/grade';
-import { parseNumber } from '@/features/user-info/character-detail/utils/format';
+import {
+	gradeToClasses,
+	parseNumber,
+	ItemEquipmentWithTooltip,
+} from '@/features';
 import { ui } from '@/shared/ui-controller';
-import type { ItemEquipmentWithTooltip } from '@/features/user-info/character-detail/types';
 
 export function EquipmentPanel({
 	isLoading,

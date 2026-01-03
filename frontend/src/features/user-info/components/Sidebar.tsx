@@ -6,7 +6,7 @@
 
 import type { UserAbility } from '@/features/user-info/types/ability';
 import type { UserInfo } from '@/features/user-info/types/user';
-import { abilityGradeToClasses } from '@/features/user-info/character-detail/utils/grade';
+import { abilityGradeToClasses } from '@/features';
 import {
 	AwardIcon,
 	TrendingUpIcon,

@@ -6,10 +6,7 @@
 
 import type { UserInfo } from '@/features/user-info/types/user';
 import type { UserStatInfo } from '@/features/user-info/types/stat';
-import {
-	formatStatValue,
-	pickStatValue,
-} from '@/features/user-info/character-detail/utils/format';
+import { formatStatValue, pickStatValue } from '@/features';
 
 export function CharacterProfileCard({
 	isLoading,
@@ -73,14 +70,20 @@ export function CharacterProfileCard({
 								{isLoading ? '—' : klass || '—'}
 							</span>
 							<span className='text-gray-300'>•</span>
-							<span>길드: {isLoading ? '—' : guild || '없음'}</span>
+							<span>
+								길드: {isLoading ? '—' : guild || '없음'}
+							</span>
 						</div>
 
 						<div className='flex items-center gap-6 flex-wrap'>
 							<div>
-								<div className='text-xs text-gray-500 mb-0.5'>레벨</div>
+								<div className='text-xs text-gray-500 mb-0.5'>
+									레벨
+								</div>
 								<div className='text-lg font-bold text-gray-900'>
-									{isLoading || level === null ? '—' : `Lv.${level}`}
+									{isLoading || level === null
+										? '—'
+										: `Lv.${level}`}
 								</div>
 							</div>
 							<div className='w-px h-10 bg-gray-200' />
@@ -91,14 +94,21 @@ export function CharacterProfileCard({
 								<div className='text-lg font-bold text-blue-600'>
 									{isLoading || !maxAtk
 										? '—'
-										: formatStatValue('최대 스탯공격력', maxAtk)}
+										: formatStatValue(
+												'최대 스탯공격력',
+												maxAtk
+										  )}
 								</div>
 							</div>
 							<div className='w-px h-10 bg-gray-200' />
 							<div>
-								<div className='text-xs text-gray-500 mb-0.5'>경험치</div>
+								<div className='text-xs text-gray-500 mb-0.5'>
+									경험치
+								</div>
 								<div className='text-lg font-bold text-gray-900'>
-									{isLoading || !expRate ? '—' : `${expRate}%`}
+									{isLoading || !expRate
+										? '—'
+										: `${expRate}%`}
 								</div>
 							</div>
 						</div>
@@ -123,5 +133,3 @@ export function CharacterProfileCard({
 		</div>
 	);
 }
-
-

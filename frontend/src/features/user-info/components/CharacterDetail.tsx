@@ -6,17 +6,17 @@
 'use client';
 
 import { useState } from 'react';
-import type {
+import {
 	CharacterDetailProps,
 	CharacterDetailTabId,
-} from '@/features/user-info/character-detail/types';
-import { CharacterProfileCard } from '@/features/user-info/character-detail/components/CharacterProfileCard';
-import { TabNavigation } from '@/features/user-info/character-detail/components/TabNavigation';
-import { Sidebar } from '@/features/user-info/character-detail/components/Sidebar';
-import { PlaceholderPanel } from '@/features/user-info/character-detail/components/panels/PlaceholderPanel';
-import { StatsPanel } from '@/features/user-info/character-detail/components/panels/StatsPanel';
-import { EquipmentPanel } from '@/features/user-info/character-detail/components/panels/EquipmentPanel';
-import { SymbolPanel } from '@/features/user-info/character-detail/components/panels/SymbolPanel';
+	CharacterProfileCard,
+	TabNavigation,
+	Sidebar,
+	PlaceholderPanel,
+	StatsPanel,
+	EquipmentPanel,
+	SymbolPanel,
+} from '@/features';
 
 export function CharacterDetail(props: CharacterDetailProps) {
 	const [activeTab, setActiveTab] = useState<CharacterDetailTabId>('stats');
@@ -32,7 +32,10 @@ export function CharacterDetail(props: CharacterDetailProps) {
 
 				<div className='flex gap-6 mt-6'>
 					<div className='flex-1 min-w-0'>
-						<TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+						<TabNavigation
+							activeTab={activeTab}
+							onTabChange={setActiveTab}
+						/>
 
 						<div className='mt-4'>
 							{activeTab === 'stats' && (
@@ -46,19 +49,27 @@ export function CharacterDetail(props: CharacterDetailProps) {
 							{activeTab === 'equipment' && (
 								<EquipmentPanel
 									isLoading={props.isLoading}
-									itemEquipmentWithTooltip={props.itemEquipmentWithTooltip}
+									itemEquipmentWithTooltip={
+										props.itemEquipmentWithTooltip
+									}
 								/>
 							)}
 
 							{activeTab === 'symbols' && (
 								<SymbolPanel
 									isLoading={props.isLoading}
-									userSymbolEquipment={props.userSymbolEquipment}
+									userSymbolEquipment={
+										props.userSymbolEquipment
+									}
 								/>
 							)}
 
-							{activeTab === 'skills' && <PlaceholderPanel label='스킬' />}
-							{activeTab === 'union' && <PlaceholderPanel label='유니온' />}
+							{activeTab === 'skills' && (
+								<PlaceholderPanel label='스킬' />
+							)}
+							{activeTab === 'union' && (
+								<PlaceholderPanel label='유니온' />
+							)}
 						</div>
 					</div>
 
@@ -72,5 +83,3 @@ export function CharacterDetail(props: CharacterDetailProps) {
 		</div>
 	);
 }
-
-

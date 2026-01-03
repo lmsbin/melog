@@ -11,8 +11,7 @@
 import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useCharacterPageViewModel } from '@/page/character/view-model/viewModel';
-import { CharacterDetail } from '@/features/user-info/character-detail/components';
-import { SearchBar } from '@/features/search/components';
+import { CharacterDetail, SearchBar } from '@/features';
 import { ui } from '@/shared/ui-controller';
 
 export default function CharacterPage() {

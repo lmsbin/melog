@@ -2,6 +2,8 @@
  * 유저 정보 컴포넌트 export
  */
 
+export * from './panels';
+
 export * from './UserInfoCard';
 export * from './UserPropensityCard';
 export * from './UserAbilityCard';

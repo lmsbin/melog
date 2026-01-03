@@ -4,10 +4,7 @@
 
 'use client';
 
-import {
-	CHARACTER_DETAIL_TABS,
-	type CharacterDetailTabId,
-} from '@/features/user-info/character-detail/types';
+import { CHARACTER_DETAIL_TABS, type CharacterDetailTabId } from '@/features';
 
 export function TabNavigation({
 	activeTab,
@@ -40,5 +37,3 @@ export function TabNavigation({
 		</div>
 	);
 }
-
-

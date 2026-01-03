@@ -7,12 +7,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import type {
-	Symbol,
-	UserSymbolEquipment,
-} from '@/features/user-info/types/symbol';
-import { getSymbolCategory } from '@/features/user-info/character-detail/utils/symbol';
-import { parseNumber } from '@/features/user-info/character-detail/utils/format';
+import type { Symbol, UserSymbolEquipment } from '@/features';
+import { getSymbolCategory, parseNumber } from '@/features';
 
 export function SymbolPanel({
 	isLoading,

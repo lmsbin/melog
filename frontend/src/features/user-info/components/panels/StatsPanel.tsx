@@ -8,10 +8,7 @@
 import { useMemo, useState } from 'react';
 import type { UserHyperStatInfo } from '@/features/user-info/types/hyper-stat';
 import type { UserStatInfo } from '@/features/user-info/types/stat';
-import {
-	formatStatValue,
-	pickStatValue,
-} from '@/features/user-info/character-detail/utils/format';
+import { formatStatValue, pickStatValue } from '@/features';
 
 export function StatsPanel({
 	isLoading,
