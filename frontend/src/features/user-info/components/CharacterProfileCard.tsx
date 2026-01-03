@@ -36,21 +36,21 @@ export function CharacterProfileCard({
 			</div>
 
 			<div className='relative px-6 pb-6'>
-				<div className='absolute -top-16 left-6'>
-					<div className='w-32 h-32 bg-white rounded-lg border-4 border-white shadow-lg overflow-hidden'>
+				<div className='absolute -top-20 left-6'>
+					<div className='w-40 h-40 bg-white rounded-lg border-4 border-white shadow-lg overflow-hidden'>
 						{isLoading ? (
 							<div className='w-full h-full bg-gray-100 animate-pulse' />
 						) : (
 							<img
 								src={image}
 								alt={name}
-								className='w-full h-full object-cover object-center scale-150'
+								className='w-full h-full object-cover object-center scale-210'
 							/>
 						)}
 					</div>
 				</div>
 
-				<div className='pt-20 flex items-start justify-between gap-4'>
+				<div className='pt-24 flex items-start justify-between gap-4'>
 					<div className='min-w-0'>
 						<div className='flex items-center gap-3 mb-2 flex-wrap'>
 							<h1 className='text-2xl font-bold text-gray-900'>
