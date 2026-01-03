@@ -26,6 +26,7 @@ import {
 	useUserSymbolEquipment,
 	useUserVMatrix,
 } from '@/features/user-info/hooks';
+import { format } from '@/shared';
 import type { Symbol } from '@/features/user-info/types/symbol';
 import type {
 	ItemEquipment,
@@ -223,6 +224,26 @@ export function useCharacterPageViewModel({
 	const userDojangQuery = useUserDojang(ocid);
 	const userItemEquipmentQuery = useUserItemEquipment(ocid);
 
+	/**
+	 * 스탯 포맷 적용 ViewModel
+	 *
+	 * - useQuery로 받은 `final_stat`의 모든 (stat_name, stat_value)에 대해
+	 *   shared 포매터(`shared/utils/format`)를 적용한 결과를 내려줍니다.
+	 * - Query 캐시를 직접 변형하지 않도록, 여기서 새 객체로 만들어 제공합니다.
+	 */
+	const userStatInfo = useMemo(() => {
+		const data = userStatInfoQuery.data;
+		if (!data?.final_stat) return data ?? null;
+
+		return {
+			...data,
+			final_stat: data.final_stat.map((s) => ({
+				...s,
+				stat_value: format(s.stat_name, s.stat_value),
+			})),
+		};
+	}, [userStatInfoQuery.data]);
+
 	// 장비 툴팁용 ViewModel (페칭 완료 후 1회 생성)
 	const itemEquipmentWithTooltip = useMemo(() => {
 		const items = userItemEquipmentQuery.data?.item_equipment ?? [];
@@ -304,6 +325,7 @@ export function useCharacterPageViewModel({
 		models: {
 			itemEquipmentWithTooltip,
 			symbolRows,
+			userStatInfo,
 		},
 		queries: {
 			userInfo: userInfoQuery,

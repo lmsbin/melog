@@ -23,7 +23,7 @@ export default function CharacterPage() {
 		ocidError,
 		isLoading: isPageLoading,
 		isFetching: isPageFetching,
-		models: { itemEquipmentWithTooltip },
+		models: { itemEquipmentWithTooltip, userStatInfo: userStatInfoModel },
 		queries: {
 			userInfo,
 			userAbility,
@@ -69,7 +69,7 @@ export default function CharacterPage() {
 			nickName={nickName}
 			isLoading={isPageLoading}
 			userInfo={userInfo.data ?? null}
-			userStatInfo={userStatInfo.data ?? null}
+			userStatInfo={userStatInfoModel ?? null}
 			userAbility={userAbility.data ?? null}
 			userHyperStatInfo={userHyperStatInfo.data ?? null}
 			userItemEquipment={userItemEquipment.data ?? null}
